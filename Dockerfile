@@ -13,6 +13,14 @@ RUN pnpm install
 EXPOSE 3000
 
 FROM base as builder
+
+ENV LINKEDIN_CLIENT_ID=example
+ENV LINKEDIN_CLIENT_SECRET=example
+ENV NEXTAUTH_SECRET=example
+ENV NEXTAUTH_URL=http://localhost:3000/
+ENV BACKEND_GATEWAY_URL=http://localhost:8080
+ENV GOOGLE_ANALYTICS_ID=example
+
 WORKDIR /app
 COPY . .
 RUN pnpm run build
