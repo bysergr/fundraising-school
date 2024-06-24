@@ -33,7 +33,7 @@ export default function Hero() {
                 </p>
                 <a
                   className="btn mb-4 w-full rounded-3xl border-fsPurple bg-white px-14 font-serif text-fsPurple duration-150 hover:bg-fsPurple hover:text-white focus:bg-darkFsPurple focus:text-white sm:mb-0 sm:w-auto"
-                  href={AppLink.JoinLinkAirtable}
+                  href={AppLink.Varius.JoinLinkAirtable}
                   target="_blank"
                   rel="noopener"
                 >

@@ -14,7 +14,7 @@ export default function Footer() {
         </Link>
         <a
           className="btn mb-4 rounded-xl border border-fsPurple bg-white text-fsPurple duration-150 hover:bg-fsPurple hover:text-white sm:mb-0 sm:w-36"
-          href={AppLink.JoinLinkAirtable}
+          href={AppLink.Varius.JoinLinkAirtable}
           target="_blank"
           rel="noopener"
         >

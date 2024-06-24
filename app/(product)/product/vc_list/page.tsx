@@ -5,7 +5,8 @@ import TableVC from '@/components/vc_list/table-vc';
 import TitleSection from '@/components/vc_list/title-section';
 
 import { Session, getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth';
+
 import FundModal from '@/components/vc_list/fund_modal';
 
 export default async function Page() {

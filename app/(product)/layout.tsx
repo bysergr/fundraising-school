@@ -2,7 +2,7 @@ import Navbar from '@/components/vc_list/navbar';
 import Logo from '@/components/ui/logo';
 import Profile from '@/components/vc_list/profile';
 import { Session, getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth';
 
 export default async function VcListLayout({ children }: { children: React.ReactNode }) {
   const data: Session = (await getServerSession(authOptions)) as Session;

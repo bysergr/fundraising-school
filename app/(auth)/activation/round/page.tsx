@@ -1,6 +1,6 @@
 import { Session, getServerSession } from 'next-auth';
 
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth';
 import RoundForm from '@/components/auth/round-form';
 import AuthProfile from '@/components/auth/auth-profile';
 

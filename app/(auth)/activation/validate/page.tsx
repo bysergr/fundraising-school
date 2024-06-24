@@ -1,7 +1,8 @@
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/utils/auth';
+
 import ConfirmUserDataForm from '@/components/auth/confirm-user-data-form';
 import { correctImage } from '@/utils/validations';
 
