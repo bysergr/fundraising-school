@@ -21,6 +21,13 @@ FROM base as production
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV LINKEDIN_CLIENT_ID=example
+ENV LINKEDIN_CLIENT_SECRET=example
+ENV NEXTAUTH_SECRET=example
+ENV NEXTAUTH_URL=http://localhost:3000/
+ENV BACKEND_GATEWAY_URL=http://localhost:8080
+ENV GOOGLE_ANALYTICS_ID=example
+
 
 RUN pnpm install --prod
 
