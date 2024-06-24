@@ -1,10 +1,13 @@
 import { useFundStore } from '@/providers/funds-store-providers';
+import { useUserStore } from '@/providers/user-store-provider';
 import { useCallback, useRef } from 'react';
 
-function useLazyLoad() {
+function useLazyLoad({ email_linkedin }: { email_linkedin: string }) {
   const { page, setPage, addFunds, funds, total, selected_filter_options } = useFundStore(
     (state) => state,
   );
+
+  const { email } = useUserStore((state) => state);
 
   const lastItem = useRef<IntersectionObserver | null>(null);
 
@@ -39,6 +42,12 @@ function useLazyLoad() {
             url_params.append('location', selected_filter_options.location);
           }
 
+          if (email.trim() === '') {
+            url_params.append('user_email', email_linkedin);
+          } else {
+            url_params.append('user_email', email);
+          }
+
           fetch(`/api/funds?` + url_params, {
             method: 'GET',
           })
@@ -57,7 +66,7 @@ function useLazyLoad() {
 
       lastItem.current.observe(element);
     },
-    [addFunds, page, selected_filter_options, setPage, funds, total],
+    [addFunds, page, selected_filter_options, setPage, funds, total, email, email_linkedin],
   );
 
   return { showNext };

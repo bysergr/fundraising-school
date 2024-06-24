@@ -22,6 +22,7 @@ export type FundState = {
   selected_filter_options: SelectedFilterOptions;
   total: number;
   page: number;
+  modal_vc: VCProfile | null;
 };
 
 export type FundActions = {
@@ -31,6 +32,9 @@ export type FundActions = {
   setTotal: (total: number) => void;
   setFilterOptions: (filter_options: FilterOptions) => void;
   setSelectedFilterOptions: (selected_filter_options: SelectedFilterOptions) => void;
+  setFavorite: (id: number, favorite: boolean) => void;
+  openModal: (id: number) => void;
+  closeModal: () => void;
 };
 
 export type FundStore = FundState & FundActions;
@@ -42,6 +46,7 @@ export const initFundStore = (): FundState => {
     page: 1,
     filter_options: { rounds: [], check_size: [], sectors: [], locations: [] },
     selected_filter_options: { round: null, check_size: null, sector: null, location: null },
+    modal_vc: null,
   };
 };
 
@@ -83,6 +88,32 @@ export const createFundStore = (initState: FundState = defaultInitState) => {
       set(
         produce((state: FundState) => {
           state.filter_options = filter_options;
+        }),
+      ),
+
+    setFavorite: (id, favorite) =>
+      set(
+        produce((state: FundState) => {
+          state.funds = state.funds.map((fund) => {
+            if (fund.id === id) {
+              fund.favorite = favorite;
+            }
+            return fund;
+          });
+        }),
+      ),
+
+    openModal: (id) =>
+      set(
+        produce((state: FundState) => {
+          state.modal_vc = state.funds.find((fund) => fund.id === id) || null;
+        }),
+      ),
+
+    closeModal: () =>
+      set(
+        produce((state: FundState) => {
+          state.modal_vc = null;
         }),
       ),
 

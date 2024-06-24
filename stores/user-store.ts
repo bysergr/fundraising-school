@@ -1,4 +1,5 @@
 import { createStore } from 'zustand/vanilla';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type UserState = {
   nickname: string;
@@ -34,24 +35,32 @@ export const defaultInitState: UserState = {
 };
 
 export const createUserStore = (initState: UserState = defaultInitState) => {
-  return createStore<UserStore>()((set) => ({
-    ...initState,
+  return createStore<UserStore>()(
+    persist(
+      (set) => ({
+        ...initState,
 
-    updateUserInfo: (nickname, contact_email, email, image_url) =>
-      set(() => ({
-        contact_email: contact_email,
-        email: email,
-        nickname: nickname,
-        image_url: image_url,
-      })),
+        updateUserInfo: (nickname, contact_email, email, image_url) =>
+          set(() => ({
+            contact_email: contact_email,
+            email: email,
+            nickname: nickname,
+            image_url: image_url,
+          })),
 
-    updateNickName: (nickname) => set((state) => ({ ...state, nickname: nickname })),
+        updateNickName: (nickname) => set((state) => ({ ...state, nickname: nickname })),
 
-    updateContactEmail: (contact_email) =>
-      set((state) => ({ ...state, contact_email: contact_email })),
+        updateContactEmail: (contact_email) =>
+          set((state) => ({ ...state, contact_email: contact_email })),
 
-    updateEmail: (email) => set((state) => ({ ...state, email: email })),
+        updateEmail: (email) => set((state) => ({ ...state, email: email })),
 
-    updateImageURL: (image_url) => set((state) => ({ ...state, image_url: image_url })),
-  }));
+        updateImageURL: (image_url) => set((state) => ({ ...state, image_url: image_url })),
+      }),
+      {
+        name: 'user-store', // nombre de almacenamiento en el localStorage
+        storage: createJSONStorage(() => localStorage), // cambiar localStorage a cualquier otro storage si es necesario
+      },
+    ),
+  );
 };

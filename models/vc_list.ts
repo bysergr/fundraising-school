@@ -48,6 +48,7 @@ interface VCProfile {
   partners: Partner[];
   rounds: Round[];
   sectors: Sector[];
+  favorite: boolean;
 }
 
 export type { CheckSize, Country, Partner, Round, Sector, VCProfile };

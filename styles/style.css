@@ -18,3 +18,7 @@
 thead tr tbody{
   display:block;
 }
+
+dialog:modal {
+  max-height: 100vh;
+}

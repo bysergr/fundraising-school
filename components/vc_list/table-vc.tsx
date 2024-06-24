@@ -4,13 +4,15 @@ import { useEffect } from 'react';
 import RowTableVC from '@/components/vc_list/table_vc/row-table-vc';
 import { useFundStore } from '@/providers/funds-store-providers';
 import useLazyLoad from '@/hooks/useLazyLoad';
+import { useUserStore } from '@/providers/user-store-provider';
 
-export default function TableVC() {
+export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
   const { total, page, setPage, funds, setFunds, setTotal, selected_filter_options } = useFundStore(
     (state) => state,
   );
 
-  const { showNext } = useLazyLoad();
+  const { email } = useUserStore((state) => state);
+  const { showNext } = useLazyLoad({ email_linkedin });
 
   useEffect(() => {
     if (funds.length !== 0) {
@@ -32,6 +34,12 @@ export default function TableVC() {
       url_params.append('location', selected_filter_options.location);
     }
 
+    if (email.trim() === '') {
+      url_params.append('user_email', email_linkedin);
+    } else {
+      url_params.append('user_email', email);
+    }
+
     fetch(`/api/funds?` + url_params, {
       method: 'GET',
     })
@@ -42,7 +50,16 @@ export default function TableVC() {
         setPage(data.page);
       })
       .catch((error) => console.error('Error:', error));
-  }, [funds.length, page, selected_filter_options, setFunds, setPage, setTotal]);
+  }, [
+    funds.length,
+    page,
+    selected_filter_options,
+    setFunds,
+    setPage,
+    setTotal,
+    email,
+    email_linkedin,
+  ]);
 
   return (
     <table className="mt-6 size-full ">

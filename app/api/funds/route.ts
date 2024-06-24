@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
   const check_size = searchParams.get('check_size');
   const sector = searchParams.get('sector');
   const location = searchParams.get('location');
+  const user_email = searchParams.get('user_email');
 
   if (!page) {
     page = '1';
@@ -35,6 +36,10 @@ export async function GET(req: NextRequest) {
   }
   if (location) {
     params.append('country', location);
+  }
+
+  if (user_email) {
+    params.append('user_email', user_email);
   }
 
   const resp = await fetch(`${process.env.BACKEND_GATEWAY_URL}/vc_sheet/funds?${params}`, {

@@ -4,7 +4,13 @@ import { SiCrunchbase } from 'react-icons/si';
 
 import { VCProfile } from '@/models/vc_list';
 
-export default function VCLinks({ vc_profile }: { vc_profile: VCProfile }) {
+export default function VCLinks({
+  vc_profile,
+  size = 'size-4',
+}: {
+  vc_profile: VCProfile;
+  size?: string;
+}) {
   return (
     <ul className="mt-2 flex gap-1">
       {vc_profile.website && vc_profile.website.length !== 0 && (
@@ -15,7 +21,7 @@ export default function VCLinks({ vc_profile }: { vc_profile: VCProfile }) {
             rel="noreferrer"
             className="text-neutral-600"
           >
-            <LinkIcon className="size-4" />
+            <LinkIcon className={size} />
           </a>
         </li>
       )}
@@ -27,7 +33,7 @@ export default function VCLinks({ vc_profile }: { vc_profile: VCProfile }) {
             rel="noreferrer"
             className="text-neutral-600"
           >
-            <FaLinkedin className="size-4" />
+            <FaLinkedin className={size} />
           </a>
         </li>
       )}
@@ -39,7 +45,7 @@ export default function VCLinks({ vc_profile }: { vc_profile: VCProfile }) {
             rel="noreferrer"
             className="text-neutral-600"
           >
-            <FaXTwitter className="size-4" />
+            <FaXTwitter className={size} />
           </a>
         </li>
       )}
@@ -51,7 +57,7 @@ export default function VCLinks({ vc_profile }: { vc_profile: VCProfile }) {
             rel="noreferrer"
             className="text-neutral-600"
           >
-            <SiCrunchbase className="size-4" />
+            <SiCrunchbase className={size} />
           </a>
         </li>
       )}
