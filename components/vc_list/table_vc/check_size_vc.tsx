@@ -20,7 +20,7 @@ export default function CheckSizeVC({ check_size }: { check_size: CheckSize[] })
           }
 
           return (
-            <p key={nanoid()} className="text-center text-xs font-normal">
+            <p key={nanoid()} className="text-center text-xs text-black">
               {checkSize.size}
             </p>
           );
@@ -28,7 +28,7 @@ export default function CheckSizeVC({ check_size }: { check_size: CheckSize[] })
         <div className="mt-0.5 flex justify-center">
           {check_size.length > 1 && (
             <>
-              <span className="text-center text-xs font-normal text-black" key={nanoid()}>
+              <span className="text-center text-xs text-black" key={nanoid()}>
                 +{check_size.length - 1}
               </span>
 
