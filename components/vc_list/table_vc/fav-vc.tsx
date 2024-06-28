@@ -68,7 +68,7 @@ export default function FavVC({
   }
 
   return (
-    <td className="grid place-content-center">
+    <td className="grid w-8 place-content-center">
       <button onClick={handleClick}>
         <StarIcon
           className={clsx(

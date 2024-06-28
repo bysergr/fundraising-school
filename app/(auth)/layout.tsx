@@ -1,5 +1,5 @@
-import Slider from '@/components/auth/slider';
-import Logo from '@/components/ui/logo';
+import SliderCTW from '@/components/auth/slider-ctw';
+import LogoCTW from '@/components/ui/logo-ctw';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <section className="flex h-screen w-full flex-col items-center gap-2 lg:px-8 lg:py-6">
         <nav className="hidden w-full lg:block">
           <div className="hidden w-32 lg:block ">
-            <Logo />
+            <LogoCTW />
           </div>
         </nav>
         {children}
@@ -32,7 +32,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </a>
         </p>
       </section>
-      <Slider />
+      <SliderCTW />
     </main>
   );
 }

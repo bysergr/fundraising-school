@@ -6,6 +6,7 @@ import { LegacyRef } from 'react';
 import { VCProfile } from '@/models/vc_list';
 import VCLinks from '@/components/vc_list/table_vc/vc_links';
 import CountriesVC from '@/components/vc_list/table_vc/countries-vc';
+import StagesVC from '@/components/vc_list/table_vc/stages-vc';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import CheckSizeVC from './check_size_vc';
 import { useFundStore } from '@/providers/funds-store-providers';
@@ -14,23 +15,21 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
   const { openModal } = useFundStore((state) => state);
 
   const handleClick = () => {
-    console.log(vc_profile.id);
-
     openModal(vc_profile.id);
   };
 
   return (
     <>
-      <td className="flex w-72 justify-between">
+      <td className="flex w-80 justify-start gap-6">
         <Image
-          className="cursor-pointer rounded-md"
+          className="size-[110px] cursor-pointer rounded-md object-cover"
           alt={`image of ${vc_profile.name}`}
           src={vc_profile.photo}
           width={60}
           height={60}
           onClick={handleClick}
         />
-        <div className="w-1/2">
+        <div className="my-auto w-fit">
           <p onClick={handleClick} className="cursor-pointer text-base font-semibold">
             {vc_profile.name}
           </p>
@@ -41,7 +40,7 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
 
       <CountriesVC countries={vc_profile.countries} />
       <CheckSizeVC check_size={vc_profile.check_size} />
-      <td>Stages</td>
+      <StagesVC stages={vc_profile.rounds} />
     </>
   );
 }

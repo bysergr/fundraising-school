@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  IdentificationIcon,
-  VideoCameraIcon,
-  HomeIcon,
-  SignalIcon,
-} from '@heroicons/react/24/outline';
+import { IdentificationIcon, HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
@@ -24,26 +19,6 @@ const Navbar = () => {
       >
         <HomeIcon className="size-5" />
         Home
-      </Link>
-      <Link
-        href="/product/course"
-        className={clsx(
-          pathname === '/product/course' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
-          'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
-        )}
-      >
-        <VideoCameraIcon className="size-5" />
-        Course
-      </Link>
-      <Link
-        href="/product/podcast"
-        className={clsx(
-          pathname === '/product/podcast' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
-          'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
-        )}
-      >
-        <SignalIcon className="size-5" />
-        Podcast
       </Link>
       <Link
         href="/product/vc_list"

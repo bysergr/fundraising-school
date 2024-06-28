@@ -51,7 +51,7 @@ export default function FilterBar() {
           className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
         >
           <option>All</option>
-          {filter_options.rounds.map((option) => (
+          {Array.from(new Set(filter_options.rounds)).map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>
@@ -68,7 +68,7 @@ export default function FilterBar() {
           className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
         >
           <option>All</option>
-          {filter_options.check_size.map((option) => (
+          {Array.from(new Set(filter_options.check_size)).map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>
@@ -85,7 +85,7 @@ export default function FilterBar() {
           className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
         >
           <option>All</option>
-          {filter_options.sectors.map((option) => (
+          {Array.from(new Set(filter_options.sectors)).map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>
@@ -102,7 +102,7 @@ export default function FilterBar() {
           className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
         >
           <option>All</option>
-          {filter_options.locations.map((option) => (
+          {Array.from(new Set(filter_options.locations)).map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>

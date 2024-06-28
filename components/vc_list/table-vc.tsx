@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import RowTableVC from '@/components/vc_list/table_vc/row-table-vc';
 import { useFundStore } from '@/providers/funds-store-providers';
 import useLazyLoad from '@/hooks/useLazyLoad';
 import { useUserStore } from '@/providers/user-store-provider';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
   const { total, page, setPage, funds, setFunds, setTotal, selected_filter_options } = useFundStore(
@@ -13,6 +14,8 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
 
   const { email } = useUserStore((state) => state);
   const { showNext } = useLazyLoad({ email_linkedin });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (funds.length !== 0) {
@@ -40,6 +43,8 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
       url_params.append('user_email', email);
     }
 
+    setLoading(true);
+
     fetch(`/api/funds?` + url_params, {
       method: 'GET',
     })
@@ -49,7 +54,8 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
         setTotal(data.total);
         setPage(data.page);
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => console.error('Error:', error))
+      .finally(() => setLoading(false));
   }, [
     funds.length,
     page,
@@ -62,22 +68,36 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
   ]);
 
   return (
-    <table className="mt-6 size-full ">
+    <table className="mt-6 size-full">
       <thead className="h-14 border-b border-neutral-200">
         <tr className="mr-16 flex items-center justify-between  [&>th]:text-left [&>th]:text-neutral-500">
-          <th className="w-72">
+          <th className="w-80">
             {total} <br />
             Investors
           </th>
-          <th>Fav</th>
-          <th className="w-1/5">
+          <th className="w-8">
+            <p className="text-center">Fav</p>
+          </th>
+          <th className="w-56">
             <p className="text-center">Geography</p>
           </th>
-          <th>Checks</th>
-          <th>Stages</th>
+          <th className="w-36">
+            <p className="text-center">Checks</p>
+          </th>
+          <th className="w-44">
+            <p className="text-center">Stages</p>
+          </th>
         </tr>
       </thead>
       <tbody className="mt-6 block h-[calc(100%-11.9rem)] overflow-y-scroll [&>tr]:mr-12 [&>tr]:flex [&>tr]:justify-between">
+        {loading && (
+          <tr className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
+            <td className="m-auto block">
+              <ClipLoader color="#637EE0" size={55} />
+            </td>
+          </tr>
+        )}
+
         {funds.map((fund, index) => {
           if (index === funds.length - 1) {
             return <RowTableVC refProp={showNext} vc_profile={fund} key={fund.id} />;
