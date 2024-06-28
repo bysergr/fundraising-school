@@ -1,9 +1,10 @@
 // import { GoogleAnalytics } from '@next/third-parties/google';
 
 import '@/styles/style.css';
-import { dm_sans } from '@/app/fonts';
+import { dm_sans, josefin_sans } from '@/app/fonts';
 import { UserStoreProvider } from '@/providers/user-store-provider';
 import { FundStoreProvider } from '@/providers/funds-store-providers';
+import clsx from 'clsx';
 
 export const metadata = {
   title: 'Fundraising School - Be a great deal for investors and raise money like a pro',
@@ -13,7 +14,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${dm_sans.variable}`}>
+    <html lang="en" className={clsx(dm_sans.variable, josefin_sans.variable)}>
       <body className="bg-white font-sans tracking-tight text-gray-900 antialiased">
         <UserStoreProvider>
           <FundStoreProvider>{children}</FundStoreProvider>

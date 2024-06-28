@@ -8,7 +8,7 @@ export default async function VcListLayout({ children }: { children: React.React
   const data: Session = (await getServerSession(authOptions)) as Session;
 
   return (
-    <div className="flex h-screen w-full gap-1 overflow-y-hidden bg-gray-100">
+    <div className="flex h-screen w-full gap-1 overflow-y-hidden bg-gray-100 font-josefin">
       <header className="flex h-screen w-full max-w-64 flex-col justify-between bg-white py-8">
         <div>
           <Logo className="mx-auto mb-6 mt-4 w-3/5" />

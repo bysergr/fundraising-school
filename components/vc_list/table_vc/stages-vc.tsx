@@ -12,21 +12,7 @@ export default function stages({ stages }: { stages: Round[] }) {
         </div>
       )}
 
-      {Array.from(rounds).map((round, index) => {
-        if (index === 2) {
-          return (
-            <>
-              <br key={nanoid()} />
-              <span
-                key={nanoid()}
-                className="mx-0.5 mt-1 w-full rounded-sm bg-secondLightFsPurple px-2 py-1 text-center text-xs font-semibold text-fsPurple"
-              >
-                {round}
-              </span>
-            </>
-          );
-        }
-
+      {Array.from(rounds).map((round) => {
         return (
           <span
             key={nanoid()}

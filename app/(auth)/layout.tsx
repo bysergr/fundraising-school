@@ -3,7 +3,7 @@ import LogoCTW from '@/components/ui/logo-ctw';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="h-screen w-full max-w-full grid-cols-authLayout lg:grid ">
+    <main className="h-screen w-full max-w-full grid-cols-authLayout font-josefin lg:grid">
       <section className="flex h-screen w-full flex-col items-center gap-2 lg:px-8 lg:py-6">
         <nav className="hidden w-full lg:block">
           <div className="hidden w-32 lg:block ">

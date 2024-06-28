@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-ds-sans)'],
+        josefin: ['var(--font-josefin-sans)'],
       },
       colors: {
         fsPurple: '#637EE0',

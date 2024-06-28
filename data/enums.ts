@@ -44,4 +44,4 @@ export const Rounds: Round[] = [
   },
 ];
 
-export const ProtectedRoutes: string[] = ['/vc_list', '/activation'];
+export const ProtectedRoutes: string[] = ['/product', '/activation'];
