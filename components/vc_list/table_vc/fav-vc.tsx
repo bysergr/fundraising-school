@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { StarIcon } from '@heroicons/react/24/outline';
-import { useFundStore } from '@/providers/funds-store-providers';
+import { useAppStore } from '@/providers/app-store-providers';
 import { useUserStore } from '@/providers/user-store-provider';
 
 export default function FavVC({
@@ -16,7 +16,7 @@ export default function FavVC({
   size?: string;
   is_modal?: boolean;
 }) {
-  const { setFavorite, openModal } = useFundStore((state) => state);
+  const { setFavoriteFund: setFavorite, openFundModal: openModal } = useAppStore((state) => state);
   const { email } = useUserStore((state) => state);
 
   const handleClick = () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useFundStore } from '@/providers/funds-store-providers';
+import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import VCLinks from './table_vc/vc_links';
@@ -16,12 +16,10 @@ import clsx from 'clsx';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
 
 export default function FundModal() {
-  const { modal_vc, closeModal } = useFundStore((state) => state);
+  const { modal_vc, closeFundModal: closeModal } = useAppStore((state) => state);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    console.log(modal_vc);
-
     if (modal_vc) {
       dialogRef.current?.showModal();
     } else {

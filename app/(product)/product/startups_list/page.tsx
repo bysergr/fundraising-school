@@ -1,5 +1,5 @@
-import DownloadVC from '@/components/vc_list/download-vc';
-import FilterBar from '@/components/vc_list/filter-bar';
+import DownloadStartups from '@/components/startups_list/download-startups';
+import FilterBar from '@/components/startups_list/filter-bar';
 import SearchInput from '@/components/vc_list/search-input';
 import TableVC from '@/components/vc_list/table-vc';
 import TitleSection from '@/components/vc_list/title-section';
@@ -15,11 +15,11 @@ export default async function Page() {
   return (
     <>
       <FundModal />
-      <TitleSection nameSection="VC List" description="Browse all funds" />
+      <TitleSection nameSection="Startups List" description="Browse all Startups" />
       <div className="size-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">
           <SearchInput />
-          <DownloadVC />
+          <DownloadStartups />
         </div>
         <FilterBar />
         <TableVC email_linkedin={data.user?.email as string} />

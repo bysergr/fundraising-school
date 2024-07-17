@@ -96,29 +96,59 @@ export const validateNewUser = async (
       }
     }
 
+    const isFromStartupsResponse = await fetch(`/api/user/startups/${user.user.email as string}`, {
+      method: 'GET',
+    });
+
+    if (isFromStartupsResponse.status !== 200) {
+      console.error('Error validating user: ', response.status);
+    }
+
+    const isFromStartupsBody = await isFromStartupsResponse.json();
+
+    let isFromStartups: boolean | undefined = isFromStartupsBody['startup'];
+
+    if (isFromStartups === undefined) {
+      console.error('Error validating user: ', response.status);
+
+      isFromStartups = false;
+    }
+
     if (data.message === 'User exists') {
-      updateUserInfo(data.nickname, data.contact_email, user.user.email as string, image);
+      updateUserInfo(
+        data.nickname,
+        data.contact_email,
+        user.user.email as string,
+        image,
+        isFromStartups,
+      );
       router.replace(AppLink.Product.Home);
 
       return;
     }
 
     if (data.message === 'User exist without contact info') {
-      updateUserInfo('', '', user.user.email as string, image);
+      updateUserInfo('', '', user.user.email as string, image, isFromStartups);
       router.replace(AppLink.Activation.BaseData);
 
       return;
     }
 
     if (data.message === 'User exist without info about round') {
-      updateUserInfo(data.nickname, data.contact_email, user.user.email as string, image);
+      updateUserInfo(
+        data.nickname,
+        data.contact_email,
+        user.user.email as string,
+        image,
+        isFromStartups,
+      );
       router.replace(AppLink.Activation.Round);
 
       return;
     }
 
     if (data.message === 'User created') {
-      updateUserInfo('', '', user.user.email as string, image);
+      updateUserInfo('', '', user.user.email as string, image, isFromStartups);
       router.replace(AppLink.Activation.BaseData);
 
       return;

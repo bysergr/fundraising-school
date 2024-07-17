@@ -46,6 +46,10 @@ export async function GET(req: NextRequest) {
     method: 'GET',
   });
 
+  if (!resp.ok) {
+    return Response.json({ error: 'Invalid Request' }, { status: 400 });
+  }
+
   const data = await resp.json();
 
   return Response.json(data);

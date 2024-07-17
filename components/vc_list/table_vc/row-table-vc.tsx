@@ -9,10 +9,10 @@ import CountriesVC from '@/components/vc_list/table_vc/countries-vc';
 import StagesVC from '@/components/vc_list/table_vc/stages-vc';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import CheckSizeVC from './check_size_vc';
-import { useFundStore } from '@/providers/funds-store-providers';
+import { useAppStore } from '@/providers/app-store-providers';
 
 function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
-  const { openModal } = useFundStore((state) => state);
+  const { openFundModal: openModal } = useAppStore((state) => state);
 
   const handleClick = () => {
     openModal(vc_profile.id);

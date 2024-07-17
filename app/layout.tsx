@@ -3,7 +3,7 @@
 import '@/styles/style.css';
 import { dm_sans, josefin_sans } from '@/app/fonts';
 import { UserStoreProvider } from '@/providers/user-store-provider';
-import { FundStoreProvider } from '@/providers/funds-store-providers';
+import { AppStoreProvider } from '@/providers/app-store-providers';
 import clsx from 'clsx';
 
 export const metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={clsx(dm_sans.variable, josefin_sans.variable)}>
       <body className="bg-white font-sans tracking-tight text-gray-900 antialiased">
         <UserStoreProvider>
-          <FundStoreProvider>{children}</FundStoreProvider>
+          <AppStoreProvider>{children}</AppStoreProvider>
         </UserStoreProvider>
       </body>
       {/* <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID as string} /> */}

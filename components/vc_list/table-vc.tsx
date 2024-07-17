@@ -2,15 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import RowTableVC from '@/components/vc_list/table_vc/row-table-vc';
-import { useFundStore } from '@/providers/funds-store-providers';
+import { useAppStore } from '@/providers/app-store-providers';
 import useLazyLoad from '@/hooks/useLazyLoad';
 import { useUserStore } from '@/providers/user-store-provider';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
-  const { total, page, setPage, funds, setFunds, setTotal, selected_filter_options } = useFundStore(
-    (state) => state,
-  );
+  const {
+    funds_total: total,
+    funds_page: page,
+    setFundPage: setPage,
+    funds,
+    setFunds,
+    setFundTotal: setTotal,
+    selected_funds_filter_options: selected_filter_options,
+  } = useAppStore((state) => state);
 
   const { email } = useUserStore((state) => state);
   const { showNext } = useLazyLoad({ email_linkedin });
@@ -19,6 +25,8 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
 
   useEffect(() => {
     if (funds.length !== 0) {
+      console.log('We not are here');
+
       return;
     }
 
@@ -38,8 +46,12 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     }
 
     if (email.trim() === '') {
+      console.log('We are here, email_linkedin: ', email_linkedin);
+
       url_params.append('user_email', email_linkedin);
     } else {
+      console.log('We are here, user_email: ', email);
+
       url_params.append('user_email', email);
     }
 
@@ -50,7 +62,10 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     })
       .then((response) => response.json())
       .then((data) => {
-        setFunds(data.data);
+        if (data.data) {
+          setFunds(data.data);
+        }
+
         setTotal(data.total);
         setPage(data.page);
       })

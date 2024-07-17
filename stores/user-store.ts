@@ -6,6 +6,7 @@ export type UserState = {
   email: string;
   contact_email: string;
   image_url: string;
+  is_from_startups: boolean;
 };
 
 export type UserActions = {
@@ -14,17 +15,19 @@ export type UserActions = {
     contact_email: string,
     email: string,
     image_url: string,
+    is_from_startups: boolean,
   ) => void;
   updateNickName: (nickname: string) => void;
   updateEmail: (email: string) => void;
   updateContactEmail: (contact_email: string) => void;
   updateImageURL: (image_url: string) => void;
+  updateIsFromStartups: (is_from_startups: boolean) => void;
 };
 
 export type UserStore = UserState & UserActions;
 
 export const initUserStore = (): UserState => {
-  return { contact_email: '', email: '', nickname: '', image_url: '' };
+  return { contact_email: '', email: '', nickname: '', image_url: '', is_from_startups: false };
 };
 
 export const defaultInitState: UserState = {
@@ -32,6 +35,7 @@ export const defaultInitState: UserState = {
   email: '',
   contact_email: '',
   image_url: '',
+  is_from_startups: false,
 };
 
 export const createUserStore = (initState: UserState = defaultInitState) => {
@@ -40,12 +44,13 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
       (set) => ({
         ...initState,
 
-        updateUserInfo: (nickname, contact_email, email, image_url) =>
+        updateUserInfo: (nickname, contact_email, email, image_url, is_from_startups) =>
           set(() => ({
             contact_email: contact_email,
             email: email,
             nickname: nickname,
             image_url: image_url,
+            is_from_startups: is_from_startups,
           })),
 
         updateNickName: (nickname) => set((state) => ({ ...state, nickname: nickname })),
@@ -56,6 +61,9 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
         updateEmail: (email) => set((state) => ({ ...state, email: email })),
 
         updateImageURL: (image_url) => set((state) => ({ ...state, image_url: image_url })),
+
+        updateIsFromStartups: (is_from_startups) =>
+          set((state) => ({ ...state, is_from_startups: is_from_startups })),
       }),
       {
         name: 'user-store', // nombre de almacenamiento en el localStorage
