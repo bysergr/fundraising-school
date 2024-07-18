@@ -9,7 +9,7 @@ export default function DownloadStartUps() {
 
   const handleClick = async () => {
     try {
-      const response = await fetch(`/api/funds/fav/csv/${email}`, {
+      const response = await fetch(`/api/startups/fav/csv/${email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'text/csv',
@@ -29,7 +29,7 @@ export default function DownloadStartUps() {
       const a = document.createElement('a');
 
       a.href = url;
-      a.download = 'favorite_funds.csv';
+      a.download = 'favorite_startups.csv';
       document.body.appendChild(a);
       a.click();
       a.remove();

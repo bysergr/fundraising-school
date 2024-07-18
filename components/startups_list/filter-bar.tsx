@@ -1,22 +1,21 @@
 'use client';
 
 import { useAppStore } from '@/providers/app-store-providers';
-import { FilterFundsOptions } from '@/stores/app-store';
+import { FilterStartupOptions } from '@/stores/app-store';
 import { useEffect } from 'react';
 
 export default function FilterBar() {
   const {
-    filter_funds_options: filter_options,
-    setFundFilterOptions: setFilterOptions,
-    setFundSelectedFilterOptions: setSelectedFilterOptions,
-    selected_funds_filter_options: selected_filter_options,
+    filter_startups_options: filter_options,
+    setStartupFilterOptions: setFilterOptions,
+    setStartupSelectedFilterOptions: setSelectedFilterOptions,
+    selected_startups_filter_options: selected_filter_options,
   } = useAppStore((state) => state);
 
   useEffect(() => {
     if (
       !(
-        filter_options.rounds.length === 0 ||
-        filter_options.check_size.length === 0 ||
+        filter_options.traction.length === 0 ||
         filter_options.sectors.length === 0 ||
         filter_options.locations.length === 0
       )
@@ -24,14 +23,15 @@ export default function FilterBar() {
       return;
     }
 
-    fetch(`/api/funds/filter/options`, {
+    console.log('fetching filter options');
+
+    fetch(`/api/startups/filter/options`, {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((data) => {
-        const filterOptions: FilterFundsOptions = {
-          rounds: data.rounds,
-          check_size: data.check_size,
+        const filterOptions: FilterStartupOptions = {
+          traction: data.tractions,
           sectors: data.sectors,
           locations: data.countries,
         };
@@ -44,41 +44,24 @@ export default function FilterBar() {
   return (
     <div className="mt-4 flex gap-6">
       <label className="flex flex-col gap-1 text-xs font-bold">
-        Rounds They invest In
+        Traction
         <select
           onChange={(e) =>
             setSelectedFilterOptions({
               ...selected_filter_options,
-              round: e.target.value === 'All' ? null : e.target.value,
+              traction: e.target.value === 'All' ? null : e.target.value,
             })
           }
           className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
         >
           <option>All</option>
-          {Array.from(new Set(filter_options.rounds)).map((option) => (
+          {Array.from(new Set(filter_options.traction)).map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>
       </label>
       <label className="flex flex-col gap-1 text-xs font-bold">
-        Check Size Ranges
-        <select
-          onChange={(e) =>
-            setSelectedFilterOptions({
-              ...selected_filter_options,
-              check_size: e.target.value === 'All' ? null : e.target.value,
-            })
-          }
-          className="h-5 w-36 rounded-lg border-0 bg-[#e4e7f8] py-0 text-[11px] font-normal outline-0 ring-0 focus:border-0 focus:ring-0"
-        >
-          <option>All</option>
-          {Array.from(new Set(filter_options.check_size)).map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
-      </label>
-      <label className="flex flex-col gap-1 text-xs font-bold">
-        Sector Specialty
+        Sector Speciality
         <select
           onChange={(e) =>
             setSelectedFilterOptions({
@@ -95,7 +78,7 @@ export default function FilterBar() {
         </select>
       </label>
       <label className="flex flex-col gap-1 text-xs font-bold">
-        Geographic Focus
+        Startup base in
         <select
           onChange={(e) =>
             setSelectedFilterOptions({

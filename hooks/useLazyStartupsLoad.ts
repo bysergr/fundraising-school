@@ -2,14 +2,14 @@ import { useAppStore } from '@/providers/app-store-providers';
 import { useUserStore } from '@/providers/user-store-provider';
 import { useCallback, useRef } from 'react';
 
-function useLazyLoad({ email_linkedin }: { email_linkedin: string }) {
+function useLazyStartupsLoad({ email_linkedin }: { email_linkedin: string }) {
   const {
-    funds_page: page,
-    setFundPage: setPage,
-    addFunds,
-    funds,
-    funds_total: total,
-    selected_funds_filter_options: selected_filter_options,
+    startups_page: page,
+    setStartupPage: setPage,
+    addStartups,
+    startups,
+    startups_total: total,
+    selected_startups_filter_options: selected_filter_options,
   } = useAppStore((state) => state);
 
   const { email } = useUserStore((state) => state);
@@ -26,7 +26,7 @@ function useLazyLoad({ email_linkedin }: { email_linkedin: string }) {
 
       const intersection = (entries: IntersectionObserverEntry[]) => {
         if (entries[0].isIntersecting) {
-          if (funds.length === total) {
+          if (startups.length === total) {
             return;
           }
 
@@ -34,35 +34,28 @@ function useLazyLoad({ email_linkedin }: { email_linkedin: string }) {
 
           const url_params = new URLSearchParams({ page: newPage.toString(), limit: '25' });
 
-          if (selected_filter_options.round) {
-            url_params.append('round', selected_filter_options.round);
-          }
-          if (selected_filter_options.check_size) {
-            url_params.append('check_size', selected_filter_options.check_size);
+          if (selected_filter_options.traction) {
+            url_params.append('traction', selected_filter_options.traction);
           }
           if (selected_filter_options.sector) {
             url_params.append('sector', selected_filter_options.sector);
           }
           if (selected_filter_options.location) {
-            url_params.append('location', selected_filter_options.location);
+            url_params.append('country', selected_filter_options.location);
           }
 
           if (email.trim() === '') {
-            console.log('We are here, email_linkedin 2: ', email_linkedin);
-
             url_params.append('user_email', email_linkedin);
           } else {
-            console.log('We are here, user_email 2: ', email);
-
             url_params.append('user_email', email);
           }
 
-          fetch(`/api/funds?` + url_params, {
+          fetch(`/api/startups?` + url_params, {
             method: 'GET',
           })
             .then((response) => response.json())
             .then((data) => {
-              addFunds(data.data);
+              addStartups(data.data);
               setPage(newPage);
             })
             .catch((error) => console.error('Error:', error));
@@ -75,10 +68,10 @@ function useLazyLoad({ email_linkedin }: { email_linkedin: string }) {
 
       lastItem.current.observe(element);
     },
-    [addFunds, page, selected_filter_options, setPage, funds, total, email, email_linkedin],
+    [addStartups, page, selected_filter_options, setPage, startups, total, email, email_linkedin],
   );
 
   return { showNext };
 }
 
-export default useLazyLoad;
+export default useLazyStartupsLoad;

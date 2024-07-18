@@ -22,7 +22,7 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
     <>
       <td className="flex w-80 justify-start gap-6">
         <Image
-          className="size-[110px] cursor-pointer rounded-md object-cover"
+          className="size-[110px] cursor-pointer rounded-md bg-black object-cover"
           alt={`image of ${vc_profile.name}`}
           src={vc_profile.photo}
           width={60}

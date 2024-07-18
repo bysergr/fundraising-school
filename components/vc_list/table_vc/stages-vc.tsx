@@ -5,7 +5,7 @@ export default function stages({ stages }: { stages: Round[] }) {
   const rounds = new Set(stages.map((stage) => stage.stage));
 
   return (
-    <td className="grid w-44 place-content-center ">
+    <td className="grid w-44 place-content-center">
       {Array.from(rounds).length === 0 && (
         <div key={nanoid()} className="w-44 px-2 py-1 text-center">
           😔

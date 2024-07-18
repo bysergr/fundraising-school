@@ -1,7 +1,7 @@
 import DownloadStartups from '@/components/startups_list/download-startups';
 import FilterBar from '@/components/startups_list/filter-bar';
 import SearchInput from '@/components/vc_list/search-input';
-import TableVC from '@/components/vc_list/table-vc';
+import TableStartups from '@/components/startups_list/table-startups';
 import TitleSection from '@/components/vc_list/title-section';
 
 import { Session, getServerSession } from 'next-auth';
@@ -22,7 +22,7 @@ export default async function Page() {
           <DownloadStartups />
         </div>
         <FilterBar />
-        <TableVC email_linkedin={data.user?.email as string} />
+        <TableStartups email_linkedin={data.user?.email as string} />
       </div>
     </>
   );

@@ -32,6 +32,11 @@ interface Sector {
   name: string;
 }
 
+interface Traction {
+  id: number;
+  name: string;
+}
+
 interface VCProfile {
   id: number;
   name: string;
@@ -51,4 +56,23 @@ interface VCProfile {
   favorite: boolean;
 }
 
-export type { CheckSize, Country, Partner, Round, Sector, VCProfile };
+interface StartupProfile {
+  id: number;
+  name: string;
+  calendly: string;
+  deck: string;
+  email: string;
+  fund_raised: string;
+  description: string;
+  phone_number: string;
+  website: string;
+  linkedin: string;
+  photo: string;
+  country: Country;
+  sector: Sector;
+  traction: Traction;
+  round: Round;
+  favorite: boolean;
+}
+
+export type { CheckSize, Country, Partner, Round, Sector, VCProfile, StartupProfile };

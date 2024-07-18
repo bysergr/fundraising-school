@@ -7,9 +7,10 @@ import { useEffect } from 'react';
 export default function FilterBar() {
   const {
     filter_funds_options: filter_options,
+    selected_funds_filter_options: selected_filter_options,
+
     setFundFilterOptions: setFilterOptions,
     setFundSelectedFilterOptions: setSelectedFilterOptions,
-    selected_funds_filter_options: selected_filter_options,
   } = useAppStore((state) => state);
 
   useEffect(() => {

@@ -1,6 +1,18 @@
 import { createStore } from 'zustand/vanilla';
-import { VCProfile } from '@/models/vc_list';
+import { VCProfile, StartupProfile } from '@/models/vc_list';
 import { produce } from 'immer';
+
+export type FilterStartupOptions = {
+  traction: string[];
+  sectors: string[];
+  locations: string[];
+};
+
+export type SelectedStartupFilterOptions = {
+  traction: string | null;
+  sector: string | null;
+  location: string | null;
+};
 
 export type FilterFundsOptions = {
   rounds: string[];
@@ -22,6 +34,14 @@ export type AppState = {
   selected_funds_filter_options: SelectedFundsFilterOptions;
   funds_total: number;
   funds_page: number;
+
+  startups: StartupProfile[];
+  filter_startups_options: FilterStartupOptions;
+  selected_startups_filter_options: SelectedStartupFilterOptions;
+  startups_total: number;
+  startups_page: number;
+
+  modal_startup: StartupProfile | null;
   modal_vc: VCProfile | null;
 };
 
@@ -35,6 +55,16 @@ export type AppActions = {
   setFavoriteFund: (id: number, favorite: boolean) => void;
   openFundModal: (id: number) => void;
   closeFundModal: () => void;
+
+  setStartups: (startups: StartupProfile[]) => void;
+  addStartups: (startups: StartupProfile[]) => void;
+  setStartupPage: (page: number) => void;
+  setStartupTotal: (total: number) => void;
+  setStartupFilterOptions: (filter_options: FilterStartupOptions) => void;
+  setStartupSelectedFilterOptions: (selected_filter_options: SelectedStartupFilterOptions) => void;
+  setFavoriteStartup: (id: number, favorite: boolean) => void;
+  openStartupModal: (id: number) => void;
+  closeStartupModal: () => void;
 };
 
 export type AppStore = AppState & AppActions;
@@ -46,6 +76,14 @@ export const initAppStore = (): AppState => {
     funds_page: 1,
     filter_funds_options: { rounds: [], check_size: [], sectors: [], locations: [] },
     selected_funds_filter_options: { round: null, check_size: null, sector: null, location: null },
+
+    startups_total: 0,
+    startups: [],
+    startups_page: 1,
+    filter_startups_options: { traction: [], sectors: [], locations: [] },
+    selected_startups_filter_options: { traction: null, sector: null, location: null },
+
+    modal_startup: null,
     modal_vc: null,
   };
 };
@@ -124,6 +162,77 @@ export const createAppStore = (initState: AppState = defaultInitState) => {
           state.funds = [];
           state.funds_page = 1;
           state.funds_total = 0;
+        }),
+      ),
+
+    setStartupPage: (page) =>
+      set(
+        produce((state: AppState) => {
+          state.startups_page = page;
+        }),
+      ),
+
+    setStartupTotal: (total) =>
+      set(
+        produce((state: AppState) => {
+          state.startups_total = total;
+        }),
+      ),
+
+    setStartups: (startups) =>
+      set(
+        produce((state: AppState) => {
+          state.startups = startups;
+        }),
+      ),
+
+    addStartups: (startups) =>
+      set(
+        produce((state: AppState) => {
+          state.startups.push(...startups);
+        }),
+      ),
+
+    setStartupFilterOptions: (filter_options) =>
+      set(
+        produce((state: AppState) => {
+          state.filter_startups_options = filter_options;
+        }),
+      ),
+
+    setFavoriteStartup: (id, favorite) =>
+      set(
+        produce((state: AppState) => {
+          state.startups = state.startups.map((fund) => {
+            if (fund.id === id) {
+              fund.favorite = favorite;
+            }
+            return fund;
+          });
+        }),
+      ),
+
+    openStartupModal: (id) =>
+      set(
+        produce((state: AppState) => {
+          state.modal_startup = state.startups.find((startup) => startup.id === id) || null;
+        }),
+      ),
+
+    closeStartupModal: () =>
+      set(
+        produce((state: AppState) => {
+          state.modal_startup = null;
+        }),
+      ),
+
+    setStartupSelectedFilterOptions: (selected_filter_options) =>
+      set(
+        produce((state: AppState) => {
+          state.selected_startups_filter_options = selected_filter_options;
+          state.startups = [];
+          state.startups_page = 1;
+          state.startups_total = 0;
         }),
       ),
   }));

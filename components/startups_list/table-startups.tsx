@@ -1,46 +1,48 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import RowTableVC from '@/components/vc_list/table_vc/row-table-vc';
+import RowTableStartups from '@/components/startups_list/table_startups/row-table-startups';
 import { useAppStore } from '@/providers/app-store-providers';
-import useLazyFundsLoad from '@/hooks/useLazyFundsLoad';
+import useLazyStartupsLoad from '@/hooks/useLazyStartupsLoad';
 import { useUserStore } from '@/providers/user-store-provider';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
+export default function TableStartups({ email_linkedin }: { email_linkedin: string }) {
   const {
-    funds_total: total,
-    funds_page: page,
-    setFundPage: setPage,
-    funds,
-    setFunds,
-    setFundTotal: setTotal,
-    selected_funds_filter_options: selected_filter_options,
+    startups_total: total,
+    startups_page: page,
+    setStartupPage: setPage,
+    startups,
+    setStartups,
+    setStartupTotal: setTotal,
+    selected_startups_filter_options: selected_filter_options,
   } = useAppStore((state) => state);
 
   const { email } = useUserStore((state) => state);
-  const { showNext } = useLazyFundsLoad({ email_linkedin });
+  const { showNext } = useLazyStartupsLoad({ email_linkedin });
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (funds.length !== 0) {
+    if (startups.length !== 0) {
+      return;
+    }
+
+    if (page === undefined) {
+      setPage(1);
       return;
     }
 
     const url_params = new URLSearchParams({ page: page.toString(), limit: '25' });
 
-    if (selected_filter_options.round) {
-      url_params.append('round', selected_filter_options.round);
-    }
-    if (selected_filter_options.check_size) {
-      url_params.append('check_size', selected_filter_options.check_size);
+    if (selected_filter_options.traction) {
+      url_params.append('traction', selected_filter_options.traction);
     }
     if (selected_filter_options.sector) {
       url_params.append('sector', selected_filter_options.sector);
     }
     if (selected_filter_options.location) {
-      url_params.append('location', selected_filter_options.location);
+      url_params.append('country', selected_filter_options.location);
     }
 
     if (email.trim() === '') {
@@ -51,13 +53,15 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
 
     setLoading(true);
 
-    fetch(`/api/funds?` + url_params, {
+    fetch(`/api/startups?` + url_params, {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.data);
+
         if (data.data) {
-          setFunds(data.data);
+          setStartups(data.data);
         }
 
         setTotal(data.total);
@@ -66,10 +70,10 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
       .catch((error) => console.error('Error:', error))
       .finally(() => setLoading(false));
   }, [
-    funds.length,
+    startups.length,
     page,
     selected_filter_options,
-    setFunds,
+    setStartups,
     setPage,
     setTotal,
     email,
@@ -80,21 +84,21 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     <table className="mt-6 size-full">
       <thead className="h-14 border-b border-neutral-200">
         <tr className="mr-16 flex items-center justify-between  [&>th]:text-left [&>th]:text-neutral-500">
-          <th className="w-80">
+          <th className="w-60">
             {total} <br />
-            Investors
+            Startups
           </th>
           <th className="w-8">
             <p className="text-center">Fav</p>
           </th>
-          <th className="w-56">
-            <p className="text-center">Geography</p>
+          <th className="w-72">
+            <p className="text-center"> </p>
           </th>
           <th className="w-36">
-            <p className="text-center">Checks</p>
+            <p className="text-center">Traction</p>
           </th>
           <th className="w-44">
-            <p className="text-center">Stages</p>
+            <p className="text-center">Looking for</p>
           </th>
         </tr>
       </thead>
@@ -107,12 +111,14 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
           </tr>
         )}
 
-        {funds.map((fund, index) => {
-          if (index === funds.length - 1) {
-            return <RowTableVC refProp={showNext} vc_profile={fund} key={fund.id} />;
+        {startups.map((startup, index) => {
+          if (index === startups.length - 1) {
+            return (
+              <RowTableStartups refProp={showNext} startups_profile={startup} key={startup.id} />
+            );
           }
 
-          return <RowTableVC vc_profile={fund} key={fund.id} />;
+          return <RowTableStartups startups_profile={startup} key={startup.id} />;
         })}
       </tbody>
     </table>
