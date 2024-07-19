@@ -75,4 +75,28 @@ interface StartupProfile {
   favorite: boolean;
 }
 
-export type { CheckSize, Country, Partner, Round, Sector, VCProfile, StartupProfile };
+interface Founder {
+  followers_amount: number;
+  photo_url: string | null;
+  email: string;
+  industry: string | null;
+  terms_conditions: string | null;
+  id: number;
+  summary: string | null;
+  created_at: string;
+  first_name: string | null;
+  role: string | null;
+  updated_at: string;
+  last_name: string | null;
+  headline: string | null;
+  deleted_at: string | null;
+  nickname: string;
+  linkedin_url: string;
+  round_id: number | null;
+  contact_email: string | null;
+  location: string;
+  phone_number: string;
+  seeking_capital: boolean | null;
+}
+
+export type { CheckSize, Country, Partner, Round, Sector, VCProfile, StartupProfile, Founder };

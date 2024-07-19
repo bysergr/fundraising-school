@@ -2,22 +2,28 @@
 
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import VCLinks from '@/components/startups_list/table_startups/startups_links';
 import {
   XMarkIcon,
   HandThumbUpIcon,
-  MapIcon,
   BriefcaseIcon,
   CurrencyDollarIcon,
   RocketLaunchIcon,
   CalendarIcon,
+  EnvelopeIcon,
 } from '@heroicons/react/24/outline';
+import { FaLinkedin } from 'react-icons/fa6';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import clsx from 'clsx';
-// import defaultImageProfile from '@/public/images/default-profile.jpg';
+import { Founder } from '@/models/vc_list';
+import defaultImageProfile from '@/public/images/default-profile.jpg';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function FundModal() {
+  const [founders, setFounders] = useState<Founder[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const { modal_startup, closeStartupModal: closeModal } = useAppStore((state) => state);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -26,7 +32,35 @@ export default function FundModal() {
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
+      return;
     }
+    setIsLoading(true);
+
+    fetch(`/api/startups/founders/${modal_startup.name}`)
+      .then((response) => {
+        if (!response.ok) {
+          return;
+        }
+
+        response
+          .json()
+          .then((data) => {
+            setFounders(data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [modal_startup]);
 
   useEffect(() => {
@@ -203,65 +237,66 @@ export default function FundModal() {
         </div>
       )}
 
-      {/* Country */}
-      {startup_countries.length > 0 && (
-        <div className="my-8 flex gap-16">
-          <div className="flex">
-            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <MapIcon className="size-8 text-white" />
-            </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">
-              Geographies they <br /> invest in
-            </p>
-          </div>
-          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {startup_countries.map((country) => (
-              <li
-                key={country}
-                className={clsx(
-                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
-                )}
-              >
-                {country}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <hr className="my-4" />
 
       <h3 className="mb-6 text-xl font-semibold text-neutral-700">Founders</h3>
-      {/* <ul className="flex flex-wrap justify-around gap-2">
-        {modal_startup.partners.map((partner) => (
-          <li
-            key={partner?.id}
-            className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
-          >
-            {partner?.photo !== null ? (
-              <Image
-                className="rounded-full"
-                alt={`image of ${partner?.name}`}
-                src={partner?.photo}
-                width={90}
-                height={90}
-              />
-            ) : (
-              <Image
-                className="rounded-full"
-                alt={`image of ${partner?.name}`}
-                src={defaultImageProfile}
-                width={90}
-                height={90}
-              />
-            )}
-            <div>
-              <p className="text-center text-base font-semibold">{partner?.name}</p>
-              <p className="text-center text-sm font-semibold text-neutral-500">{partner?.role}</p>
-            </div>
-          </li>
-        ))}
-      </ul> */}
+      <ul className="flex flex-wrap justify-around gap-2">
+        {isLoading && (
+          <div className="grid place-content-center">
+            <ClipLoader color="#637EE0" size={55} />
+          </div>
+        )}
+
+        {founders.length === 0 && !isLoading && (
+          <p className="text-center text-base font-semibold">No founders found</p>
+        )}
+
+        {founders &&
+          !isLoading &&
+          founders.map((founder) => (
+            <li
+              key={founder?.id}
+              className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
+            >
+              {founder?.photo_url !== null ? (
+                <Image
+                  className="rounded-full"
+                  alt={founder?.nickname}
+                  src={founder?.photo_url}
+                  width={90}
+                  height={90}
+                />
+              ) : (
+                <Image
+                  className="rounded-full"
+                  alt={founder?.nickname}
+                  src={defaultImageProfile}
+                  width={90}
+                  height={90}
+                />
+              )}
+              <div>
+                <p className="text-center text-base font-semibold">{founder?.nickname}</p>
+                <p className="text-center text-sm font-semibold text-neutral-500">
+                  {founder?.role}
+                </p>
+                <div className="mt-2 flex w-full justify-center gap-1">
+                  {founder?.linkedin_url && (
+                    <a target="_blank" rel="noreferrer" href={founder?.linkedin_url}>
+                      <FaLinkedin className="size-4" />
+                    </a>
+                  )}
+
+                  {founder?.contact_email && (
+                    <a target="_blank" rel="noreferrer" href={`mailto:${founder?.contact_email}`}>
+                      <EnvelopeIcon className="size-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+      </ul>
     </dialog>
   );
 }
