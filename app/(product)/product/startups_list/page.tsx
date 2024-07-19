@@ -7,14 +7,14 @@ import TitleSection from '@/components/vc_list/title-section';
 import { Session, getServerSession } from 'next-auth';
 import { authOptions } from '@/utils/auth';
 
-import FundModal from '@/components/vc_list/fund_modal';
+import StartupsModal from '@/components/startups_list/startups_modal';
 
 export default async function Page() {
   const data: Session = (await getServerSession(authOptions)) as Session;
 
   return (
     <>
-      <FundModal />
+      <StartupsModal />
       <TitleSection nameSection="Startups List" description="Browse all Startups" />
       <div className="size-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">

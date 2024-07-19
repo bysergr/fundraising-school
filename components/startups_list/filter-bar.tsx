@@ -23,8 +23,6 @@ export default function FilterBar() {
       return;
     }
 
-    console.log('fetching filter options');
-
     fetch(`/api/startups/filter/options`, {
       method: 'GET',
     })

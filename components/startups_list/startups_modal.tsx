@@ -3,34 +3,31 @@
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
-import VCLinks from '@/components/vc_list/table_vc/vc_links';
+import VCLinks from '@/components/startups_list/table_startups/startups_links';
 import {
   XMarkIcon,
   HandThumbUpIcon,
-  CurrencyDollarIcon,
-  MagnifyingGlassIcon,
   MapIcon,
-  LinkIcon,
-  EnvelopeIcon,
+  BriefcaseIcon,
+  CurrencyDollarIcon,
+  RocketLaunchIcon,
+  CalendarIcon,
 } from '@heroicons/react/24/outline';
-
-import { FaLinkedin, FaXTwitter } from 'react-icons/fa6';
-
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import clsx from 'clsx';
-import defaultImageProfile from '@/public/images/default-profile.jpg';
+// import defaultImageProfile from '@/public/images/default-profile.jpg';
 
 export default function FundModal() {
-  const { modal_vc, closeFundModal: closeModal } = useAppStore((state) => state);
+  const { modal_startup, closeStartupModal: closeModal } = useAppStore((state) => state);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    if (modal_vc) {
+    if (modal_startup) {
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
     }
-  }, [modal_vc]);
+  }, [modal_startup]);
 
   useEffect(() => {
     const dialog = document.getElementById('modal-vc');
@@ -54,16 +51,29 @@ export default function FundModal() {
       },
       { once: true },
     );
-  }, [modal_vc, closeModal]);
+  }, [modal_startup, closeModal]);
 
-  if (!modal_vc) return null;
+  if (!modal_startup) return null;
 
-  const fund_rounds = Array.from(new Set(modal_vc.rounds.map((round) => round?.stage)));
-  const fund_check_size = Array.from(
-    new Set(modal_vc.check_size.map((check_size) => check_size?.size)),
-  );
-  const fund_sectors = Array.from(new Set(modal_vc.sectors.map((sector) => sector?.name)));
-  const fund_countries = Array.from(new Set(modal_vc.countries.map((country) => country?.name)));
+  const startup_rounds: string[] = [];
+  if (modal_startup.round) {
+    startup_rounds.push(modal_startup.round.stage);
+  }
+
+  const startup_sectors: string[] = [];
+  if (modal_startup.sector) {
+    startup_sectors.push(modal_startup.sector.name);
+  }
+
+  const startup_countries: string[] = [];
+  if (modal_startup.country) {
+    startup_countries.push(modal_startup.country.name);
+  }
+
+  const startup_traction: string[] = [];
+  if (modal_startup.traction) {
+    startup_traction.push(modal_startup.traction.name);
+  }
 
   return (
     <dialog
@@ -80,26 +90,71 @@ export default function FundModal() {
       <div className="flex justify-between pr-16">
         <div className="flex gap-8 align-middle">
           <Image
-            className="my-auto block rounded-md"
-            alt={`image of ${modal_vc.name}`}
-            src={modal_vc.photo}
+            className="my-auto block rounded-md bg-black"
+            alt={`image of ${modal_startup.name}`}
+            src={modal_startup.photo}
             width={120}
             height={120}
           />
           <div className="">
-            <h3 className="text-2xl font-semibold">{modal_vc.name}</h3>
-            <VCLinks vc_profile={modal_vc} size="size-5" />
-            <p className="mt-4 font-semibold text-fsPurple">{modal_vc.contact}</p>
+            <h3 className="text-2xl font-semibold">{modal_startup.name}</h3>
+            <VCLinks startup_profile={modal_startup} size="size-5" />
           </div>
         </div>
-        <FavVC is_modal size="size-6" fund_id={modal_vc.id} favorite={modal_vc.favorite} />
+        <FavVC
+          is_modal
+          size="size-6"
+          fund_id={modal_startup.id}
+          favorite={modal_startup.favorite}
+        />
       </div>
-      <p className="mt-6 text-sm text-neutral-500">{modal_vc.description}</p>
+      <div className="mt-6 flex w-full gap-2">
+        <a
+          href={modal_startup.calendly || '#'}
+          className="flex w-full justify-center gap-2 rounded-lg bg-secondLightFsPurple px-2 py-1 text-center text-sm font-semibold text-fsPurple"
+        >
+          <CalendarIcon className="size-5 text-fsPurple" />
+          My Calendly Link
+        </a>
+        <a
+          href={modal_startup.deck || '#'}
+          className="flex w-full justify-center gap-2 rounded-lg bg-secondLightFsPurple px-2 py-1 text-center text-sm font-semibold text-fsPurple"
+        >
+          <RocketLaunchIcon className="size-5 text-fsPurple" />
+          Deck
+        </a>
+      </div>
+      <h3 className="mb-2 mt-4 text-base font-semibold text-neutral-700">Description</h3>
+      <p className="text-sm text-neutral-500">{modal_startup.description}</p>
       <hr className="my-4" />
       <h3 className="mb-6 text-xl font-semibold text-neutral-700">Investment Preferences</h3>
 
+      {/* Traction */}
+      {startup_traction.length > 0 && (
+        <div className="my-8 flex gap-16">
+          <div className="flex">
+            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
+              <CurrencyDollarIcon className="size-8 text-white" />
+            </div>
+            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">Traction</p>
+          </div>
+          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
+            {startup_traction.map((traction) => (
+              <li
+                key={traction}
+                className={clsx(
+                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
+                )}
+              >
+                {traction}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Rounds */}
-      {fund_rounds.length > 0 && (
+      {startup_rounds.length > 0 && (
         <div className="my-8 flex gap-16">
           <div className="flex">
             <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
@@ -110,7 +165,7 @@ export default function FundModal() {
             </p>
           </div>
           <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {fund_rounds.map((round) => (
+            {startup_rounds.map((round) => (
               <li
                 key={round}
                 className={clsx(
@@ -124,45 +179,17 @@ export default function FundModal() {
         </div>
       )}
 
-      {/* Check Size */}
-      {fund_check_size.length > 0 && (
-        <div className="my-8 flex gap-16">
-          <div className="flex">
-            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <CurrencyDollarIcon className="size-8 text-white" />
-            </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">
-              Check size <br /> range(s)
-            </p>
-          </div>
-          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {fund_check_size.map((check_size) => (
-              <li
-                key={check_size}
-                className={clsx(
-                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
-                )}
-              >
-                {check_size}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Sectors */}
-      {fund_sectors.length > 0 && (
+      {startup_sectors.length > 0 && (
         <div className="my-8 flex gap-16">
           <div className="flex">
             <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <MagnifyingGlassIcon className="size-8 text-white" />
+              <BriefcaseIcon className="size-8 text-white" />
             </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">
-              Sectors they <br /> invest in
-            </p>
+            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">Main Industry</p>
           </div>
           <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {fund_sectors.map((sector) => (
+            {startup_sectors.map((sector) => (
               <li
                 key={sector}
                 className={clsx(
@@ -177,7 +204,7 @@ export default function FundModal() {
       )}
 
       {/* Country */}
-      {fund_countries.length > 0 && (
+      {startup_countries.length > 0 && (
         <div className="my-8 flex gap-16">
           <div className="flex">
             <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
@@ -188,7 +215,7 @@ export default function FundModal() {
             </p>
           </div>
           <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {fund_countries.map((country) => (
+            {startup_countries.map((country) => (
               <li
                 key={country}
                 className={clsx(
@@ -204,9 +231,9 @@ export default function FundModal() {
 
       <hr className="my-4" />
 
-      <h3 className="mb-6 text-xl font-semibold text-neutral-700">Partners</h3>
-      <ul className="flex flex-wrap justify-around gap-2">
-        {modal_vc.partners.map((partner) => (
+      <h3 className="mb-6 text-xl font-semibold text-neutral-700">Founders</h3>
+      {/* <ul className="flex flex-wrap justify-around gap-2">
+        {modal_startup.partners.map((partner) => (
           <li
             key={partner?.id}
             className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
@@ -231,32 +258,10 @@ export default function FundModal() {
             <div>
               <p className="text-center text-base font-semibold">{partner?.name}</p>
               <p className="text-center text-sm font-semibold text-neutral-500">{partner?.role}</p>
-              <div className="mt-2 flex w-full justify-center gap-1">
-                {partner?.website && (
-                  <a target="_blank" rel="noreferrer" href={partner?.website}>
-                    <LinkIcon className="size-4" />
-                  </a>
-                )}
-                {partner?.linkedin && (
-                  <a target="_blank" rel="noreferrer" href={partner?.linkedin}>
-                    <FaLinkedin className="size-4" />
-                  </a>
-                )}
-                {partner?.twitter && (
-                  <a target="_blank" rel="noreferrer" href={partner?.twitter}>
-                    <FaXTwitter className="size-4" />
-                  </a>
-                )}
-                {partner?.email && (
-                  <a target="_blank" rel="noreferrer" href={`mailto:${partner?.email}`}>
-                    <EnvelopeIcon className="size-4" />
-                  </a>
-                )}
-              </div>
             </div>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </dialog>
   );
 }
