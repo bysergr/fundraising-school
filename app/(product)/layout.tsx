@@ -12,7 +12,7 @@ export default async function VcListLayout({ children }: { children: React.React
       <header className="flex h-screen w-full max-w-64 flex-col justify-between bg-white py-8">
         <div>
           <Logo className="mx-auto mb-6 mt-4 w-3/5" />
-          <Navbar />
+          <Navbar userEmail={data.user?.email as string} />
         </div>
         <Profile data={data} />
       </header>

@@ -16,8 +16,6 @@ export async function GET(req: Request, context: { params: Params }) {
 
     const data = await response.json();
 
-    console.log({ data });
-
     return Response.json(data);
   } catch (error) {
     return Response.json({ message: `Error ${error}` }, { status: 500 });

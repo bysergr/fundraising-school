@@ -9,9 +9,43 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useUserStore } from '@/providers/user-store-provider';
+import { useEffect } from 'react';
 
-const Navbar = () => {
-  const { is_from_startups } = useUserStore((state) => state);
+const Navbar = ({ userEmail }: { userEmail: string }) => {
+  const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
+
+  useEffect(() => {
+    if (email.trim() === '') {
+      updateEmail(userEmail);
+      return;
+    }
+
+    if (role !== undefined) return;
+
+    const syncRole = async () => {
+      const roleResponse = await fetch(`/api/user/startups/${email}`, {
+        method: 'GET',
+      });
+
+      if (roleResponse.status !== 200) {
+        console.error('Error validating user: ', roleResponse.status);
+      }
+
+      const roleBody = await roleResponse.json();
+
+      let roleResp: string | undefined = roleBody['response'];
+
+      if (roleResp === undefined) {
+        console.error('Error validating user: ', roleResponse.status);
+
+        roleResp = 'guest';
+      }
+
+      updateRole(roleResp);
+    };
+
+    syncRole();
+  }, [email, updateRole, role, updateEmail, userEmail]);
 
   const pathname = usePathname();
 
@@ -27,7 +61,7 @@ const Navbar = () => {
         <HomeIcon className="size-5" />
         Home
       </Link>
-      {is_from_startups ? (
+      {role === 'startup' && (
         <Link
           href="/product/vc_list"
           className={clsx(
@@ -38,7 +72,9 @@ const Navbar = () => {
           <IdentificationIcon className="size-5" />
           VC List
         </Link>
-      ) : (
+      )}
+
+      {role === 'fund' && (
         <Link
           href="/product/startups_list"
           className={clsx(

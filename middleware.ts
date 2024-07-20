@@ -23,6 +23,38 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/activation/', req.url));
   }
 
+  let userRole = 'guest';
+
+  // Check the role of the user and redirect to the appropriate page
+  const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/check/${token?.email}`, {
+    method: 'GET',
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+
+    const role = data['response'];
+
+    if (role !== undefined) {
+      userRole = role;
+    }
+  }
+
+  if (userRole === 'startup' && pathname === '/product/startups_list') {
+    return NextResponse.redirect(new URL('/product/vc_list', req.url));
+  }
+
+  if (userRole === 'fund' && pathname === '/product/vc_list') {
+    return NextResponse.redirect(new URL('/product/startups_list', req.url));
+  }
+
+  if (
+    userRole === 'guest' &&
+    (pathname === '/product/vc_list' || pathname === '/product/startups_list')
+  ) {
+    return NextResponse.redirect(new URL('/product/', req.url));
+  }
+
   return NextResponse.next({ headers });
 }
 

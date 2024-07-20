@@ -38,7 +38,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
       <td className="grid w-72 place-content-center">
         <p className="w-72 text-left text-base text-black">
           {startups_profile.description.length > 120
-            ? startups_profile.description.substring(0, 90) + '...'
+            ? startups_profile.description.substring(0, 70) + '...'
             : startups_profile.description}
         </p>
       </td>

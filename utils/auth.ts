@@ -96,59 +96,47 @@ export const validateNewUser = async (
       }
     }
 
-    const isFromStartupsResponse = await fetch(`/api/user/startups/${user.user.email as string}`, {
+    const roleResponse = await fetch(`/api/user/startups/${user.user.email as string}`, {
       method: 'GET',
     });
 
-    if (isFromStartupsResponse.status !== 200) {
+    if (roleResponse.status !== 200) {
       console.error('Error validating user: ', response.status);
     }
 
-    const isFromStartupsBody = await isFromStartupsResponse.json();
+    const roleBody = await roleResponse.json();
 
-    let isFromStartups: boolean | undefined = isFromStartupsBody['startup'];
+    let role: string | undefined = roleBody['response'];
 
-    if (isFromStartups === undefined) {
+    if (role === undefined) {
       console.error('Error validating user: ', response.status);
 
-      isFromStartups = false;
+      role = 'guest';
     }
 
     if (data.message === 'User exists') {
-      updateUserInfo(
-        data.nickname,
-        data.contact_email,
-        user.user.email as string,
-        image,
-        isFromStartups,
-      );
+      updateUserInfo(data.nickname, data.contact_email, user.user.email as string, image, role);
       router.replace(AppLink.Product.Home);
 
       return;
     }
 
     if (data.message === 'User exist without contact info') {
-      updateUserInfo('', '', user.user.email as string, image, isFromStartups);
+      updateUserInfo('', '', user.user.email as string, image, role);
       router.replace(AppLink.Activation.BaseData);
 
       return;
     }
 
     if (data.message === 'User exist without info about round') {
-      updateUserInfo(
-        data.nickname,
-        data.contact_email,
-        user.user.email as string,
-        image,
-        isFromStartups,
-      );
+      updateUserInfo(data.nickname, data.contact_email, user.user.email as string, image, role);
       router.replace(AppLink.Activation.Round);
 
       return;
     }
 
     if (data.message === 'User created') {
-      updateUserInfo('', '', user.user.email as string, image, isFromStartups);
+      updateUserInfo('', '', user.user.email as string, image, role);
       router.replace(AppLink.Activation.BaseData);
 
       return;

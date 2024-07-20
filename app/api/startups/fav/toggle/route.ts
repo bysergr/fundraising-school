@@ -3,8 +3,6 @@ export async function POST(req: Request) {
 
   const { email, startup_id, favorite } = data;
 
-  console.log({ data });
-
   if (favorite) {
     const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/favorite_startup`, {
       method: 'POST',

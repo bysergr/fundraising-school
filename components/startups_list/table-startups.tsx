@@ -58,8 +58,6 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
-
         if (data.data) {
           setStartups(data.data);
         }
