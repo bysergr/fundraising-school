@@ -32,7 +32,7 @@ export default async function VcListLayout({ children }: { children: React.React
           <OpenAuthModal className="mt-auto" />
         )}
       </header>
-      <main className="flex w-full flex-col gap-1">{children}</main>
+      <main className="flex w-full flex-col gap-1 overflow-x-auto">{children}</main>
     </div>
   );
 }
