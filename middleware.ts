@@ -3,25 +3,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ProtectedRoutes } from './data/enums';
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  // const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const headers = new Headers(req.headers);
-  const { pathname } = req.nextUrl;
+  // const { pathname } = req.nextUrl;
 
-  // Set the current path in the headers
-  headers.set('x-current-path', pathname);
+  // // Set the current path in the headers
+  // headers.set('x-current-path', pathname);
 
-  // Check if the route is protected and the user is not logged in
-  // If so, redirect to the login page
-  for (const route of ProtectedRoutes) {
-    if ((pathname.startsWith(route) || pathname === route) && !token) {
-      return NextResponse.redirect(new URL('/signin', req.url));
-    }
-  }
+  // // Check if the route is protected and the user is not logged in
+  // // If so, redirect to the login page
+  // for (const route of ProtectedRoutes) {
+  //   if ((pathname.startsWith(route) || pathname === route) && !token) {
+  //     return NextResponse.redirect(new URL('/signin', req.url));
+  //   }
+  // }
 
-  // If the user is logged in and tries to access the login page, redirect to the homepage
-  if (token && pathname === '/signin') {
-    return NextResponse.redirect(new URL('/activation/', req.url));
-  }
+  // // If the user is logged in and tries to access the login page, redirect to the homepage
+  // if (token && pathname === '/signin') {
+  //   return NextResponse.redirect(new URL('/activation/', req.url));
+  // }
 
   let userRole = 'guest';
 

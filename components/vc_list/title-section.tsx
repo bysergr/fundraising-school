@@ -15,6 +15,7 @@ export default function TitleSection({
   nameSection: string;
   icon: Icon;
   description?: string;
+  children?: JSX.Element
 }) {
   const iconMap: Record<Icon, JSX.Element> = {
     identification: <IdentificationIcon className="mr-2 size-8" />,
