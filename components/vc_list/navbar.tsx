@@ -50,24 +50,23 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
 
   const pathname = usePathname();
 
+  const SELECTED_STYLES =
+    'rounded-r-lg rounded-bl-lg bg-ctwLightPurple font-bold border-l-4 border-ctwGreen';
+  const STANDARD_LINK_STYLES =
+    'flex h-10 items-center gap-2 pl-4 pr-6 text-xl font-semibold text-white hover:bg-ctwLightPurple hover:rounded-r-lg hover:rounded-bl-lg';
+
   return (
     <nav className="flex flex-col gap-1 p-4">
       <Link
         href="/product"
-        className={clsx(
-          pathname === '/product' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
-          'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
-        )}
+        className={clsx(pathname === '/product' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
       >
-        <HomeIcon className="size-5" />
-        Home
+        <HomeIcon className="size-5 stroke-white" />
+        <span>Home</span>
       </Link>
       <Link
         href="/product/courses"
-        className={clsx(
-          pathname === '/product/courses' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
-          'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
-        )}
+        className={clsx(pathname === '/product/courses' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
       >
         <VideoCameraIcon className="size-5" />
         Courses
@@ -75,10 +74,7 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
       {role === 'startup' && (
         <Link
           href="/product/vc_list"
-          className={clsx(
-            pathname === '/product/vc_list' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
-            'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
-          )}
+          className={clsx(pathname === '/product/vc_list' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
         >
           <IdentificationIcon className="size-5" />
           VC List
@@ -89,17 +85,14 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
         <Link
           href="/product/startups_list"
           className={clsx(
-            pathname === '/product/startups_list' &&
-              'bg-secondLightFsPurple font-semibold text-fsPurple',
-            'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
+            pathname === '/product/startups_list' && SELECTED_STYLES,
+            STANDARD_LINK_STYLES,
           )}
         >
           <PresentationChartLineIcon className="size-5" />
           Startups List
         </Link>
       )}
-
-      <hr className="mt-4 " />
     </nav>
   );
 };
