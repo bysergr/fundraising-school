@@ -4,6 +4,7 @@ import {
   IdentificationIcon,
   HomeIcon,
   PresentationChartLineIcon,
+  VideoCameraIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -60,6 +61,16 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
       >
         <HomeIcon className="size-5" />
         Home
+      </Link>
+      <Link
+        href="/product/courses"
+        className={clsx(
+          pathname === '/product/courses' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
+          'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
+        )}
+      >
+        <VideoCameraIcon className="size-5" />
+        Courses
       </Link>
       {role === 'startup' && (
         <Link

@@ -7,7 +7,7 @@ import TitleSection from '@/components/vc_list/title-section';
 import { Session, getServerSession } from 'next-auth';
 import { authOptions } from '@/utils/auth';
 
-import StartupsModal from '@/components/startups_list/startups_modal';
+import StartupsModal from '@/components/startups_list/startups-modal';
 
 export default async function Page() {
   const data: Session = (await getServerSession(authOptions)) as Session;

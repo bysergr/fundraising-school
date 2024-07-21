@@ -5,7 +5,7 @@ import { LegacyRef } from 'react';
 
 import { StartupProfile } from '@/models/vc_list';
 import { useAppStore } from '@/providers/app-store-providers';
-import StartupsLinks from '@/components/startups_list/table_startups/startups_links';
+import StartupsLinks from '@/components/startups_list/table_startups/startups-links';
 import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 
 function InnerRowTableStartups({ startups_profile }: { startups_profile: StartupProfile }) {
@@ -35,10 +35,10 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
       </td>
 
       <FavStartup startup_id={startups_profile.id} favorite={startups_profile.favorite} />
-      <td className="grid w-72 place-content-center">
-        <p className="w-72 text-left text-base text-black">
+      <td className="grid w-96 place-content-center">
+        <p className="w-96 text-left text-sm  text-black">
           {startups_profile.description.length > 120
-            ? startups_profile.description.substring(0, 70) + '...'
+            ? startups_profile.description.substring(0, 115) + '...'
             : startups_profile.description}
         </p>
       </td>

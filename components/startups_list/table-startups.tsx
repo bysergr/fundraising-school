@@ -89,7 +89,7 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
           <th className="w-8">
             <p className="text-center">Fav</p>
           </th>
-          <th className="w-72">
+          <th className="w-96">
             <p className="text-center"> </p>
           </th>
           <th className="w-36">

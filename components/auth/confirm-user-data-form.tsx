@@ -39,7 +39,7 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
         nickname: name,
       });
 
-      updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string);
+      updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
 
       router.replace(AppLink.Activation.Round);
     } catch {

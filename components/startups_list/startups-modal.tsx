@@ -3,7 +3,7 @@
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import VCLinks from '@/components/startups_list/table_startups/startups_links';
+import VCLinks from '@/components/startups_list/table_startups/startups-links';
 import {
   XMarkIcon,
   HandThumbUpIcon,
@@ -64,7 +64,7 @@ export default function FundModal() {
   }, [modal_startup]);
 
   useEffect(() => {
-    const dialog = document.getElementById('modal-vc');
+    const dialog = document.getElementById('modal-startups');
 
     if (!dialog) return;
 
@@ -111,7 +111,7 @@ export default function FundModal() {
 
   return (
     <dialog
-      id="modal-vc"
+      id="modal-startups"
       className="left-auto right-0 top-0 m-0 h-screen w-1/2 max-w-[763px] overflow-y-auto bg-neutral-50 px-14 py-8"
       ref={dialogRef}
       onCancel={closeModal}

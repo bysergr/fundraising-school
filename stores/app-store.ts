@@ -43,6 +43,8 @@ export type AppState = {
 
   modal_startup: StartupProfile | null;
   modal_vc: VCProfile | null;
+
+  modal_update_startup: boolean;
 };
 
 export type AppActions = {
@@ -65,6 +67,9 @@ export type AppActions = {
   setFavoriteStartup: (id: number, favorite: boolean) => void;
   openStartupModal: (id: number) => void;
   closeStartupModal: () => void;
+
+  closeUpdateStartupModal: () => void;
+  openUpdateStartupModal: () => void;
 };
 
 export type AppStore = AppState & AppActions;
@@ -85,6 +90,8 @@ export const initAppStore = (): AppState => {
 
     modal_startup: null,
     modal_vc: null,
+
+    modal_update_startup: false,
   };
 };
 
@@ -233,6 +240,20 @@ export const createAppStore = (initState: AppState = defaultInitState) => {
           state.startups = [];
           state.startups_page = 1;
           state.startups_total = 0;
+        }),
+      ),
+
+    closeUpdateStartupModal: () =>
+      set(
+        produce((state: AppState) => {
+          state.modal_update_startup = false;
+        }),
+      ),
+
+    openUpdateStartupModal: () =>
+      set(
+        produce((state: AppState) => {
+          state.modal_update_startup = true;
         }),
       ),
   }));
