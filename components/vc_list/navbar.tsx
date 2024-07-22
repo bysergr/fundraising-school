@@ -2,7 +2,6 @@
 
 import {
   IdentificationIcon,
-  HomeIcon,
   PresentationChartLineIcon,
   VideoCameraIcon,
 } from '@heroicons/react/24/outline';
@@ -10,112 +9,193 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useUserStore } from '@/providers/user-store-provider';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import Logo from '@/components/ui/logo-ctw';
+import Profile from '@/components/vc_list/profile';
+import type { Session } from 'next-auth';
+import Image from 'next/image';
+import menu from '@/public/images/icons/menu.svg';
+import exit from '@/public/images/icons/exit.svg';
+import logo from '@/public/images/ctw/logo.svg';
 
-const Navbar = ({ userEmail }: { userEmail: string | null }) => {
-  const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
+import { HomeIcon } from '@/public/images/icons/home';
+import { PodcastIcon } from '@/public/images/icons/podcast';
+import { ClassRoomIcon } from '@/public/images/icons/classroom';
+import { VCListIcon } from '@/public/images/icons/vc_list';
+import { StartupsIcon } from '@/public/images/icons/startups';
+import { AgendaIcon } from '@/public/images/icons/agenda';
 
-  useEffect(() => {
-    if (userEmail === null) {
-      return;
-    }
 
-    if (email.trim() === '') {
-      updateEmail(userEmail);
-      return;
-    }
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isCollapsed: boolean;
+  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  data: Session
+}
 
-    if (role !== undefined) return;
+interface NavItemProps {
+  icon: React.ReactNode;
+  text: string;
+  href: string;
+  pathname: string;
+  collapsed: boolean;
+}
 
-    const syncRole = async () => {
-      const roleResponse = await fetch(`/api/user/startups/${email}`, {
-        method: 'GET',
-      });
+interface IconProps {
+  icon: typeof menu;
+}
 
-      if (roleResponse.status !== 200) {
-        console.error('Error validating user: ', roleResponse.status);
+
+const NavItem: React.FC<NavItemProps> = ({ icon, text, collapsed, pathname, href }) => (
+  <Link
+    href={href}
+    className={clsx(
+      pathname === href ? 'bg-[#3C0560] font-semibold text-white fill-white' : "fill-[#32083E] text-[#32083E]",
+      'flex rounded-lg text-lg p-2.5',
+    )}
+  >
+    {icon}
+    {!collapsed && <span className="ml-3">{text}</span>}
+  </Link>
+);
+
+const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
+  ({ isOpen, setIsOpen, isCollapsed, setIsCollapsed, data }, ref) => {
+    const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
+
+    useEffect(() => {
+      if (email.trim() === '' && data.user && data.user.email) {
+        updateEmail(data.user.email);
+        return;
       }
 
-      const roleBody = await roleResponse.json();
+      if (role !== undefined) return;
 
-      let roleResp: string | undefined = roleBody['response'];
+      const syncRole = async () => {
+        const roleResponse = await fetch(`/api/user/startups/${email}`, {
+          method: 'GET',
+        });
 
-      if (roleResp === undefined) {
-        console.error('Error validating user: ', roleResponse.status);
+        if (roleResponse.status !== 200) {
+          console.error('Error validating user: ', roleResponse.status);
+        }
 
-        roleResp = 'guest';
-      }
+        const roleBody = await roleResponse.json();
 
-      updateRole(roleResp);
-    };
+        let roleResp: string | undefined = roleBody.response;
 
-    syncRole();
-  }, [email, updateRole, role, updateEmail, userEmail]);
+        if (roleResp === undefined) {
+          console.error('Error validating user: ', roleResponse.status);
 
-  const pathname = usePathname();
+          roleResp = 'guest';
+        }
 
-  const SELECTED_STYLES =
-    'rounded-r-lg rounded-bl-lg bg-ctwLightPurple font-bold border-l-4 border-ctwGreen';
-  const STANDARD_LINK_STYLES =
-    'flex h-10 items-center gap-2 pl-4 pr-6 text-xl font-semibold text-white hover:bg-ctwLightPurple hover:rounded-r-lg hover:rounded-bl-lg';
+        updateRole(roleResp);
+      };
 
-  if (userEmail === null) {
+      syncRole();
+    }, [email, updateRole, role, updateEmail, data]);
+
+    const pathname = usePathname();
+
+    const sidebarWidth = isCollapsed ? 'w-16' : 'w-64';
+
     return (
-      <nav className="flex flex-col gap-1 p-4">
-        <Link
-          href="/product"
-          className={clsx(pathname === '/product' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
-        >
-          <HomeIcon className="size-5 stroke-white" />
-          <span>Home</span>
-        </Link>
+      <nav ref={ref} className={`bg-white justify-between flex flex-col text-black ${sidebarWidth} space-y-6 absolute z-40 inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition duration-200 ease-in-out`}>
+        <div className="flex-col ">
+          <div className="flex justify-between py-2.5 px-5">
+            <button
+              className="hidden lg:block"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              type="button"
+            >
+              <Image
+                alt="colapse button"
+                src={menu}
+                className="w-6"
+              />
+            </button>
+            {
+              !isCollapsed && (
+                <Image
+                  alt="CTW logo"
+                  src={logo}
+                  className="w-9/12"
+                />
+              )
+            }
+            <button
+              className="block lg:hidden"
+              onClick={() => setIsOpen(false)}
+              type="button"
+            >
+              <Image
+                alt="close button"
+                src={exit}
+                className="w-6"
+              />
+            </button>
+          </div>
+          <div className="space-y-4 px-2">
+            <NavItem
+              icon={<HomeIcon stroke={pathname === "/product" ? '#fff' : "#32083E"} />}
+              text="Home"
+              collapsed={isCollapsed}
+              href="/product"
+              pathname={pathname}
+            />
+
+            <NavItem
+              icon={<PodcastIcon stroke={pathname === "/podcast" ? '#fff' : "#32083E"} />}
+              text="Podcast"
+              collapsed={isCollapsed}
+              href="/podcast"
+              pathname={pathname}
+            />
+            <NavItem
+              icon={<ClassRoomIcon stroke={pathname === "/classroom" ? '#fff' : "#32083E"} />}
+              text="Classroom"
+              collapsed={isCollapsed}
+              href="/"
+              pathname={pathname}
+            />
+            {role === 'startup' && (
+              <NavItem
+                icon={<VCListIcon stroke={pathname === "/product/vc_list" ? '#fff' : "#32083E"} />}
+                text="VC List"
+                collapsed={isCollapsed}
+                href="/product/vc_list"
+                pathname={pathname}
+              />
+            )}
+            {role === 'fund' && (
+              <NavItem
+                icon={<StartupsIcon stroke={pathname === "/product/startups_list" ? '#fff' : "#32083E"} />}
+                text="Startup List"
+                collapsed={isCollapsed}
+                href="/product/startups_list"
+                pathname={pathname}
+              />
+            )}
+            <NavItem
+              icon={<AgendaIcon stroke={pathname === "/product/search_list" ? '#fff' : "#32083E"} />}
+              text="Agenda"
+              collapsed={isCollapsed}
+              href="/product/search_list"
+              pathname={pathname}
+            />
+          </div>
+        </div>
+        <div className="py-5 px-2 space-y-3.5">
+          <Profile data={data} collapsed={isCollapsed} />
+          <p className={`${isCollapsed ? "text-[12px]" : "text-sm"} `}>
+            {`${!isCollapsed ? "Made with 💜 " : ""}`}
+            by <a href="https://onde-vamos.com/" target="_blank" className='underline' rel="noopener noreferrer">Onde</a>
+          </p>
+        </div>
       </nav>
     );
-  }
-
-  return (
-    <nav className="flex flex-col gap-1 p-4">
-      <Link
-        href="/product"
-        className={clsx(pathname === '/product' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
-      >
-        <HomeIcon className="size-5 stroke-white" />
-        <span>Home</span>
-      </Link>
-      <Link
-        href="/product/courses"
-        className={clsx(
-          pathname.startsWith('/product/courses') && SELECTED_STYLES,
-          STANDARD_LINK_STYLES,
-        )}
-      >
-        <VideoCameraIcon className="size-5" />
-        Courses
-      </Link>
-      {role === 'startup' && (
-        <Link
-          href="/product/vc_list"
-          className={clsx(pathname === '/product/vc_list' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
-        >
-          <IdentificationIcon className="size-5" />
-          VC List
-        </Link>
-      )}
-
-      {role === 'fund' && (
-        <Link
-          href="/product/startups_list"
-          className={clsx(
-            pathname === '/product/startups_list' && SELECTED_STYLES,
-            STANDARD_LINK_STYLES,
-          )}
-        >
-          <PresentationChartLineIcon className="size-5" />
-          Startups List
-        </Link>
-      )}
-    </nav>
-  );
-};
+  });
 
 export default Navbar;
