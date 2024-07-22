@@ -66,7 +66,10 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
       </Link>
       <Link
         href="/product/courses"
-        className={clsx(pathname === '/product/courses' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
+        className={clsx(
+          pathname.startsWith('/product/courses') && SELECTED_STYLES,
+          STANDARD_LINK_STYLES,
+        )}
       >
         <VideoCameraIcon className="size-5" />
         Courses

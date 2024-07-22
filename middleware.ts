@@ -23,41 +23,41 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/activation/', req.url));
   }
 
-  const userRole = 'guest';
+  let userRole = 'guest';
 
-  // try {
-  //   // Check the role of the user and redirect to the appropriate page
-  //   const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/check/${token?.email}`, {
-  //     method: 'GET',
-  //   });
+  try {
+    // Check the role of the user and redirect to the appropriate page
+    const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/check/${token?.email}`, {
+      method: 'GET',
+    });
 
-  //   if (response.ok) {
-  //     const data = await response.json();
+    if (response.ok) {
+      const data = await response.json();
 
-  //     const role = data['response'];
+      const role = data['response'];
 
-  //     if (role !== undefined) {
-  //       userRole = role;
-  //     }
-  //   }
+      if (role !== undefined) {
+        userRole = role;
+      }
+    }
 
-  //   if (userRole === 'startup' && pathname === '/product/startups_list') {
-  //     return NextResponse.redirect(new URL('/product/vc_list', req.url));
-  //   }
+    if (userRole === 'startup' && pathname === '/product/startups_list') {
+      return NextResponse.redirect(new URL('/product/vc_list', req.url));
+    }
 
-  //   if (userRole === 'fund' && pathname === '/product/vc_list') {
-  //     return NextResponse.redirect(new URL('/product/startups_list', req.url));
-  //   }
+    if (userRole === 'fund' && pathname === '/product/vc_list') {
+      return NextResponse.redirect(new URL('/product/startups_list', req.url));
+    }
 
-  //   if (
-  //     userRole === 'guest' &&
-  //     (pathname === '/product/vc_list' || pathname === '/product/startups_list')
-  //   ) {
-  //     return NextResponse.redirect(new URL('/product/', req.url));
-  //   }
-  // } catch (error) {
-  //   return NextResponse.next({ headers });
-  // }
+    if (
+      userRole === 'guest' &&
+      (pathname === '/product/vc_list' || pathname === '/product/startups_list')
+    ) {
+      return NextResponse.redirect(new URL('/product/', req.url));
+    }
+  } catch (error) {
+    return NextResponse.next({ headers });
+  }
 
   return NextResponse.next({ headers });
 }
