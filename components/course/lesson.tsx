@@ -37,6 +37,7 @@ const Lesson: React.FC = () => {
           <ul className="list-inside list-disc pl-4">
             <li className="flex items-center">
               <input
+                disabled
                 type="checkbox"
                 className="form-checkbox mr-2 size-5 rounded border-gray-300 text-green-500 focus:ring-green-500"
               />
@@ -44,6 +45,7 @@ const Lesson: React.FC = () => {
             </li>
             <li className="flex items-center">
               <input
+                disabled
                 type="checkbox"
                 className="form-checkbox mr-2 size-5 rounded border-gray-300 text-green-500 focus:ring-green-500"
               />
@@ -51,6 +53,7 @@ const Lesson: React.FC = () => {
             </li>
             <li className="flex items-center">
               <input
+                disabled
                 type="checkbox"
                 className="form-checkbox mr-2 size-5 rounded border-gray-300 text-green-500 focus:ring-green-500"
               />
@@ -58,6 +61,7 @@ const Lesson: React.FC = () => {
             </li>
             <li className="flex items-center">
               <input
+                disabled
                 type="checkbox"
                 className="form-checkbox mr-2 size-5 rounded border-gray-300 text-green-500 focus:ring-green-500"
               />

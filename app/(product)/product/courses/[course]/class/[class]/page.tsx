@@ -89,7 +89,7 @@ export default async function Page({ params }: { params: { course: string; class
           </div>
         </div>
         <div className="h-full overflow-y-auto p-4">
-          <Progress />
+          <Progress progress={courseData.progress} />
           <Lesson />
         </div>
       </div>
