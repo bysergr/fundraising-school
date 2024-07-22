@@ -65,7 +65,8 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
       <Link
         href="/product/courses"
         className={clsx(
-          pathname === '/product/courses' && 'bg-secondLightFsPurple font-semibold text-fsPurple',
+          pathname.startsWith('/product/courses') &&
+            'bg-secondLightFsPurple font-semibold text-fsPurple',
           'flex h-10 items-center gap-2 rounded-3xl px-6 text-sm font-semibold text-fsGray hover:bg-secondLightFsPurple hover:text-fsPurple',
         )}
       >

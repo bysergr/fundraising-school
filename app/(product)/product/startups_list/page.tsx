@@ -15,7 +15,11 @@ export default async function Page() {
   return (
     <>
       <StartupsModal />
-      <TitleSection nameSection="Startups List" description="Browse all Startups" />
+      <TitleSection
+        icon="presentation"
+        nameSection="Startups List"
+        description="Browse all Startups"
+      />
       <div className="size-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">
           <SearchInput />

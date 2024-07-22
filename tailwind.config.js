@@ -23,6 +23,7 @@ module.exports = {
       },
       gridTemplateColumns: {
         authLayout: '65% 35%',
+        courseLayout: '65% 35%',
       },
       boxShadow: {
         xs: '0 0 0 1px rgba(0, 0, 0, 0.16)',
