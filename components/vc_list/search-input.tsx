@@ -13,7 +13,7 @@ export default function SearchInput() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="search" className=" text-sm font-bold">
+      <label htmlFor="search" className="text-sm font-bold">
         Search
       </label>
       <div className="mt-2 flex">

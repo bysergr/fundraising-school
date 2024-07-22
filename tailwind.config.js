@@ -26,6 +26,7 @@ module.exports = {
       },
       gridTemplateColumns: {
         authLayout: '65% 35%',
+        courseLayout: '65% 35%',
       },
       borderRadius: {
         '4xl': '4rem',
