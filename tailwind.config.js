@@ -20,10 +20,16 @@ module.exports = {
         lightFsPurple: '#ced6f6ff',
         secondLightFsPurple: '#f2f4fc',
         darkFsGray: '#323743FF',
+        ctwPurple: '#370440',
+        ctwLightPurple: '#7D0991',
+        ctwGreen: '#61FF76',
       },
       gridTemplateColumns: {
         authLayout: '65% 35%',
         courseLayout: '65% 35%',
+      },
+      borderRadius: {
+        '4xl': '4rem',
       },
       boxShadow: {
         xs: '0 0 0 1px rgba(0, 0, 0, 0.16)',
@@ -91,6 +97,9 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5%)' },
         },
+      },
+      width: {
+        '85%': '85%',
       },
       zIndex: {
         '-1': '-1',
