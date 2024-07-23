@@ -20,7 +20,7 @@ input[type='checkbox']:focus {
 }
 
 input[type='checkbox']:checked {
-  @apply text-fsPurple shadow-none;
+  @apply text-ctwDarkGreen shadow-none;
 }
 
 input[type='checkbox'] {

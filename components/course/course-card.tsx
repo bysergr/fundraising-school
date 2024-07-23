@@ -19,8 +19,6 @@ export default function CourseCard({ courseData }: { courseData: CourseInfo }) {
         : `/product/courses/#`;
   }
 
-  courseData.progress = '40%';
-
   return (
     <article
       key={courseData.course.title}

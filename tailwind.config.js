@@ -23,6 +23,7 @@ module.exports = {
         ctwPurple: '#370440',
         ctwLightPurple: '#7D0991',
         ctwGreen: '#61FF76',
+        ctwDarkGreen: '#2e6b32',
       },
       gridTemplateColumns: {
         authLayout: '65% 35%',

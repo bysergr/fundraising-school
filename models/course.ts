@@ -3,6 +3,7 @@ interface Class {
   title: string;
   description: string;
   video_link: string;
+  taken: boolean;
 }
 
 interface Module {

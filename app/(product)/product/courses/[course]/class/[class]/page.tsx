@@ -14,14 +14,10 @@ import { slugify } from '@/utils/validations';
 
 export default async function Page({ params }: { params: { course: string; class: string } }) {
   if (params.course.trim() === '') {
-    console.log('redirecting');
-
     redirect('/product/courses');
   }
 
   if (params.class.trim() === '') {
-    console.log('redirecting');
-
     redirect('/product/courses');
   }
   const data: Session = (await getServerSession(authOptions)) as Session;
@@ -56,7 +52,7 @@ export default async function Page({ params }: { params: { course: string; class
   const currentClass = classes
     .filter((classObj, id) => {
       if (slugify(classObj.title) === params.class) {
-        classID = id;
+        classID = id + 1;
         return true;
       }
 
@@ -66,6 +62,47 @@ export default async function Page({ params }: { params: { course: string; class
 
   if (currentClass === undefined) {
     redirect('/product/courses');
+  }
+
+  const currentModule = courseData.course.modules.find((module) =>
+    module.classes.includes(currentClass),
+  );
+
+  let prevClassName: string | null = null;
+  let nextClassName: string | null = null;
+
+  const nextClassResponse = await fetch(
+    `${process.env.BACKEND_GATEWAY_URL}/course/module/${currentModule?.id}/classes/${classID}/next`,
+    {
+      method: 'GET',
+    },
+  );
+
+  if (nextClassResponse.ok) {
+    try {
+      const nextClass = await nextClassResponse.json();
+
+      nextClassName = nextClass.title;
+    } catch (error) {
+      console.error('Error');
+    }
+  }
+
+  const prevClassResponse = await fetch(
+    `${process.env.BACKEND_GATEWAY_URL}/course/module/${currentModule?.id}/classes/${classID}/prev`,
+    {
+      method: 'GET',
+    },
+  );
+
+  if (prevClassResponse.ok) {
+    try {
+      const prevClass = await prevClassResponse.json();
+
+      prevClassName = prevClass.title;
+    } catch (error) {
+      console.error('Error');
+    }
   }
 
   return (
@@ -78,10 +115,14 @@ export default async function Page({ params }: { params: { course: string; class
       <div className="grid h-[calc(100vh-84px-0.25rem)] w-full grid-cols-courseLayout bg-white pl-7">
         <div className="h-full overflow-y-auto pb-12 pr-4 pt-4">
           <VideoSection
+            nextSessionName={nextClassName}
+            prevSessionName={prevClassName}
             currentLesson={classID}
-            moduleName={courseData.course.title}
+            courseName={courseData.course.title}
             numberOfLessons={classes.length}
             sessionName={currentClass?.title}
+            sessionID={currentClass?.id}
+            email={data.user?.email as string}
             videoId={currentClass?.video_link}
           />
           <div className="pt-2">
@@ -90,7 +131,7 @@ export default async function Page({ params }: { params: { course: string; class
         </div>
         <div className="h-full overflow-y-auto p-4">
           <Progress progress={courseData.progress} />
-          <Lesson />
+          <Lesson courseData={courseData} />
         </div>
       </div>
     </>
