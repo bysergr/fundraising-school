@@ -1,7 +1,6 @@
 'use client';
 
-import { StarIcon } from '@heroicons/react/24/solid';
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline';
 import { useUserStore } from '@/providers/user-store-provider';
 
 export default function DownloadVC() {
@@ -41,11 +40,10 @@ export default function DownloadVC() {
   return (
     <button
       onClick={handleClick}
-      className="flex h-9 items-center gap-2 rounded-e-lg bg-fsPurple px-3 text-white"
+      className="flex h-9 items-center gap-2 rounded-e-lg bg-ctwLightPurple px-3 text-white"
     >
-      <StarIcon className="size-5" />
-      <span className="text-xs font-semibold">Download your favorites VCs</span>
-      <ArrowDownTrayIcon className="size-5" />
+      <span className="text-sm font-semibold">Download your favorites VCs</span>
+      <ArrowDownOnSquareIcon className="size-5" />
     </button>
   );
 }
