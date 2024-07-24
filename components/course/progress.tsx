@@ -1,19 +1,17 @@
-const Progress: React.FC = () => {
+export default function Progress({ progress }: { progress: string }) {
   return (
     <div className="mb-4">
       <div className="flex items-center">
         <h3 className="mr-4 text-3xl font-bold">Progress</h3>
-        <p className="text-sm font-bold text-fsGray">19/32</p>
+        <p className="text-sm font-bold text-fsGray">{progress}</p>
       </div>
       <p className="mb-2 text-xs font-semibold">Keep going and be part of Top 1%</p>
-      <div className="mb-4 flex h-2 overflow-hidden rounded bg-lightFsPurple text-xs">
+      <div className="mb-4 flex h-2.5 overflow-hidden rounded bg-ctwGreen/40 text-xs">
         <div
-          style={{ width: '65%' }}
-          className="flex flex-col justify-center whitespace-nowrap bg-fsPurple text-center text-white shadow-none"
+          style={{ width: progress }}
+          className="flex flex-col justify-center whitespace-nowrap bg-ctwGreen text-center text-white shadow-none"
         ></div>
       </div>
     </div>
   );
-};
-
-export default Progress;
+}

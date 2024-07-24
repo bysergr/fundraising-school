@@ -51,3 +51,13 @@ export default function useUserInfo({ data }: { data: Session }): {
     imageProfile,
   };
 }
+
+export function slugify(url: string): string {
+  url = url.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
+  url = url.toLowerCase(); // convert string to lowercase
+  url = url
+    .replace(/[^a-z0-9 -]/g, '') // remove any non-alphanumeric characters
+    .replace(/\s+/g, '-') // replace spaces with hyphens
+    .replace(/-+/g, '-'); // remove consecutive hyphens
+  return url;
+}
