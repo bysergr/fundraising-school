@@ -22,8 +22,8 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
           className="size-[110px] cursor-pointer rounded-md bg-black object-cover"
           alt={`image of ${startups_profile.name}`}
           src={startups_profile.photo}
-          width={60}
-          height={60}
+          width={64}
+          height={64}
           onClick={handleClick}
         />
         <div className="my-auto w-fit">
@@ -46,7 +46,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
         <p className="">{startups_profile.traction ? startups_profile.traction.name : 'None'}</p>
       </td>
       <td className="grid w-44 place-content-center">
-        <p className="mx-0.5 mt-1 w-full rounded-sm bg-secondLightFsPurple px-2 py-1 text-center text-xs font-semibold text-fsPurple">
+        <p className="bg-ctwLightGreen/35 text-ctwDarkGreen mx-0.5 mt-1 w-full rounded-sm px-2 py-1 text-center text-xs font-semibold">
           {startups_profile.round ? startups_profile.round.stage : 'None'}
         </p>
       </td>
