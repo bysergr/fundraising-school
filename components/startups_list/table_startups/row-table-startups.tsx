@@ -46,7 +46,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
         <p className="">{startups_profile.traction ? startups_profile.traction.name : 'None'}</p>
       </td>
       <td className="grid w-44 place-content-center">
-        <p className="bg-ctwLightGreen/35 text-ctwDarkGreen2 mx-0.5 mt-1 w-full rounded-sm px-2 py-1 text-center text-xs font-semibold">
+        <p className="mx-0.5 mt-1 w-full rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-center text-xs font-semibold text-ctwDarkGreen2">
           {startups_profile.round ? startups_profile.round.stage : 'None'}
         </p>
       </td>

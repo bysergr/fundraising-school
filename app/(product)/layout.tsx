@@ -11,9 +11,9 @@ export default async function VcListLayout({ children }: { children: React.React
   return (
     <div className="flex h-screen w-full gap-1 overflow-y-hidden bg-gray-100 font-josefin">
       <UpdateStartupModal />
-      <header className="bg-ctwPurple flex h-screen w-full max-w-64 flex-col justify-start pb-8">
-        <div className="bg-ctwGreen rounded-br-4xl py-9">
-          <Logo className="w-85% mx-auto mb-6 mt-4" />
+      <header className="flex h-screen w-full max-w-64 flex-col justify-start bg-ctwPurple pb-8">
+        <div className="rounded-br-4xl bg-ctwGreen py-9">
+          <Logo className="mx-auto mb-6 mt-4 w-85%" />
         </div>
         <Navbar userEmail={data.user?.email as string} />
         <Profile data={data} className="mt-auto" />
