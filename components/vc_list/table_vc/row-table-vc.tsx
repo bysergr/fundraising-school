@@ -25,8 +25,8 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
           className="size-[110px] cursor-pointer rounded-md bg-black object-cover"
           alt={`image of ${vc_profile.name}`}
           src={vc_profile.photo}
-          width={60}
-          height={60}
+          width={64}
+          height={64}
           onClick={handleClick}
         />
         <div className="my-auto w-fit">
