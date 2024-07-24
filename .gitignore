@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# IDE
+.idea
+.vscode
+
 # testing
 /coverage
 
@@ -27,6 +31,9 @@ yarn-error.log*
 
 # local env files
 .env*.local
+
+# Env files
+.env*
 
 # vercel
 .vercel

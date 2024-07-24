@@ -1,74 +1,86 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-import Link from 'next/link'
-import Logo from './logo'
-import Dropdown from '@/components/utils/dropdown'
-import MobileMenu from './mobile-menu'
+import Logo from '@/components/ui/logo';
+import MobileMenu from '@/components/ui/mobile-menu';
 
 export default function Header() {
-
-  const [top, setTop] = useState<boolean>(true)
+  const [top, setTop] = useState<boolean>(true);
 
   // detect whether user has scrolled the page down by 10px
   const scrollHandler = () => {
-    window.pageYOffset > 10 ? setTop(false) : setTop(true)
-  }
+    window.scrollY > 10 ? setTop(false) : setTop(true);
+  };
 
   useEffect(() => {
-    scrollHandler()
-    window.addEventListener('scroll', scrollHandler)
-    return () => window.removeEventListener('scroll', scrollHandler)
-  }, [top])
+    scrollHandler();
+    window.addEventListener('scroll', scrollHandler);
+    return () => window.removeEventListener('scroll', scrollHandler);
+  }, [top]);
 
   return (
-    <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${!top ? 'bg-white backdrop-blur-sm shadow-lg' : ''}`}>
-      <div className="max-w-6xl mx-auto px-5 sm:px-6">
-        <div className="flex items-center justify-between h-20">
-
+    <header
+      className={`fixed z-30 w-full transition duration-300 ease-in-out ${!top ? 'bg-white shadow-lg backdrop-blur-sm md:bg-white/90' : ''}`}
+    >
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="flex h-20 items-center justify-between">
           {/* Site branding */}
-          <div className="shrink-0 mr-4">
+          <div className="block w-[90px] shrink-0">
             <Logo />
           </div>
 
           {/* Desktop navigation */}
           <nav className="hidden md:flex md:grow">
             {/* Desktop sign in links */}
-            <ul className="flex grow justify-end flex-wrap items-center">
-
+            <ul className="flex grow flex-wrap items-center justify-end">
               <li>
-                <a href="/#about" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">About</a>
+                <a
+                  href="/#about"
+                  className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-gray-900"
+                >
+                  About
+                </a>
               </li>
               <li>
-                <a href="/#speakers" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Speakers & Mentors</a>
+                <a
+                  href="/#speakers"
+                  className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-gray-900"
+                >
+                  Speakers & Mentors
+                </a>
               </li>
               <li>
-                <a href="/#curriculum" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Curriculum</a>
+                <a
+                  href="/#curriculum"
+                  className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-gray-900"
+                >
+                  Curriculum
+                </a>
               </li>
               <li>
-                <a href="/#questions" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Q&A</a>
-              </li>
-
-              {/* <li>
-                <Link href="/signin" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
+                <a
+                  href="/#questions"
+                  className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-gray-900"
+                >
+                  Q&A
+                </a>
               </li>
               <li>
-                <Link href="/signup" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
-                  <span>Sign up</span>
-                  <svg className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z" fillRule="nonzero" />
-                  </svg>
+                <Link
+                  href="/signin"
+                  className="btn-sm w-full rounded-3xl border-fsPurple bg-white px-14 text-fsPurple duration-150 hover:bg-fsPurple hover:text-white focus:bg-darkFsPurple focus:text-white sm:mb-0 sm:w-auto"
+                >
+                  Sign in
                 </Link>
-              </li> */}
+              </li>
             </ul>
-
           </nav>
 
           <MobileMenu />
-
         </div>
       </div>
     </header>
-  )
+  );
 }
