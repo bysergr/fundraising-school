@@ -18,7 +18,7 @@ export default async function Page() {
       <TitleSection icon="identification" nameSection="VC List" description="Browse all funds" />
       <div className="size-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">
-          <SearchInput />
+          <SearchInput searchType="VC" />
           <DownloadVC />
         </div>
         <FilterBar />

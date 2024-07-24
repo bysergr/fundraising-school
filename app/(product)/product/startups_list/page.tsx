@@ -22,7 +22,7 @@ export default async function Page() {
       />
       <div className="size-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">
-          <SearchInput />
+          <SearchInput searchType="Startup" />
           <DownloadStartups />
         </div>
         <FilterBar />
