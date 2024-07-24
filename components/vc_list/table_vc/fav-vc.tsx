@@ -5,6 +5,9 @@ import { StarIcon } from '@heroicons/react/24/outline';
 import { useAppStore } from '@/providers/app-store-providers';
 import { useUserStore } from '@/providers/user-store-provider';
 
+const IS_FAV_STYLES = 'fill-ctwLightPurple text-ctwLightPurple hover:fill-white hover:text-black';
+const IS_NOT_FAV_STYLES = 'text-black hover:fill-ctwLightPurple hover:text-ctwLightPurple';
+
 export default function FavVC({
   fund_id,
   favorite,
@@ -57,9 +60,7 @@ export default function FavVC({
             className={clsx(
               'transition duration-100 ease-in-out',
               size,
-              favorite
-                ? 'fill-fsPurple text-fsPurple hover:fill-white hover:text-black'
-                : 'text-black hover:fill-fsPurple hover:text-fsPurple',
+              favorite ? IS_FAV_STYLES : IS_NOT_FAV_STYLES,
             )}
           />
         </button>
@@ -74,9 +75,7 @@ export default function FavVC({
           className={clsx(
             'transition duration-100 ease-in-out',
             size,
-            favorite
-              ? 'fill-fsPurple text-fsPurple hover:fill-white hover:text-black'
-              : 'text-black hover:fill-fsPurple hover:text-fsPurple',
+            favorite ? IS_FAV_STYLES : IS_NOT_FAV_STYLES,
           )}
         />
       </button>

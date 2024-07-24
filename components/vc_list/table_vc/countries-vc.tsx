@@ -3,11 +3,14 @@ import { nanoid } from 'nanoid';
 
 import { Country } from '@/models/vc_list';
 
+const CONTAINER_STYLES =
+  'rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-xs font-semibold text-ctwDarkGreen2';
+
 export default function CountriesVC({ countries }: { countries: Country[] }) {
   if (countries.length === 0) {
     return (
       <td className="grid w-56 place-content-center">
-        <div className="w-20 rounded-sm bg-secondLightFsPurple px-2 py-1 text-center text-xs font-semibold text-fsPurple">
+        <div className={`${CONTAINER_STYLES} w-20`}>
           <span>😔</span>
         </div>
       </td>
@@ -16,7 +19,7 @@ export default function CountriesVC({ countries }: { countries: Country[] }) {
 
   return (
     <td className="grid w-56 place-content-center">
-      <div className="tooltip rounded-sm bg-secondLightFsPurple px-2 py-1 text-xs font-semibold text-fsPurple">
+      <div className={`${CONTAINER_STYLES} tooltip`}>
         {countries.slice(0, 6).map((country, index) => {
           if (index === 3) {
             if (index === countries.length - 1) {

@@ -80,12 +80,9 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
 
   return (
     <table className="mt-6 size-full">
-      <thead className="h-14 border-b border-neutral-200">
-        <tr className="mr-16 flex items-center justify-between  [&>th]:text-left [&>th]:text-neutral-500">
-          <th className="w-60">
-            {total} <br />
-            Startups
-          </th>
+      <thead className="border-b border-neutral-200">
+        <tr className="my-4 mr-16 flex items-center justify-between text-xs uppercase [&>th]:text-left [&>th]:text-black">
+          <th className="w-60">Startups ({total})</th>
           <th className="w-8">
             <p className="text-center">Fav</p>
           </th>
