@@ -42,6 +42,9 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     if (selected_filter_options.location) {
       url_params.append('location', selected_filter_options.location);
     }
+    if (selected_filter_options.search_term) {
+      url_params.append('fund_term', selected_filter_options.search_term);
+    }
 
     if (email.trim() === '') {
       url_params.append('user_email', email_linkedin);

@@ -43,6 +43,9 @@ function useLazyStartupsLoad({ email_linkedin }: { email_linkedin: string }) {
           if (selected_filter_options.location) {
             url_params.append('country', selected_filter_options.location);
           }
+          if (selected_filter_options.search_term) {
+            url_params.append('startup_term', selected_filter_options.search_term);
+          }
 
           if (email.trim() === '') {
             url_params.append('user_email', email_linkedin);

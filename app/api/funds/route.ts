@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
   const sector = searchParams.get('sector');
   const location = searchParams.get('location');
   const user_email = searchParams.get('user_email');
+  const fund_term = searchParams.get('fund_term');
 
   if (!page) {
     page = '1';
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
   });
 
   if (round) {
-    params.append('round_op', round);
+    params.append('fund_round', round);
   }
   if (check_size) {
     params.append('check_size', check_size);
@@ -37,9 +38,11 @@ export async function GET(req: NextRequest) {
   if (location) {
     params.append('country', location);
   }
-
   if (user_email) {
     params.append('user_email', user_email);
+  }
+  if (fund_term) {
+    params.append('fund_name_term', fund_term);
   }
 
   const resp = await fetch(`${process.env.BACKEND_GATEWAY_URL}/vc_sheet/funds?${params}`, {

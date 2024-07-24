@@ -12,6 +12,7 @@ export type SelectedStartupFilterOptions = {
   traction: string | null;
   sector: string | null;
   location: string | null;
+  search_term: string | null;
 };
 
 export type FilterFundsOptions = {
@@ -26,6 +27,7 @@ export type SelectedFundsFilterOptions = {
   check_size: string | null;
   sector: string | null;
   location: string | null;
+  search_term: string | null;
 };
 
 export type AppState = {
@@ -79,14 +81,30 @@ export const initAppStore = (): AppState => {
     funds_total: 0,
     funds: [],
     funds_page: 1,
-    filter_funds_options: { rounds: [], check_size: [], sectors: [], locations: [] },
-    selected_funds_filter_options: { round: null, check_size: null, sector: null, location: null },
+    filter_funds_options: {
+      rounds: [],
+      check_size: [],
+      sectors: [],
+      locations: [],
+    },
+    selected_funds_filter_options: {
+      round: null,
+      check_size: null,
+      sector: null,
+      location: null,
+      search_term: null,
+    },
 
     startups_total: 0,
     startups: [],
     startups_page: 1,
     filter_startups_options: { traction: [], sectors: [], locations: [] },
-    selected_startups_filter_options: { traction: null, sector: null, location: null },
+    selected_startups_filter_options: {
+      traction: null,
+      sector: null,
+      location: null,
+      search_term: null,
+    },
 
     modal_startup: null,
     modal_vc: null,
