@@ -23,7 +23,7 @@ module.exports = {
         ctwPurple: '#370440',
         ctwLightPurple: '#7D0991',
         ctwGreen: '#61FF76',
-        ctwDarkGreen: '#00700F',
+        ctwDarkGreen2: '#00700F',
         ctwLightGreen: '#61FF76',
       },
       gridTemplateColumns: {

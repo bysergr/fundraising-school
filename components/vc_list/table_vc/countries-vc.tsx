@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { Country } from '@/models/vc_list';
 
 const CONTAINER_STYLES =
-  'rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-xs font-semibold text-ctwDarkGreen';
+  'rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-xs font-semibold text-ctwDarkGreen2';
 
 export default function CountriesVC({ countries }: { countries: Country[] }) {
   if (countries.length === 0) {
