@@ -70,8 +70,8 @@ export const Content = ({ data, children }: { children: React.ReactNode; data: S
             </button>
           </div>
         </header>
-        <main className="flex flex-col lg:px-4 space-y-1 lg:w-10/12 flex-1 overflow-x-hidden overflow-y-auto bg-[#F9F9FA]">
-          <div className="overflow-y-auto">
+        <main className="flex flex-col px-2 lg:px-4 space-y-1 lg:w-10/12 flex-1 overflow-x-hidden overflow-y-auto bg-[#F9F9FA] h-screen">
+          <div className="overflow-y-auto min-h-[95%]">
             {children}
           </div>
         </main>
