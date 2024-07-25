@@ -24,7 +24,7 @@ export default function TitleSection({
   };
 
   return (
-    <header className="flex h-24 w-full flex-col justify-center bg-white pl-7">
+    <header className="flex h-24 w-full flex-col justify-center bg-[red] lg:bg-white pl-7">
       <div className="flex items-center">
         {iconMap[icon]}
         <h2 className="text-2xl font-black text-darkFsGray">{nameSection}</h2>

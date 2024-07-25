@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FaSpinner } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { IconContext } from "react-icons/lib";
-import { LuCalendarMinus, LuCalendarPlus } from 'react-icons/lu';
+import { LuCalendarMinus, LuCalendarPlus, LuUserX } from 'react-icons/lu';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select"
 
 import { Filters } from './Filters';
+import { UsersIcon } from '@heroicons/react/24/outline';
 
 
 type SearchEventsProps = { serverUrl: string }
@@ -102,6 +103,24 @@ const Host = ({ host }: { host: HostProps[] }) => {
   return ui
 }
 
+
+const NumPeople = ({ out }: { out: boolean }) => {
+  return (
+    <div className="flex items-end">
+      {
+        out ? (<>
+          <LuUserX className="w-4 h-4 mr-2 text-black" />
+          <span className="text-black text-right font-sans text-base font-semibold leading-none">Soldout</span>
+        </>) : (
+          <>
+            <UsersIcon className="w-4 h-4 mr-2 text-black" />
+            <span className="text-black text-right font-sans text-base font-semibold leading-none">(150/200)</span>
+          </>
+        )
+      }
+    </div>
+  )
+}
 const TimelineItem = ({
   event,
   separator,
@@ -129,17 +148,17 @@ const TimelineItem = ({
         </Link>
 
         <Button
-          className={`px-2 focus:outline-none cursor-pointer text-black rounded-none uppercase flex lg:hidden ${remove ? "bg-[red]" : "bg-[#52EF70]"}`}
+          className={`px-2 focus:outline-none cursor-pointer text-white uppercase rounded-md flex lg:hidden ${remove ? "bg-[red]" : "bg-[#3C0560]"}`}
           variant="ghost"
           onClick={addToCalendar}
         >
           {
             remove ? <>
-              <LuCalendarMinus className="w-4 h-4 mr-2 text-black" />
+              <LuCalendarMinus className="w-4 h-4 mr-2 text-white" />
               Quitar
             </> : <>
-              <LuCalendarPlus className="w-4 h-4 mr-2 text-black" />
-              Añadir
+              <LuCalendarPlus className="w-4 h-4 mr-2 text-white" />
+              My Cal
             </>
           }
         </Button>
@@ -163,27 +182,22 @@ const TimelineItem = ({
         </div>
 
         <p className="line-clamp-4 max-w-full">{event.description}</p>
-        <p className="line-clamp-4 text-md font-semibold text-[#313A5E]">
-          Por qué es tu interés
-        </p>
-        <p className="line-clamp-4 mt-2 text-[#313A5E] text-md  pb-4">
-          {event.relevanceExplanation}
-        </p>
+
 
         <div className="flex w-full justify-between">
-          <RelevanceBadge score={event.relevanceScore} />
+          <NumPeople out={false} />
           <Button
-            className={`px-2  focus:outline-none cursor-pointer text-black rounded-none uppercase hidden lg:flex ${remove ? "bg-[red]" : "bg-[#52EF70]"}`}
+            className={`px-2 focus:outline-none cursor-pointer text-white uppercase rounded-md hidden lg:flex ${remove ? "bg-[red]" : "bg-[#3C0560]"}`}
             variant="ghost"
             onClick={addToCalendar}
           >
             {
               remove ? <>
-                <LuCalendarMinus className="w-4 h-4 mr-2 text-black" />
+                <LuCalendarMinus className="w-4 h-4 mr-2 text-white" />
                 Quitar
               </> : <>
-                <LuCalendarPlus className="w-4 h-4 mr-2 text-black" />
-                Añadir
+                <LuCalendarPlus className="w-4 h-4 mr-2 text-white" />
+                My Cal
               </>
             }
           </Button>
@@ -208,15 +222,12 @@ const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove })
     new Date(dateString).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
-    <div className="px-4 md:px-6 py-0">
+    <div className="px-0 py-0">
       <div className=" grid gap-y-8 max-w-full">
         {schedules.map((schedule) => (
           <div
             key={formatDate(schedule.date)}
-            className="flex flex-col bg-white p-3 "
-            style={{
-              boxShadow: "10px 10px 0px 0px #7D0992"
-            }}
+            className="flex flex-col bg-white p-3"
           >
             <details className="flex " open>
               <summary className="text-[#7D0991] cursor-pointer text-xl font-bold justify-between flex uppercase lg:pt-2 lg:pl-2">
@@ -319,10 +330,10 @@ const ChatSearchUI = () => {
       {/* Top search bar */}
 
       <div className="w-full h-full min-h-[50vh]">
-        <Tabs value={activeTab} defaultValue="matches" className="flex justify-start flex-col items-start space-y-10" id="myMatchesTab">
+        <Tabs value={activeTab} defaultValue="matches" className="flex justify-center flex-col items-start space-y-10" id="myMatchesTab">
           <TabsList className="grid w-full grid-cols-2 md:max-w-xl bg-transparent ">
-            <TabsTrigger activeTab={activeTab} onClick={() => setActiveTab("matches")} className='uppercase font-bold' value="matches">Resultados: {events.length}</TabsTrigger>
-            <TabsTrigger activeTab={activeTab} onClick={() => setActiveTab("my_calendar")} className='uppercase font-bold' value="my_calendar">Mi Calendario</TabsTrigger>
+            <TabsTrigger activeTab={activeTab} onClick={() => setActiveTab("matches")} className='font-bold' value="matches">Events</TabsTrigger>
+            <TabsTrigger activeTab={activeTab} onClick={() => setActiveTab("my_calendar")} className='font-bold' value="my_calendar">My Calendar</TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className='w-full h-screen'>
             <form
@@ -330,9 +341,9 @@ const ChatSearchUI = () => {
               role="search"
               noValidate
               method="get"
-              className="relative w-full flex-wrap px-6 grid grid-cols-6 gap-4"
+              className="relative w-full flex-wrap grid grid-cols-6 gap-4"
             >
-              <div className="bg-white border-2 border-black flex items-center justify-center content-center w-full col-span-4">
+              <div className="bg-white rounded-md border border-gray-400 flex items-center justify-center content-center w-full col-span-4">
                 <Input
                   ref={inputRef}
                   className="flex-grow mr-2 bg-transparent border-none rounded-none focus:border-none"
@@ -348,13 +359,12 @@ const ChatSearchUI = () => {
                   autoFocus
                 />
                 <Button
-                  className=" inset-y-0 right-0 flex items-center z-10 px-4  focus:outline-none cursor-pointer bg-[#52EF70] text-black rounded-none"
+                  className=" inset-y-0 right-0 flex items-center z-10 px-2 mx-2 my-1  focus:outline-none cursor-pointer bg-[#7D0991] text-white rounded-none"
                   variant="ghost"
                   disabled={status === "loading"}
                   type="submit"
                 >
-                  BUSCAR
-                  <MagnifyingGlassIcon className="w-4 h-4 ml-2 text-black" />
+                  <MagnifyingGlassIcon className="w-4 h-4 text-white font-bold" />
                 </Button>
               </div>
               <Select>

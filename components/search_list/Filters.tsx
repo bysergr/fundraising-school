@@ -34,7 +34,7 @@ const filters: FilterButtonProps[] = [
 const FilterButton: React.FC<FilterButtonProps> = ({ icon, name }) => {
   const [active, setActive] = React.useState(false)
   return (
-    <Button onClick={() => setActive(!active)} className={` ${active ? "border-[#7D0991] border-2" : "border-black"} rounded-none  border-solid border flex gap-2 justify-center items-center px-2 py-1.5 text-lg text-black  min-w-max`}>
+    <Button onClick={() => setActive(!active)} className={` ${active ? "bg-[#DBDBDB] border-none" : "border-gray-400"} rounded-md border  flex gap-2 justify-center items-center px-2 py-1.5 text-lg text-black  min-w-max`}>
       <Image
         loading="lazy"
         alt={name}
@@ -49,7 +49,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ icon, name }) => {
       {
         active && (
           <XMarkIcon
-            color="#7D0991"
+            color="#000"
             className="w-[18px] "
           />
         )
@@ -72,13 +72,13 @@ export const Filters: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-5 items-center py-2 max-md:flex-wrap px-6">
+    <div className="flex gap-5 items-center py-2 max-md:flex-wrap">
       {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
         onClick={() => scroll('left')}
-        className="flex justify-center items-center self-stretch p-1.5 my-auto  h-[30px] w-[30px] border-black rounded-none border border-solid"
+        className="flex justify-center items-center self-stretch p-1.5 my-auto  h-[30px] w-[30px] bg-[#7D0991] text-white rounded-none border border-solid"
       >
-        <ChevronLeftIcon className="aspect-square w-[18px]" />
+        <ChevronLeftIcon className="aspect-square w-[18px] font-bold" />
       </button>
 
       <div
@@ -91,9 +91,9 @@ export const Filters: React.FC = () => {
       {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
         onClick={() => scroll('right')}
-        className="flex justify-center items-center self-stretch p-1.5 my-auto  h-[30px] w-[30px] border-black rounded-none border border-solid"
+        className="flex justify-center items-center self-stretch p-1.5 my-auto  h-[30px] w-[30px] bg-[#7D0991] text-white rounded-none border border-solid"
       >
-        <ChevronRightIcon className="aspect-square w-[18px]" />
+        <ChevronRightIcon className="aspect-square w-[18px] font-bold" />
       </button>
     </div>
   );

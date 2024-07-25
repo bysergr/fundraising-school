@@ -7,7 +7,7 @@ const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = ({
   ...props
 }) => (
   <select
-    className={`flex border-2 border-black px-3 py-2 text-sm  ${className}`}
+    className={`flex rounded-md border border-gray-400 px-3 py-2 text-sm  ${className}`}
     {...props}
   >
     {children}

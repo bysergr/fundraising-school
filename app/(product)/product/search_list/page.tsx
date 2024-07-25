@@ -21,8 +21,8 @@ export default async function Page() {
       <TitleSection nameSection="EVENTS AGENDA" description="Explore all of the events and create your calendar" >
         <Image src={by_onde} alt="by Onde" className=" w-20 ml-1" />
       </TitleSection>
-      <div className="size-full  px-7">
-        <div className="overflow-y-auto h-screen w-full">
+      <div className="size-full p-0">
+        <div className="h-screen w-full">
           <SearchEvents serverUrl="" />
         </div>
       </div>
