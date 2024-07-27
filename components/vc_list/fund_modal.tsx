@@ -16,55 +16,9 @@ import {
 
 import { FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 
+import { InvestmentPreferenceSection } from '@/components/shared/InvestmentPreferenceSection';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
-
-function InvestmentPreferenceIcon({
-  IconComponent,
-  title,
-}: {
-  IconComponent: React.ComponentType<{
-    className?: string;
-  }>;
-  title: string;
-}) {
-  return (
-    <div className="flex">
-      <div className="my-auto size-fit rounded-md bg-ctwLightPurple p-2">
-        <IconComponent className="text-ctwLightGreen size-8" />
-      </div>
-      <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">{title}</p>
-    </div>
-  );
-}
-
-function InvestmentPreferenceSection({
-  IconComponent,
-  title,
-  listItems,
-}: {
-  IconComponent: React.ComponentType<{
-    className?: string;
-  }>;
-  title: string;
-  listItems: string[];
-}) {
-  return (
-    <div className="mb-10 flex gap-16">
-      <InvestmentPreferenceIcon IconComponent={IconComponent} title={title} />
-      <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-        {listItems.map((item) => (
-          <li
-            key={item}
-            className="bg-ctwLightGreen/35 text-ctwDarkGreen2 rounded-lg px-2 py-1 text-sm font-semibold"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export default function FundModal() {
   const { modal_vc, closeFundModal: closeModal } = useAppStore((state) => state);
@@ -140,7 +94,7 @@ export default function FundModal() {
         </div>
         <FavVC is_modal size="size-6" fund_id={modal_vc.id} favorite={modal_vc.favorite} />
       </div>
-      <p className="mt-6 text-base text-black">{modal_vc.description}</p>
+      <p className="mt-10 text-base text-black">{modal_vc.description}</p>
       <h3 className="my-10 text-xl font-semibold text-black">Investment Preferences</h3>
 
       {/* Rounds */}
