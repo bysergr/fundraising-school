@@ -60,7 +60,7 @@ type ScheduleProps = {
   events: TechWeekEvent[];
 };
 
-const RelevanceBadge = ({ score }: { score: number }) => {
+const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
   let color: string;
   let text: string;
   let emoji: string;
@@ -85,12 +85,12 @@ const RelevanceBadge = ({ score }: { score: number }) => {
 
   return (
     <Badge className={`${color} px-2 py-1 text-sm font-medium`}>
-      {emoji} {text}
+      <a href="" aria-label={explanation}>
+        {emoji} {text}
+      </a>
     </Badge>
   );
 };
-
-const TYPESENSE_PER_PAGE = 20;
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
@@ -168,6 +168,12 @@ const TimelineItem = ({
               Por <Host host={event.host} />
             </p>
           )}
+          {event.relevanceScore && (
+            <RelevanceBadge
+              score={Number(event.relevanceScore)}
+              explanation={event.relevanceExplanation}
+            />
+          )}{' '}
           {event.full_address && (
             <span className="text-md ml-2 hidden font-semibold leading-normal text-[#313A5E] lg:ml-0 lg:block">
               {event.full_address}
@@ -579,16 +585,16 @@ const ChatSearchUI = () => {
                     <path
                       d="M22 2L11 13"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M22 2L15 22L11 13L2 9L22 2Z"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </>
@@ -667,30 +673,30 @@ const ChatSearchUI = () => {
                     <path
                       d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M9 9H9.01"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M15 9H15.01"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </>
