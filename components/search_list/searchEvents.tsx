@@ -23,6 +23,7 @@ import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
 import { type ToastRef, Toast } from './Toast';
 import { getTypesenseAdapter } from '@/utils/onde-vamos';
+import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 
 const searchAdapter = getTypesenseAdapter();
@@ -347,13 +348,14 @@ const CitySelect = ({ className, onSelect }: { className: string; onSelect?: (e:
 const SearchBar = ({ activeTab, openModal, openModalShare }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
-
   const [value, setValue] = React.useState(query);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  const refineSearch = debounce(refine, 100);
+
   function setQuery(newQuery: string) {
     setValue(newQuery);
-    refine(newQuery);
+    refineSearch(newQuery);
   }
 
   return (
@@ -398,7 +400,7 @@ const SearchBar = ({ activeTab, openModal, openModalShare }) => {
             spellCheck="false"
             autoCapitalize="off"
             onChange={(e) => {
-              setValue(e.target.value);
+              setQuery(e.target.value);
             }}
             autoFocus
           />

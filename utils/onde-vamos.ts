@@ -38,10 +38,12 @@ const TypesenseAdapterOptions = {
     // So you can pass any parameters supported by the search endpoint below.
     // queryBy is required.
     additionalSearchParameters: {
-        query_by: 'title,description',
+        query_by: 'title,host,description',
+        query_by_weights: 'title:3,host:2,description:1',
         sort_by: '_text_match:desc',
         exclude_fields: 'embedding',
-        prefix: false,
+        num_typos: 2,
+        prefix: true,
     },
     // additionalSearchParameters: {
     //     query_by: 'embedding,title,description',
