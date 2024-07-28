@@ -1,4 +1,5 @@
 'use client';
+import { useUserStore } from '@/providers/user-store-provider';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
@@ -22,11 +23,9 @@ import { Filters } from './Filters';
 import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
 import { type ToastRef, Toast } from './Toast';
-import { getTypesenseAdapter } from '@/utils/onde-vamos';
+import { getOndeVamosClient } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
-
-const searchAdapter = getTypesenseAdapter();
 
 type SearchEventsProps = { serverUrl: string };
 
@@ -712,9 +711,18 @@ const ChatSearchUI = () => {
 };
 
 const SearchEvents = ({ serverUrl }: SearchEventsProps) => {
+  const { email } = useUserStore((state) => state);
+
+  const { searchClient } = getOndeVamosClient({
+    server: {
+      additionalHeaders: {
+        'X-Onde-Email': email,
+      },
+    },
+  });
   return (
     <InstantSearch
-      searchClient={searchAdapter.searchClient}
+      searchClient={searchClient}
       indexName="onde_col_week"
       future={{ preserveSharedStateOnUnmount: true }}
     >
