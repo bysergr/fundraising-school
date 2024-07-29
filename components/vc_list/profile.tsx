@@ -31,7 +31,7 @@ export default function Profile({ data, className }: { data: Session; className?
 
       {role === 'startup' && (
         <button
-          className="mt-2 rounded-md bg-fsPurple px-3 py-1 text-sm font-semibold text-white"
+          className="mt-2 rounded-md bg-ctwLightPurple px-8 text-sm font-semibold text-white"
           onClick={openUpdateStartupModal}
         >
           My Startup

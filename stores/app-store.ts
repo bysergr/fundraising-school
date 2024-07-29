@@ -47,6 +47,9 @@ export type AppState = {
   modal_vc: VCProfile | null;
 
   modal_update_startup: boolean;
+
+  sign_in_stage: string | null;
+  modal_sign_in: boolean;
 };
 
 export type AppActions = {
@@ -72,6 +75,11 @@ export type AppActions = {
 
   closeUpdateStartupModal: () => void;
   openUpdateStartupModal: () => void;
+
+  closeSignInModal: () => void;
+
+  setSignInStage: (stage: string | null) => void;
+  openSignInModal: () => void;
 };
 
 export type AppStore = AppState & AppActions;
@@ -110,6 +118,9 @@ export const initAppStore = (): AppState => {
     modal_vc: null,
 
     modal_update_startup: false,
+
+    sign_in_stage: null,
+    modal_sign_in: false,
   };
 };
 
@@ -272,6 +283,27 @@ export const createAppStore = (initState: AppState = defaultInitState) => {
       set(
         produce((state: AppState) => {
           state.modal_update_startup = true;
+        }),
+      ),
+
+    closeSignInModal: () =>
+      set(
+        produce((state: AppState) => {
+          state.modal_sign_in = false;
+        }),
+      ),
+
+    openSignInModal: () =>
+      set(
+        produce((state: AppState) => {
+          state.modal_sign_in = true;
+        }),
+      ),
+
+    setSignInStage: (stage) =>
+      set(
+        produce((state: AppState) => {
+          state.sign_in_stage = stage;
         }),
       ),
   }));

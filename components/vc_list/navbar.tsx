@@ -12,10 +12,14 @@ import { usePathname } from 'next/navigation';
 import { useUserStore } from '@/providers/user-store-provider';
 import { useEffect } from 'react';
 
-const Navbar = ({ userEmail }: { userEmail: string }) => {
+const Navbar = ({ userEmail }: { userEmail: string | null }) => {
   const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
 
   useEffect(() => {
+    if (userEmail === null) {
+      return;
+    }
+
     if (email.trim() === '') {
       updateEmail(userEmail);
       return;
@@ -54,6 +58,20 @@ const Navbar = ({ userEmail }: { userEmail: string }) => {
     'rounded-r-lg rounded-bl-lg bg-ctwLightPurple font-bold border-l-4 border-ctwGreen';
   const STANDARD_LINK_STYLES =
     'flex h-10 items-center gap-2 pl-4 pr-6 text-xl font-semibold text-white hover:bg-ctwLightPurple hover:rounded-r-lg hover:rounded-bl-lg';
+
+  if (userEmail === null) {
+    return (
+      <nav className="flex flex-col gap-1 p-4">
+        <Link
+          href="/product"
+          className={clsx(pathname === '/product' && SELECTED_STYLES, STANDARD_LINK_STYLES)}
+        >
+          <HomeIcon className="size-5 stroke-white" />
+          <span>Home</span>
+        </Link>
+      </nav>
+    );
+  }
 
   return (
     <nav className="flex flex-col gap-1 p-4">
