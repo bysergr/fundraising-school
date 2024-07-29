@@ -8,6 +8,7 @@ import logout from '@/public/images/icons/logout.svg';
 import clsx from 'clsx';
 import { useAppStore } from '@/providers/app-store-providers';
 import { useUserStore } from '@/providers/user-store-provider';
+import { StartupsIcon } from '@/public/images/icons/startups';
 
 
 export default function Profile({ data, collapsed, className }: { data: Session; collapsed: boolean, className?: string }) {
@@ -43,22 +44,27 @@ export default function Profile({ data, collapsed, className }: { data: Session;
             )}
           </>
         ) : (
-          <Image
-            alt="icon"
-            src={logout}
-            className="w-6"
-          />
+          <>
+            {role === 'startup' && (
+              <button
+                className={clsx(
+                  "fill-[#32083E] text-[#32083E]",
+                  'flex  text-lg p-2.5',
+                )}
+                onClick={openUpdateStartupModal}
+                type="button"
+              >
+                <StartupsIcon stroke={"#32083E"} />
+              </button>
+            )}
+            <Image
+              alt="icon"
+              src={logout}
+              className="w-6"
+            />
+          </>
         )
       }
-
-      {role === 'startup' && (
-        <button
-          className="mt-2 rounded-md bg-ctwLightPurple px-8 text-sm font-semibold text-white"
-          onClick={openUpdateStartupModal}
-        >
-          My Startup
-        </button>
-      )}
     </div>
   );
 }

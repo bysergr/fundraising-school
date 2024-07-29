@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  IdentificationIcon,
-  PresentationChartLineIcon,
-  VideoCameraIcon,
-} from '@heroicons/react/24/outline';
+import UpdateStartupModal from '@/components/startups_list/update-startup-modal';
+import OpenAuthModal from '@/components/auth/open-auth-modal';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
@@ -65,7 +62,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
 
     useEffect(() => {
-      if (email.trim() === '' && data.user && data.user.email) {
+      if (email.trim() === '' && data?.user && data.user.email) {
         updateEmail(data.user.email);
         return;
       }
@@ -98,6 +95,11 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
     }, [email, updateRole, role, updateEmail, data]);
 
     const pathname = usePathname();
+
+    const SELECTED_STYLES =
+      'rounded-r-lg rounded-bl-lg bg-ctwLightPurple font-bold border-l-4 border-ctwGreen';
+    const STANDARD_LINK_STYLES =
+      'flex h-10 items-center gap-2 pl-4 pr-6 text-xl font-semibold text-white hover:bg-ctwLightPurple hover:rounded-r-lg hover:rounded-bl-lg';
 
     const sidebarWidth = isCollapsed ? 'w-16' : 'w-64';
 
@@ -138,6 +140,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
             </button>
           </div>
           <div className="space-y-4 px-2">
+
             <NavItem
               icon={<HomeIcon stroke={pathname === "/product" ? '#fff' : "#32083E"} />}
               text="Home"
@@ -145,7 +148,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               href="/product"
               pathname={pathname}
             />
-
+            {/* 
             <NavItem
               icon={<PodcastIcon stroke={pathname === "/podcast" ? '#fff' : "#32083E"} />}
               text="Podcast"
@@ -159,7 +162,8 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               collapsed={isCollapsed}
               href="/"
               pathname={pathname}
-            />
+            /> */}
+
             {role === 'startup' && (
               <NavItem
                 icon={<VCListIcon stroke={pathname === "/product/vc_list" ? '#fff' : "#32083E"} />}
@@ -188,7 +192,14 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
           </div>
         </div>
         <div className="py-5 px-2 space-y-3.5">
-          <Profile data={data} collapsed={isCollapsed} />
+          {data?.user ? (
+            <>
+              <UpdateStartupModal />
+              <Profile data={data} collapsed={isCollapsed} />
+            </>
+          ) : (
+            <OpenAuthModal className="mt-auto" />
+          )}
           <p className={`${isCollapsed ? "text-[12px]" : "text-sm"} `}>
             {`${!isCollapsed ? "Made with 💜 " : ""}`}
             by <a href="https://onde-vamos.com/" target="_blank" className='underline' rel="noopener noreferrer">Onde</a>

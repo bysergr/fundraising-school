@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import onde_logo_gray from '@/public/images/ctw/onde_logo_gray.svg';
 import logo from '@/public/images/ctw/logo.svg';
+import AuthModal from '@/components/auth/auth-modal';
+
 
 export const Content = ({ data, children }: { children: React.ReactNode; data: Session }) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -41,6 +43,7 @@ export const Content = ({ data, children }: { children: React.ReactNode; data: S
 
   return (
     <div className="flex h-screen bg-gray-100">
+      <AuthModal data={data} />
       <Navbar
         isOpen={sidebarOpen}
         setIsOpen={setSidebarOpen}
