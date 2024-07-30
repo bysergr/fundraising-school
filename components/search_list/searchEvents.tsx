@@ -27,8 +27,6 @@ import { getOndeVamosClient } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 
-type SearchEventsProps = { serverUrl: string };
-
 type HostProps = {
   instagram: string[];
   linkedin: string[];
@@ -96,7 +94,7 @@ const Host = ({ host }: { host: HostProps[] }) => {
     const name = key > 0 ? `, ${item.name[0]}` : item.name[0];
     const link = item.linkedin[0] ? item.linkedin[0] : item.instagram[0];
     return (
-      <Link key={item.name[0]} href={'#'} target="_blank">
+      <Link key={item.name[0]} href={link} target="_blank">
         <span>{name}</span>
       </Link>
     );
@@ -109,14 +107,14 @@ const NumPeople = ({ out }: { out: boolean }) => {
     <div className="flex items-end">
       {out ? (
         <>
-          <LuUserX className="mr-2 h-4 w-4 text-black" />
+          <LuUserX className="mr-2 size-4 text-black" />
           <span className="text-right font-sans text-base font-semibold leading-none text-black">
             Soldout
           </span>
         </>
       ) : (
         <>
-          <UsersIcon className="mr-2 h-4 w-4 text-black" />
+          <UsersIcon className="mr-2 size-4 text-black" />
           <span className="text-right font-sans text-base font-semibold leading-none text-black">
             (150/200)
           </span>
@@ -147,23 +145,21 @@ const TimelineItem = ({
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
       <div className="flex w-full flex-row items-center justify-between gap-1 text-sm text-gray-500 lg:w-auto lg:flex-col lg:items-end dark:text-gray-400">
         <div className="flex flex-row items-center text-end lg:flex-col lg:items-end">
-          <span className="w-[max-content] text-lg font-normal text-black lg:pl-2 lg:pt-2">
+          <span className="w-max text-lg font-normal text-black lg:pl-2 lg:pt-2">
             {formatTime(event.start_time)}
           </span>
         </div>
         <Link href={event.url} target="_blank">
-          <span className="text-md font-semibold leading-normal text-[#313A5E] underline">
-            REGISTER
-          </span>
+          <span className="font-semibold leading-normal text-[#313A5E] underline">REGISTER</span>
         </Link>
       </div>
 
-      <div className="w-sm separator-item hidden lg:block" />
+      <div className=" separator-item hidden lg:block" />
       <div className="grid w-full space-y-6 px-2">
         <div className="">
-          <h3 className="text-xl font-bold text-[#7D0991]">{event.title}</h3>
+          <h3 className="text-xl font-bold text-ctwLightPurple">{event.title}</h3>
           {event.host && (
-            <p className="text-md pb-2 font-normal leading-normal text-[#313A5E]">
+            <p className=" pb-2 font-normal leading-normal text-[#313A5E]">
               Por <Host host={event.host} />
             </p>
           )}
@@ -174,7 +170,7 @@ const TimelineItem = ({
             />
           )}{' '}
           {event.full_address && (
-            <span className="text-md ml-2 hidden font-semibold leading-normal text-[#313A5E] lg:ml-0 lg:block">
+            <span className=" ml-2 hidden font-semibold leading-normal text-[#313A5E] lg:ml-0 lg:block">
               {event.full_address}
             </span>
           )}
@@ -191,12 +187,12 @@ const TimelineItem = ({
           >
             {remove ? (
               <>
-                <LuCalendarMinus className="mr-2 h-4 w-4 text-white" />
+                <LuCalendarMinus className="mr-2 size-4 text-white" />
                 Quitar
               </>
             ) : (
               <>
-                <LuCalendarPlus className="mr-2 h-4 w-4 text-white" />
+                <LuCalendarPlus className="mr-2 size-4 text-white" />
                 My Cal
               </>
             )}
@@ -209,12 +205,12 @@ const TimelineItem = ({
         >
           {remove ? (
             <>
-              <LuCalendarMinus className="mr-2 h-4 w-4 text-white" />
+              <LuCalendarMinus className="mr-2 size-4 text-white" />
               Quitar
             </>
           ) : (
             <>
-              <LuCalendarPlus className="mr-2 h-4 w-4 text-white" />
+              <LuCalendarPlus className="mr-2 size-4 text-white" />
               My Cal
             </>
           )}
@@ -268,15 +264,15 @@ const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
   const schedules = groupAndOrderEventsByDate(items);
 
   return (
-    <div className="px-0 py-0">
+    <div className="p-0">
       <div className=" grid max-w-full gap-y-8">
         {schedules.length > 0 ? (
           schedules.map((schedule) => (
             <div key={formatDate(schedule.date)} className="flex flex-col bg-white p-3">
               <details className="flex " open>
-                <summary className="flex cursor-pointer justify-between text-xl font-bold uppercase text-[#7D0991] lg:pl-2 lg:pt-2">
+                <summary className="flex cursor-pointer justify-between text-xl font-bold uppercase text-ctwLightPurple lg:pl-2 lg:pt-2">
                   {formatDate(schedule.date)}
-                  <IoIosArrowDown className="arrow-icon" />
+                  <IoIosArrowDown />
                 </summary>
                 <div className="mt-5 flex h-full flex-col lg:space-y-16">
                   {schedule.events
@@ -284,7 +280,7 @@ const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
                       (left, right) =>
                         new Date(left.start_time).getTime() - new Date(right.start_time).getTime(),
                     )
-                    .filter((event) => {
+                    .filter(() => {
                       return true;
                       /* We don't have relevance scores yet */
                       /* return event.relevanceScore > 40 */
@@ -310,12 +306,10 @@ const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
         ) : (
           <div className="flex h-[30vh] items-center justify-center">
             <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-              <h3 className="font-dm-sans text-center text-2xl font-bold leading-7 text-gray-500">
-                Empty
-              </h3>
-              <LuCalendarDays className="h-10 w-10 font-bold text-[#818181]" />
+              <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
+              <LuCalendarDays className="size-10 font-bold text-[#818181]" />
               <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                <p className="font-dm-sans text-center text-base font-normal leading-6 text-gray-500">
+                <p className=" text-center text-base font-normal leading-6 text-gray-500">
                   No events matched your query. Have dinner with us?
                 </p>
               </div>
@@ -326,9 +320,12 @@ const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
     </div>
   );
 };
-interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> { }
-
-const CitySelect = ({ className, onSelect }: { className: string; onSelect?: (e: any) => any }) => {
+interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
+interface CitySelectProps {
+  className: string;
+  onSelect?: (value: string) => void;
+}
+const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
   const { items: cityOptions, refine: refineCity } = useMenu({
     attribute: 'city',
   });
@@ -358,7 +355,6 @@ interface SearchBarProps {
   openModal: () => void;
   openModalShare: () => void;
 }
-
 
 const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalShare }) => {
   const { query, refine } = useSearchBox();
@@ -407,7 +403,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         >
           <Input
             ref={inputRef}
-            className="mr-2 flex-grow rounded-none border-none bg-transparent focus:border-none"
+            className="mr-2 grow rounded-none border-none bg-transparent focus:border-none"
             placeholder="Search something"
             value={value}
             autoComplete="off"
@@ -420,12 +416,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
             autoFocus
           />
           <Button
-            className=" inset-y-0 right-0 z-10 mx-2 my-1 flex cursor-pointer items-center  rounded-none bg-[#7D0991] px-2 text-white focus:outline-none"
+            className=" inset-y-0 right-0 z-10 mx-2 my-1 flex cursor-pointer items-center  rounded-none bg-ctwLightPurple px-2 text-white focus:outline-none"
             variant="ghost"
             disabled={status === 'loading'}
             type="submit"
           >
-            <MagnifyingGlassIcon className="h-4 w-4 font-bold text-white" />
+            <MagnifyingGlassIcon className="size-4 font-bold text-white" />
           </Button>
         </div>
         <CitySelect className="hidden lg:block" />
@@ -436,7 +432,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
           type="button"
           onClick={openModal}
         >
-          <LuSettings2 className="h-4 w-4 font-bold text-white" />
+          <LuSettings2 className="size-4 font-bold text-white" />
         </Button>
         {activeTab === 'my_calendar' && (
           <Button
@@ -449,7 +445,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
             <span className="ml-1 hidden lg:block">
               {activeTab === 'my_calendar' && 'My calendar'}
             </span>
-            <LuCalendarDays className="ml-1 h-4 w-4 font-bold text-white" />
+            <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
           </Button>
         )}
       </form>
@@ -561,11 +557,9 @@ const ChatSearchUI = () => {
 
       <CustomModal key="otro" isOpen={isModalOpenShare} onClose={closeModalShare} title="">
         <div className="flex w-full flex-col space-y-2.5">
-          <h3 className="font-dm-sans text-center text-2xl font-bold leading-7 text-gray-500">
-            Send my Cal
-          </h3>
+          <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">Send my Cal</h3>
           <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-            <p className="font-dm-sans text-center text-base font-normal leading-6 text-gray-500">
+            <p className=" text-center text-base font-normal leading-6 text-gray-500">
               We{'´'}ll send your calendar to your register WhatsApp number
             </p>
           </div>
@@ -575,7 +569,7 @@ const ChatSearchUI = () => {
             onClick={handleShowToast}
           >
             Send
-            <LuCalendarDays className="ml-1 h-4 w-4 font-bold text-white" />
+            <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
           </Button>
           <div>
             <Toast
@@ -616,7 +610,7 @@ const ChatSearchUI = () => {
       </CustomModal>
 
       <SearchBar activeTab={activeTab} openModal={openModal} openModalShare={openModalShare} />
-      <div className="h-full min-h-[50vh] w-full">
+      <div className="size-full min-h-[50vh]">
         <Tabs
           value={activeTab}
           defaultValue="matches"
@@ -653,12 +647,12 @@ const ChatSearchUI = () => {
               ) : (
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-                    <h3 className="font-dm-sans text-center text-2xl font-bold leading-7 text-gray-500">
+                    <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">
                       Empty
                     </h3>
-                    <LuCalendarDays className="h-10 w-10 font-bold text-[#818181]" />
+                    <LuCalendarDays className="size-10 font-bold text-[#818181]" />
                     <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                      <p className="font-dm-sans text-center text-base font-normal leading-6 text-gray-500">
+                      <p className=" text-center text-base font-normal leading-6 text-gray-500">
                         Please add some events on events tab.
                       </p>
                     </div>
@@ -720,7 +714,7 @@ const ChatSearchUI = () => {
   );
 };
 
-const SearchEvents = ({ serverUrl }: SearchEventsProps) => {
+const SearchEvents = () => {
   const { email } = useUserStore((state) => state);
 
   const { searchClient } = getOndeVamosClient({
@@ -736,7 +730,6 @@ const SearchEvents = ({ serverUrl }: SearchEventsProps) => {
       indexName="onde_col_week"
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      {/* @ts-ignore Ignore this typescript error, the types for configure look wrong */}
       <Configure hitsPerPage={100} />
       <div className="lg:py-5">
         <ChatSearchUI />

@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 // Componente Select
 const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = ({
@@ -19,15 +19,9 @@ const SelectItem: React.FC<React.OptionHTMLAttributes<HTMLOptionElement>> = ({
   children,
   ...props
 }) => (
-  <option
-    className={`text-sm ${className}`}
-    {...props}
-  >
+  <option className={`text-sm ${className}`} {...props}>
     {children}
   </option>
 );
 
-export {
-  Select,
-  SelectItem,
-};
+export { Select, SelectItem };

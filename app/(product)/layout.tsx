@@ -5,9 +5,5 @@ import { Content } from '@/components/layout/content';
 export default async function VcListLayout({ children }: { children: React.ReactNode }) {
   const data: Session | null = await getServerSession(authOptions);
 
-  return (
-    <Content data={data}>
-      {children}
-    </Content>
-  );
+  return <Content data={data}>{children}</Content>;
 }
