@@ -28,7 +28,7 @@ interface SidebarProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-  data: Session
+  data: Session | null
 }
 
 interface NavItemProps {
@@ -198,7 +198,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               <Profile data={data} collapsed={isCollapsed} />
             </>
           ) : (
-            <OpenAuthModal className="mt-auto" />
+            <OpenAuthModal className="mt-auto btn flex h-11 w-full max-w-[335px] items-center rounded-3xl border-ctwLightPurple bg-white px-4 text-ctwLightPurple" />
           )}
           <p className={`${isCollapsed ? "text-[12px]" : "text-sm"} `}>
             {`${!isCollapsed ? "Made with 💜 " : ""}`}

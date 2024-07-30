@@ -326,6 +326,7 @@ const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
     </div>
   );
 };
+interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> { }
 
 const CitySelect = ({ className, onSelect }: { className: string; onSelect?: (e: any) => any }) => {
   const { items: cityOptions, refine: refineCity } = useMenu({
@@ -333,10 +334,12 @@ const CitySelect = ({ className, onSelect }: { className: string; onSelect?: (e:
   });
   console.log({ cityOptions });
 
-  const handleSelect = (e) => {
-    const value = e.target.value;
+  const handleSelect = (e: SelectEvent): void => {
+    const value: string = e.target.value;
     refineCity(value);
-    onSelect && onSelect(value);
+    if (onSelect) {
+      onSelect(value);
+    }
   };
 
   return (
@@ -350,7 +353,14 @@ const CitySelect = ({ className, onSelect }: { className: string; onSelect?: (e:
   );
 };
 
-const SearchBar = ({ activeTab, openModal, openModalShare }) => {
+interface SearchBarProps {
+  activeTab: string;
+  openModal: () => void;
+  openModalShare: () => void;
+}
+
+
+const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalShare }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
   const [value, setValue] = React.useState(query);
