@@ -3,8 +3,6 @@ import {
   PresentationChartLineIcon,
   VideoCameraIcon,
 } from '@heroicons/react/24/outline';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 
 type Icon = 'identification' | 'presentation' | 'camera';
@@ -13,12 +11,12 @@ export default function TitleSection({
   nameSection,
   description,
   icon,
-  children
+  children,
 }: {
   nameSection: string;
   icon: Icon;
   description?: string;
-  children?: JSX.Element
+  children?: JSX.Element;
 }) {
   const iconMap: Record<Icon, JSX.Element> = {
     identification: <IdentificationIcon className="mr-2 size-8" />,
