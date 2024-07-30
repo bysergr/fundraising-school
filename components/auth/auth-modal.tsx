@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import AuthLinkedinStage from './stages/auth-linkedin';
 import { Session } from 'next-auth';
 import ValidationStage from './stages/validation';
+import BasicInfoStage from './stages/basic-info';
 
 export default function AuthModal({ data }: { data: Session | null }) {
   const { modal_sign_in, sign_in_stage } = useAppStore((state) => state);
@@ -46,6 +47,9 @@ export default function AuthModal({ data }: { data: Session | null }) {
     >
       {sign_in_stage === null && <AuthLinkedinStage />}
       {sign_in_stage === 'linkedin' && <ValidationStage data={data} />}
+      {sign_in_stage !== 'linkedin' && sign_in_stage !== null && (
+        <BasicInfoStage data={data} stage={sign_in_stage} />
+      )}
     </dialog>
   );
 }

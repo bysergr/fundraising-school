@@ -11,9 +11,11 @@ import SignOutButton from '@/components/auth/sign-out-button';
 import { AppLink } from '@/data/enums';
 import validateUser from '@/utils/validateUser';
 import { useUserStore } from '@/providers/user-store-provider';
+import { useAppStore } from '@/providers/app-store-providers';
 
 export default function ValidateUser({ user }: { user: Session | null }) {
   const { updateUserInfo } = useUserStore((state) => state);
+  const setSignInStage = useAppStore((state) => state.setSignInStage);
 
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -32,8 +34,8 @@ export default function ValidateUser({ user }: { user: Session | null }) {
       return;
     }
 
-    await validateUser(user, router, updateUserInfo);
-  }, [user, router, updateUserInfo]);
+    await validateUser(user, router, updateUserInfo, setSignInStage);
+  }, [user, router, updateUserInfo, setSignInStage]);
 
   if (loading) {
     return (

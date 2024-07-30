@@ -33,22 +33,27 @@ interface NavItemProps {
   href: string;
   pathname: string;
   collapsed: boolean;
+  exact?: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, text, collapsed, pathname, href }) => (
-  <Link
-    href={href}
-    className={clsx(
-      pathname === href
-        ? 'bg-[#3C0560] fill-white font-semibold text-white'
-        : 'fill-[#32083E] text-[#32083E]',
-      'flex rounded-lg p-2.5 text-lg',
-    )}
-  >
-    {icon}
-    {!collapsed && <span className="ml-3">{text}</span>}
-  </Link>
-);
+const NavItem: React.FC<NavItemProps> = ({ icon, text, collapsed, pathname, href, exact }) => {
+  const isActivate = exact ? pathname === href : pathname.startsWith(href);
+
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        isActivate
+          ? 'bg-[#3C0560] fill-white font-semibold text-white'
+          : 'fill-[#32083E] text-[#32083E]',
+        'flex rounded-lg p-2.5 text-lg',
+      )}
+    >
+      {icon}
+      {!collapsed && <span className="ml-3">{text}</span>}
+    </Link>
+  );
+};
 
 const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ isOpen, setIsOpen, isCollapsed, setIsCollapsed, data }, ref) => {
@@ -117,7 +122,18 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               collapsed={isCollapsed}
               href="/product"
               pathname={pathname}
+              exact
             />
+            {data && data.user && (
+              <NavItem
+                icon={<HomeIcon stroke={pathname === '/product/courses' ? '#fff' : '#32083E'} />}
+                text="Courses"
+                collapsed={isCollapsed}
+                href="/product/courses"
+                pathname={pathname}
+              />
+            )}
+
             {/* 
             <NavItem
               icon={<PodcastIcon stroke={pathname === "/podcast" ? '#fff' : "#32083E"} />}
