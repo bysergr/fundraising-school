@@ -93,7 +93,7 @@ const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
     const name = key > 0 ? `, ${item.name[0]}` : item.name[0];
     const link = item.linkedin[0] ? item.linkedin[0] : item.instagram[0];
-    if (!link) return <span>{name}</span>;
+    if (!link) return <span key={item.name[0]}>{name}</span>;
     return (
       <Link key={item.name[0]} href={link} target="_blank">
         <span>{name}</span>
