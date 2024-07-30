@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-
-const API_BASE_URL = 'https://gzyqgawzcdjzmwb5jgppkqmfaq0xgcje.lambda-url.us-east-1.on.aws';
+import { ONDE_VAMOS_API_BASE_URL, TechWeekEvent } from './common';
 
 // API response types
 interface ApiResponse<T> {
@@ -12,6 +11,7 @@ interface CalendarEvent {
   id: string;
   eventId: string;
   createdAt: string;
+  eventData: TechWeekEvent;
 }
 
 interface PaginatedCalendarEvents {
@@ -52,7 +52,7 @@ interface ListCalendarEventsParams {
 }
 
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(`${ONDE_VAMOS_API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export const useRemoveFromCalendar = () => {
   return { mutate, isLoading, error };
 };
 
-export const useListCalendarEvents = (email: string, page = 1, limit = 20) => {
+export const useListCalendarEvents = (email: string, page = 1, limit = 150) => {
   const [data, setData] = useState<ApiResponse<PaginatedCalendarEvents> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);

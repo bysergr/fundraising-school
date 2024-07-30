@@ -4,14 +4,11 @@ import TypesenseInstantSearchAdapterExport, {
   type TypesenseInstantsearchAdapterOptions,
 } from 'typesense-instantsearch-adapter';
 import { deepMerge } from '@/utils/lib';
+import { ONDE_VAMOS_HOST, ONDE_VAMOS_API_KEY } from './common';
 // There is an issue with this being compatible with vite
 // https://github.com/typesense/typesense-instantsearch-adapter/issues/199
 export const TypesenseInstantSearchAdapter =
   (TypesenseInstantSearchAdapterExport as any).default ?? TypesenseInstantSearchAdapterExport;
-
-const ONDE_VAMOS_API_KEY = 'lasnf791hp3;iuTotallySafebnposcb-v97xoiusf';
-const ONDE_VAMOS_HOST =
-  process.env.NODE_ENV === 'production' ? 'api.onde-vamos.com' : 'api.dev.onde-vamos.com';
 
 export const OndeSearchConfig = {
   apiKey: ONDE_VAMOS_API_KEY,

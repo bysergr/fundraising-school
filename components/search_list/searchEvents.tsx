@@ -23,39 +23,10 @@ import { Filters } from './Filters';
 import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
 import { type ToastRef, Toast } from './Toast';
-import { getOndeVamosClient } from '@/utils/onde-vamos';
+import { getOndeVamosClient, useAddToCalendar, useListCalendarEvents } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
-
-type HostProps = {
-  instagram: string[];
-  linkedin: string[];
-  name: string[];
-  twitter: string[];
-};
-
-type TechWeekHit = {
-  title: string;
-  description: string;
-  categories: string[];
-  date_start: string;
-  start_time: string;
-  end_time: string;
-  full_address: string;
-  url: string;
-  host?: HostProps[];
-  neighborhood?: string;
-  relevanceExplanation?: string;
-  relevanceScore: number;
-  remove?: boolean;
-};
-
-type TechWeekEvent = TechWeekHit;
-
-type ScheduleProps = {
-  date: string;
-  events: TechWeekEvent[];
-};
+import { TechWeekEvent, TechWeekHit, ScheduleProps } from '@/utils/onde-vamos/common';
 
 const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
   let color: string;
@@ -135,6 +106,8 @@ const TimelineItem = ({
   addToCalendar: () => void;
   remove?: boolean;
 }) => {
+  const { email } = useUserStore((state) => state);
+  const addToCalendarMutation = useAddToCalendar();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
       hour: 'numeric',
@@ -142,6 +115,10 @@ const TimelineItem = ({
       hour12: true,
     });
 
+  const handleAddCalendar = () => {
+    /* addToCalendar(); */
+    addToCalendarMutation.mutate({ email, eventId: event.id });
+  };
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
       <div className="flex w-full flex-row items-center justify-between gap-1 text-sm text-gray-500 lg:w-auto lg:flex-col lg:items-end dark:text-gray-400">
@@ -184,7 +161,7 @@ const TimelineItem = ({
           <Button
             className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
             variant="ghost"
-            onClick={addToCalendar}
+            onClick={handleAddCalendar}
           >
             {remove ? (
               <>
@@ -202,7 +179,7 @@ const TimelineItem = ({
         <Button
           className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
           variant="ghost"
-          onClick={addToCalendar}
+          onClick={handleAddCalendar}
         >
           {remove ? (
             <>
@@ -232,7 +209,6 @@ interface TimeLineProps {
 function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
   const groupedEventsMap: Record<string, TechWeekEvent[]> = {};
 
-  console.log({ events });
   events.forEach((event) => {
     try {
       const date = new Date(event.start_time).toISOString().split('T')[0];
@@ -248,7 +224,6 @@ function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
   const groupedEventsArray: ScheduleProps[] = Object.entries(groupedEventsMap)
     .map(([date, events]) => ({ date, events }))
     .sort((a, b) => a.date.localeCompare(b.date));
-  console.log({ groupedEventsArray });
 
   return groupedEventsArray;
 }
@@ -260,10 +235,7 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   });
 
-const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
-  const { items } = useHits<TechWeekHit>();
-  const schedules = groupAndOrderEventsByDate(items);
-
+const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove }) => {
   return (
     <div className="p-0">
       <div className=" grid max-w-full gap-y-8">
@@ -330,7 +302,6 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
   const { items: cityOptions, refine: refineCity } = useMenu({
     attribute: 'city',
   });
-  console.log({ cityOptions });
 
   const handleSelect = (e: SelectEvent): void => {
     const value: string = e.target.value;
@@ -456,11 +427,28 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
 };
 
 const ChatSearchUI = () => {
+  const { email } = useUserStore((state) => state);
+  // This makes a call to the calendar list but we have to figure out how to make the call again after adding a new event to the calendar
+  const { data: myCalendarList } = useListCalendarEvents(email);
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
-  const [schedules, setSchedules] = React.useState<ScheduleProps[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const toastRef = React.useRef<ToastRef>(null);
   const toastRefDanger = React.useRef<ToastRef>(null);
+  const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
+  const [activeTab, setActiveTab] = React.useState('matches');
+  const { items } = useHits<TechWeekHit>();
+  const schedules = groupAndOrderEventsByDate(items);
+
+  let mySchedules: ScheduleProps[] = [];
+  if (myCalendarList && myCalendarList.data && myCalendarList.data.events.length > 0) {
+    mySchedules = groupAndOrderEventsByDate(
+      myCalendarList.data.events.map((myCalendarEvent) => {
+        return myCalendarEvent.eventData;
+      }),
+    );
+  }
+
+  console.log({ mySchedules });
 
   const handleShowToast = () => {
     toastRef.current?.show();
@@ -495,12 +483,8 @@ const ChatSearchUI = () => {
       .then((res) => res.json())
       .then((res) => {
         setEvents(res);
-        setSchedules(res);
       });
   }, []);
-
-  const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
-  const [activeTab, setActiveTab] = React.useState('matches');
 
   const addToCalendar = (event: CalendarItemProps) => {
     const eventIndex = selectedCalendar.findIndex((item) => item.date === event.date);
@@ -643,8 +627,8 @@ const ChatSearchUI = () => {
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
             <div className="w-full">
-              {selectedCalendar && selectedCalendar.length > 0 ? (
-                <TimeLine schedules={selectedCalendar} addToCalendar={addToCalendar} remove />
+              {mySchedules && mySchedules.length > 0 ? (
+                <TimeLine schedules={mySchedules} addToCalendar={addToCalendar} remove />
               ) : (
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">
