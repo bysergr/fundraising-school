@@ -7,7 +7,7 @@ import { deepMerge } from '@/utils/lib';
 // There is an issue with this being compatible with vite
 // https://github.com/typesense/typesense-instantsearch-adapter/issues/199
 export const TypesenseInstantSearchAdapter =
-  TypesenseInstantSearchAdapterExport.default ?? TypesenseInstantSearchAdapterExport;
+  (TypesenseInstantSearchAdapterExport as any).default ?? TypesenseInstantSearchAdapterExport;
 
 const ONDE_VAMOS_API_KEY = 'lasnf791hp3;iuTotallySafebnposcb-v97xoiusf';
 const ONDE_VAMOS_HOST =
