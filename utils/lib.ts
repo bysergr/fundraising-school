@@ -12,11 +12,7 @@ export const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: nu
   };
 };
 
-export type DeepMergeable = { [key: string]: any };
-
-export function isObject(item: any): item is DeepMergeable {
-  return item && typeof item === 'object' && !Array.isArray(item);
-}
+type DeepMergeable = Record<string, any>;
 
 export function deepMerge<T extends DeepMergeable>(target: T, ...sources: DeepMergeable[]): T {
   if (!sources.length) return target;
@@ -26,10 +22,10 @@ export function deepMerge<T extends DeepMergeable>(target: T, ...sources: DeepMe
     for (const key in source) {
       if (isObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} });
-        deepMerge(target[key], source[key]);
+        deepMerge(target[key] as DeepMergeable, source[key]);
       } else if (Array.isArray(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: [] });
-        target[key] = [...target[key], ...source[key]];
+        (target[key] as any[]).push(...source[key]);
       } else {
         Object.assign(target, { [key]: source[key] });
       }
@@ -37,4 +33,8 @@ export function deepMerge<T extends DeepMergeable>(target: T, ...sources: DeepMe
   }
 
   return deepMerge(target, ...sources);
+}
+
+function isObject(item: any): item is DeepMergeable {
+  return item && typeof item === 'object' && !Array.isArray(item);
 }

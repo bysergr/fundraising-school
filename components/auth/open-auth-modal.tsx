@@ -8,7 +8,7 @@ export default function OpenAuthModal({ className }: { className?: string }) {
   const { openSignInModal } = useAppStore((state) => state);
 
   return (
-    <div className={clsx('block text-center text-white', className)}>
+    <div className={clsx('block text-center', className)}>
       <button onClick={openSignInModal}>Sign In</button>
     </div>
   );

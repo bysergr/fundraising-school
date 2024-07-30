@@ -1,6 +1,6 @@
-"use client"
+'use client'
 import type React from 'react';
-import { useState, useEffect, useRef, forwardRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/vc_list/navbar';
 import type { Session } from 'next-auth';
 import menu from '@/public/images/icons/menu.svg';
@@ -11,7 +11,7 @@ import logo from '@/public/images/ctw/logo.svg';
 import AuthModal from '@/components/auth/auth-modal';
 
 
-export const Content = ({ data, children }: { children: React.ReactNode; data: Session }) => {
+export const Content = ({ data, children }: { children: React.ReactNode; data: Session | null }) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
