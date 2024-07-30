@@ -13,7 +13,6 @@ export const debounce = <T extends unknown[]>(func: (...args: T) => void, waitFo
   };
 };
 
-
 // Define el tipo DeepMergeable usando Record y evitando 'any'
 type DeepMergeable = Record<string, unknown>;
 
