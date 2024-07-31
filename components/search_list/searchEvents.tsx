@@ -29,6 +29,7 @@ import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos
 import { useToast } from '@/providers/toast-provider';
 import RelevanceBadge from '@/components/search_list/RelevanceBadge';
 import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
+import { format } from 'date-fns';
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
@@ -227,7 +228,9 @@ function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
 
   events.forEach((event) => {
     try {
-      const date = new Date(event.start_time).toISOString().split('T')[0];
+      // IMPORTAN: we are grouping events by the formatted time that respects the timezone
+      // locally of the machine that runs this code
+      const date = format(new Date(event.start_time), 'yyyy-MM-dd');
       if (!groupedEventsMap[date]) {
         groupedEventsMap[date] = [];
       }
