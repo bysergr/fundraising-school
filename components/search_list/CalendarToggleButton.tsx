@@ -1,7 +1,17 @@
 import React from 'react';
 import { LuCalendarMinus, LuCalendarPlus } from 'react-icons/lu';
 
-const CalendarToggleButton = ({ isAddedToCalendar, isLoading, onClick, className }) => {
+const CalendarToggleButton = ({
+  isAddedToCalendar,
+  isLoading,
+  onClick,
+  className,
+}: {
+  isAddedToCalendar: boolean;
+  isLoading: boolean;
+  onClick: () => void;
+  className?: string;
+}) => {
   const buttonText = isAddedToCalendar ? 'Remove from Calendar' : 'Add to Calendar';
   const Icon = isAddedToCalendar ? LuCalendarMinus : LuCalendarPlus;
 

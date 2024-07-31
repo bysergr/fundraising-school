@@ -34,6 +34,12 @@ class ApiError extends Error {
   }
 }
 
+export interface ToggleCalendarParams {
+  email: string;
+  eventId: string;
+  isAdding: boolean;
+}
+
 export interface ListCalendarEventsParams {
   email: string;
   page?: number;

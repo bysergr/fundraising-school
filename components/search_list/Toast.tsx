@@ -1,6 +1,6 @@
 import type React from 'react';
 
-interface ToastProps {
+export interface ToastProps {
   color?: 'green' | 'blue' | 'red' | 'yellow';
   icon?: React.ReactNode;
   text: string;

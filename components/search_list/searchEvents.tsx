@@ -25,7 +25,7 @@ import {
 } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
-import { TechWeekEvent, TechWeekHit, ScheduleProps } from '@/utils/onde-vamos/common';
+import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos/common';
 import { useToast } from '@/providers/toast-provider';
 import CalendarToggleButton from './CalendarToggleButton';
 
@@ -517,7 +517,7 @@ const ChatSearchUI = () => {
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('matches');
-  const { items } = useHits<TechWeekHit>();
+  const { items } = useHits<TechWeekEvent>();
   const schedules = groupAndOrderEventsByDate(items);
 
   // Transform the myCalendar response to a format that can be used by the TimeLine component
