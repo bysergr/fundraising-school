@@ -1,15 +1,11 @@
 'use client';
 import { useUserStore } from '@/providers/user-store-provider';
+import { useAppStore } from '@/providers/app-store-providers';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
-import { useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
-import {
-  LuCalendarDays,
-  LuCalendarMinus,
-  LuCalendarPlus,
-  LuSettings2,
-  LuUserX,
-} from 'react-icons/lu';
+import FilterIcons from './FilterIcons';
+import { InstantSearchApi, useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
+import { LuCalendarDays, LuSettings2 } from 'react-icons/lu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,127 +16,132 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import './styles.css';
 import { Select, SelectItem } from '@/components/ui/select';
 import { Filters } from './Filters';
-import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
-import { type ToastRef, Toast } from './Toast';
-import { getOndeVamosClient } from '@/utils/onde-vamos';
+import {
+  getOndeVamosClient,
+  useListCalendarEvents,
+  type ToggleCalendarEventReturn,
+  type ListCalendarEventsReturn,
+} from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
-
-type HostProps = {
-  instagram: string[];
-  linkedin: string[];
-  name: string[];
-  twitter: string[];
-};
-
-type TechWeekHit = {
-  title: string;
-  description: string;
-  categories: string[];
-  date_start: string;
-  start_time: string;
-  end_time: string;
-  full_address: string;
-  url: string;
-  host?: HostProps[];
-  neighborhood?: string;
-  relevanceExplanation?: string;
-  relevanceScore: number;
-  remove?: boolean;
-};
-
-type TechWeekEvent = TechWeekHit;
-
-type ScheduleProps = {
-  date: string;
-  events: TechWeekEvent[];
-};
-
-const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
-  let color: string;
-  let text: string;
-  let emoji: string;
-
-  if (score >= 90) {
-    color = 'bg-green-100 text-green-800';
-    text = 'Excelente ajuste';
-    emoji = '🎯';
-  } else if (score >= 70) {
-    color = 'bg-yellow-100 text-yellow-800';
-    text = 'Buen ajuste';
-    emoji = '👍';
-  } else if (score >= 50) {
-    color = 'bg-orange-100 text-orange-800';
-    text = 'Algo relevante';
-    emoji = '🤔';
-  } else {
-    color = 'bg-red-100 text-red-800';
-    text = 'Menos relevante';
-    emoji = '🔍';
-  }
-
-  return (
-    <Badge className={`${color} px-2 py-1 text-sm font-medium`}>
-      <a href="" aria-label={explanation}>
-        {emoji} {text}
-      </a>
-    </Badge>
-  );
-};
+import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos/common';
+import { useToast } from '@/providers/toast-provider';
+import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
+import { format } from 'date-fns';
+import OpenAuthModal from '../auth/open-auth-modal';
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
     const name = key > 0 ? `, ${item.name[0]}` : item.name[0];
-    const link = item.linkedin[0] ? item.linkedin[0] : item.instagram[0];
+    const linkedInUrl = item.linkedin[0] && `https://linkedin.com/${item.linkedin[0]}`;
+    const igUrl = item.instagram[0] && `https://instagram.com/${item.instagram[0]}`;
+    const link = linkedInUrl || igUrl;
     if (!link) return <span key={item.name[0]}>{name}</span>;
     return (
       <Link key={item.name[0]} href={link} target="_blank">
-        <span>{name}</span>
+        <span className="mouse-pointer underline">{name}</span>
       </Link>
     );
   });
   return ui;
 };
 
-const NumPeople = ({ out }: { out: boolean }) => {
+const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
   return (
-    <div className="flex items-end">
-      {out ? (
-        <>
-          <LuUserX className="mr-2 size-4 text-black" />
-          <span className="text-right font-sans text-base font-semibold leading-none text-black">
-            Soldout
-          </span>
-        </>
-      ) : (
-        <>
-          <UsersIcon className="mr-2 size-4 text-black" />
-          <span className="text-right font-sans text-base font-semibold leading-none text-black">
-            (150/200)
-          </span>
-        </>
+    <div className="flex flex-wrap gap-2">
+      {event.format && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons className="w-4 px-1" label={event.format} /> {event.format}
+        </Badge>
+      )}
+      {event.intention && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons className="w-4 px-1" label={event.intention} /> {event.intention}
+        </Badge>
+      )}
+      {event.topic && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons className="w-4 px-1" label={event.topic} /> {event.topic}
+        </Badge>
       )}
     </div>
   );
 };
+
+const ExpandableParagraph = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = React.useState(false);
+  const toggleExpanded = () => setExpanded(!expanded);
+
+  return (
+    <div className="flex flex-col">
+      <p className={`${expanded ? '' : 'line-clamp-4'}`}>{text}</p>
+
+      <button
+        type="button"
+        data-action={expanded ? 'collapse' : 'expand'}
+        className="ml-auto cursor-pointer px-2 text-sm lg:text-xs"
+        onMouseDown={toggleExpanded}
+      >
+        {expanded ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  );
+};
+
 const TimelineItem = ({
   event,
   separator,
-  addToCalendar,
-  remove,
+  toggleCalendarEvent,
+  refetchCalendar,
+  instantSearch,
 }: {
   event: TechWeekEvent;
   separator: boolean;
-  addToCalendar: () => void;
-  remove?: boolean;
+  toggleCalendarEvent: ToggleCalendarEventReturn;
+  refetchCalendar: ListCalendarEventsReturn['refetch'];
+  instantSearch: InstantSearchApi;
 }) => {
+  const { email } = useUserStore((state) => state);
+  const { openSignInModal } = useAppStore((state) => state);
+  const { showToast } = useToast();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
     });
+
+  const handleCalendarClick = () => {
+    if (email) {
+      toggleCalendarEvent.mutate(
+        event.id,
+        !event.isAddedToCalendar,
+        function callbackAfterMutate() {
+          // IMPORTANT: RACE CONDITIONS BEWARE
+          refetchCalendar();
+          instantSearch.refresh();
+          if (event.isAddedToCalendar) {
+            showToast({
+              color: 'red',
+              text: `Event removed from calendar: ${event.title}`,
+              duration: 3000,
+            });
+            return;
+          }
+          showToast({
+            color: 'green',
+            text: `Event added to calendar: ${event.title}`,
+            duration: 3000,
+          });
+        },
+      );
+    } else {
+      openSignInModal();
+    }
+  };
+
+  const isLoading = toggleCalendarEvent.isLoading || instantSearch.status === 'loading';
 
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
@@ -164,12 +165,6 @@ const TimelineItem = ({
               Por <Host host={event.host} />
             </p>
           )}
-          {event.relevanceScore && (
-            <RelevanceBadge
-              score={Number(event.relevanceScore)}
-              explanation={event.relevanceExplanation}
-            />
-          )}{' '}
           {event.full_address && (
             <span className=" ml-2 hidden font-semibold leading-normal text-[#313A5E] lg:ml-0 lg:block">
               {event.full_address}
@@ -177,65 +172,48 @@ const TimelineItem = ({
           )}
         </div>
 
-        <p className="line-clamp-4 max-w-full">{event.description}</p>
+        <ExpandableParagraph text={event.description} />
+        {/* <p className="line-clamp-4 max-w-full">{event.description}</p> */}
 
+        <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
-          <NumPeople out={false} />
-          <Button
-            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
-            variant="ghost"
-            onClick={addToCalendar}
-          >
-            {remove ? (
-              <>
-                <LuCalendarMinus className="mr-2 size-4 text-white" />
-                Quitar
-              </>
-            ) : (
-              <>
-                <LuCalendarPlus className="mr-2 size-4 text-white" />
-                My Cal
-              </>
-            )}
-          </Button>
+          <div />
+
+          <CalendarToggleButton
+            isAddedToCalendar={event.isAddedToCalendar}
+            isLoading={isLoading}
+            onClick={handleCalendarClick}
+            className="hidden lg:flex"
+          />
         </div>
-        <Button
-          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
-          variant="ghost"
-          onClick={addToCalendar}
-        >
-          {remove ? (
-            <>
-              <LuCalendarMinus className="mr-2 size-4 text-white" />
-              Quitar
-            </>
-          ) : (
-            <>
-              <LuCalendarPlus className="mr-2 size-4 text-white" />
-              My Cal
-            </>
-          )}
-        </Button>
+        <CalendarToggleButton
+          isAddedToCalendar={event.isAddedToCalendar}
+          isLoading={isLoading}
+          onClick={handleCalendarClick}
+          className="lg:hidden"
+        />
       </div>
       {separator && <Separator className="my-5 block lg:hidden" />}
     </div>
   );
 };
 
-type CalendarItemProps = { date: string; event: TechWeekEvent };
 interface TimeLineProps {
   schedules: ScheduleProps[];
-  addToCalendar: (params: CalendarItemProps) => void;
+  toggleCalendarEvent: ToggleCalendarEventReturn;
+  refetchCalendar: ListCalendarEventsReturn['refetch'];
+  instantSearch: InstantSearchApi;
   remove?: boolean;
 }
 
 function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
   const groupedEventsMap: Record<string, TechWeekEvent[]> = {};
 
-  console.log({ events });
   events.forEach((event) => {
     try {
-      const date = new Date(event.start_time).toISOString().split('T')[0];
+      // IMPORTAN: we are grouping events by the formatted time that respects the timezone
+      // locally of the machine that runs this code
+      const date = format(new Date(event.start_time), 'yyyy-MM-dd');
       if (!groupedEventsMap[date]) {
         groupedEventsMap[date] = [];
       }
@@ -248,7 +226,6 @@ function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
   const groupedEventsArray: ScheduleProps[] = Object.entries(groupedEventsMap)
     .map(([date, events]) => ({ date, events }))
     .sort((a, b) => a.date.localeCompare(b.date));
-  console.log({ groupedEventsArray });
 
   return groupedEventsArray;
 }
@@ -260,68 +237,83 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   });
 
-const TimeLine: React.FC<TimeLineProps> = ({ addToCalendar, remove }) => {
-  const { items } = useHits<TechWeekHit>();
-  const schedules = groupAndOrderEventsByDate(items);
+const TimeLine: React.FC<TimeLineProps> = ({
+  schedules,
+  toggleCalendarEvent,
+  refetchCalendar,
+  instantSearch,
+}) => {
+  const [openDates, setOpenDates] = React.useState<Set<string>>(
+    new Set(schedules.map((s) => formatDate(s.date))),
+  );
+
+  const toggleDate = React.useCallback((date: string) => {
+    setOpenDates((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(date)) {
+        newSet.delete(date);
+      } else {
+        newSet.add(date);
+      }
+      return newSet;
+    });
+  }, []);
 
   return (
     <div className="p-0">
-      <div className=" grid max-w-full gap-y-8">
-        {schedules.length > 0 ? (
-          schedules.map((schedule) => (
-            <div key={formatDate(schedule.date)} className="flex flex-col bg-white p-3">
-              <details className="flex " open>
-                <summary className="flex cursor-pointer justify-between text-xl font-bold uppercase text-ctwLightPurple lg:pl-2 lg:pt-2">
-                  {formatDate(schedule.date)}
-                  <IoIosArrowDown />
-                </summary>
-                <div className="mt-5 flex h-full flex-col lg:space-y-16">
-                  {schedule.events
-                    .sort(
-                      (left, right) =>
-                        new Date(left.start_time).getTime() - new Date(right.start_time).getTime(),
-                    )
-                    .filter(() => {
-                      return true;
-                      /* We don't have relevance scores yet */
-                      /* return event.relevanceScore > 40 */
-                    })
-                    .map((event, i) => (
-                      <TimelineItem
-                        key={event.title}
-                        event={event}
-                        separator={i < schedule.events.length - 1}
-                        remove={remove}
-                        addToCalendar={() => {
-                          addToCalendar({
-                            date: schedule.date,
-                            event: event,
-                          });
-                        }}
-                      />
-                    ))}
-                </div>
-              </details>
-            </div>
-          ))
-        ) : (
-          <div className="flex h-[30vh] items-center justify-center">
-            <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-              <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
-              <LuCalendarDays className="size-10 font-bold text-[#818181]" />
-              <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                <p className=" text-center text-base font-normal leading-6 text-gray-500">
-                  No events matched your query. Have dinner with us?
-                </p>
+      <ul className="grid max-w-full gap-y-8">
+        {schedules.map((schedule) => {
+          const formattedDate = formatDate(schedule.date);
+          const isOpen = openDates.has(formattedDate);
+          return (
+            <li key={formattedDate} className="flex flex-col rounded-lg bg-white p-3 shadow-sm">
+              <div className="flex flex-col">
+                <button
+                  onClick={() => toggleDate(formattedDate)}
+                  className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple lg:pl-2 lg:pt-2"
+                  aria-expanded={isOpen}
+                  type="button"
+                >
+                  <span>{formattedDate}</span>
+                  <IoIosArrowDown
+                    className={`transition-transform duration-300 ease-in-out${isOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+                {isOpen && (
+                  <div
+                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
+                      isOpen ? 'max-h-[9000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    {schedule.events
+                      .sort(
+                        (a, b) =>
+                          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+                      )
+                      .map((event, i) => (
+                        <TimelineItem
+                          key={`${event.title}-${event.start_time}`}
+                          event={event}
+                          separator={i < schedule.events.length - 1}
+                          toggleCalendarEvent={toggleCalendarEvent}
+                          refetchCalendar={refetchCalendar}
+                          instantSearch={instantSearch}
+                        />
+                      ))}
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        )}
-      </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
+
 interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
+
 interface CitySelectProps {
   className: string;
   onSelect?: (value: string) => void;
@@ -330,10 +322,10 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
   const { items: cityOptions, refine: refineCity } = useMenu({
     attribute: 'city',
   });
-  console.log({ cityOptions });
 
   const handleSelect = (e: SelectEvent): void => {
-    const value: string = e.target.value;
+    const value: string = e.target.value === 'all' ? '' : e.target.value;
+
     refineCity(value);
     if (onSelect) {
       onSelect(value);
@@ -342,7 +334,43 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
 
   return (
     <Select className={`${className}`} onChange={handleSelect}>
+      <SelectItem key="all" value="all">
+        Select City
+      </SelectItem>
       {cityOptions.map(({ count, label, value, isRefined }) => (
+        <SelectItem aria-checked={isRefined} key={label} value={value}>
+          {value} ({count})
+        </SelectItem>
+      ))}
+    </Select>
+  );
+};
+
+interface TopicSelectProps {
+  className: string;
+  onSelect?: (value: string) => void;
+}
+
+const TopicSelect: React.FC<TopicSelectProps> = ({ className, onSelect }) => {
+  const { items, refine } = useMenu({
+    attribute: 'topic',
+  });
+
+  const handleSelect = (e: SelectEvent): void => {
+    const value: string = e.target.value === 'all' ? '' : e.target.value;
+
+    refine(value);
+    if (onSelect) {
+      onSelect(value);
+    }
+  };
+
+  return (
+    <Select className={`${className}`} onChange={handleSelect}>
+      <SelectItem key="all" value="all">
+        Select Topic
+      </SelectItem>
+      {items.map(({ count, label, value, isRefined }) => (
         <SelectItem aria-checked={isRefined} key={label} value={value}>
           {value} ({count})
         </SelectItem>
@@ -354,10 +382,9 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
 interface SearchBarProps {
   activeTab: string;
   openModal: () => void;
-  openModalShare: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalShare }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
   const [value, setValue] = React.useState(query);
@@ -400,7 +427,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         }}
       >
         <div
-          className={`col-span-5 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4 ${activeTab === 'my_calendar' ? 'col-span-3 lg:col-span-3' : ''}  `}
+          className={`col-span-5 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4 ${activeTab === 'my_calendar' ? 'col-span-3 lg:col-span-4' : ''}  `}
         >
           <Input
             ref={inputRef}
@@ -426,6 +453,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
           </Button>
         </div>
         <CitySelect className="hidden lg:block" />
+        <TopicSelect className="hidden lg:block" />
 
         <Button
           className="inset-y-0 right-0  z-10 my-1  flex cursor-pointer items-center rounded-[1px]  bg-[#3C0560] px-2 text-white focus:outline-none lg:hidden"
@@ -435,20 +463,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         >
           <LuSettings2 className="size-4 font-bold text-white" />
         </Button>
-        {activeTab === 'my_calendar' && (
-          <Button
-            className="inset-y-0 right-0 z-10  col-span-2 my-1 flex cursor-pointer items-center rounded-[1px] bg-[#3C0560] px-2 text-white focus:outline-none lg:col-span-1"
-            variant="ghost"
-            type="button"
-            onClick={openModalShare}
-          >
-            Send{' '}
-            <span className="ml-1 hidden lg:block">
-              {activeTab === 'my_calendar' && 'My calendar'}
-            </span>
-            <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
-          </Button>
-        )}
       </form>
       <Filters />
     </div>
@@ -456,19 +470,31 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
 };
 
 const ChatSearchUI = () => {
-  const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
-  const [schedules, setSchedules] = React.useState<ScheduleProps[]>([]);
+  const { email } = useUserStore((state) => state);
+  // This makes a call to the calendar list but we have to figure out how to make the call again after adding a new event to the calendar
+  const {
+    data: myCalendarList,
+    isLoading: isCalendarLoading,
+    error: myCalendarListError,
+    toggleCalendarEvent,
+    refetch: refetchCalendar,
+  } = useListCalendarEvents(email);
+  const instantSearch = useInstantSearch();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const toastRef = React.useRef<ToastRef>(null);
-  const toastRefDanger = React.useRef<ToastRef>(null);
+  const [activeTab, setActiveTab] = React.useState('matches');
+  const { items } = useHits<TechWeekEvent>();
+  const schedules = groupAndOrderEventsByDate(items);
 
-  const handleShowToast = () => {
-    toastRef.current?.show();
-  };
-
-  const handleShowToastDelete = () => {
-    toastRefDanger.current?.show();
-  };
+  // Transform the myCalendar response to a format that can be used by the TimeLine component
+  // Probably better to have the whole MyCalendar component be the one that makes this logic
+  let mySchedules: ScheduleProps[] = [];
+  if (myCalendarList && myCalendarList.data && myCalendarList.data.events.length > 0) {
+    mySchedules = groupAndOrderEventsByDate(
+      myCalendarList.data.events.map((myCalendarEvent) => {
+        return myCalendarEvent.eventData;
+      }),
+    );
+  }
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -480,71 +506,9 @@ const ChatSearchUI = () => {
 
   const [isModalOpenShare, setIsModalOpenShare] = React.useState(false);
 
-  const openModalShare = () => {
-    setIsModalOpenShare(true);
-  };
-
   const closeModalShare = () => {
     setIsModalOpenShare(false);
   };
-
-  React.useEffect(() => {
-    fetch(
-      'https://gist.githubusercontent.com/CestDiego/e2cf07f13a287619dc563a344b124133/raw/b1d918ae195f1374322f0199662b83d8d8ab8abb/events_sample.',
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setEvents(res);
-        setSchedules(res);
-      });
-  }, []);
-
-  const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
-  const [activeTab, setActiveTab] = React.useState('matches');
-
-  const addToCalendar = (event: CalendarItemProps) => {
-    const eventIndex = selectedCalendar.findIndex((item) => item.date === event.date);
-
-    if (eventIndex !== -1) {
-      const existingEventIndex = selectedCalendar[eventIndex].events.indexOf(event.event);
-
-      if (existingEventIndex !== -1) {
-        // Remove the event if it already exists
-        const updatedEvents = selectedCalendar[eventIndex].events.filter((e) => e !== event.event);
-        const updatedCalendar = [...selectedCalendar];
-        if (updatedEvents.length > 0) {
-          updatedCalendar[eventIndex].events = updatedEvents;
-        } else {
-          updatedCalendar.splice(eventIndex, 1);
-        }
-        setSelectedCalendar(updatedCalendar);
-        handleShowToastDelete();
-      } else {
-        // Add the event if it does not exist
-        const updatedCalendar = [...selectedCalendar];
-        const newEvent = {
-          ...event.event,
-          remove: true,
-        };
-        updatedCalendar[eventIndex].events.push(newEvent);
-        setSelectedCalendar(updatedCalendar);
-      }
-    } else {
-      // Add new date and event
-      const newEvent = {
-        ...event.event,
-        remove: true,
-      };
-      const newSchedule = {
-        date: event.date,
-        events: [newEvent],
-      };
-      setSelectedCalendar([...selectedCalendar, newSchedule]);
-    }
-    setActiveTab('my_calendar');
-  };
-
-  if (!events.length) return <></>;
 
   return (
     <div className="flex flex-col space-y-5">
@@ -553,6 +517,7 @@ const ChatSearchUI = () => {
       <CustomModal key="filters" isOpen={isModalOpen} onClose={closeModal} title="Filters">
         <div className="flex w-full flex-col space-y-5">
           <CitySelect className="w-full" onSelect={closeModal} />
+          <TopicSelect className="w-full" onSelect={closeModal} />
         </div>
       </CustomModal>
 
@@ -567,50 +532,15 @@ const ChatSearchUI = () => {
           <Button
             className="cursor-pointer rounded-md bg-[#3C0560] px-2 font-semibold text-white focus:outline-none"
             variant="ghost"
-            onClick={handleShowToast}
           >
             Send
             <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
           </Button>
-          <div>
-            <Toast
-              ref={toastRef}
-              color="green"
-              icon={
-                <>
-                  {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M22 2L11 13"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M22 2L15 22L11 13L2 9L22 2Z"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </>
-              }
-              text="Calendar sent successfully"
-              duration={5000}
-            />
-          </div>
+          <div />
         </div>
       </CustomModal>
 
-      <SearchBar activeTab={activeTab} openModal={openModal} openModalShare={openModalShare} />
+      <SearchBar activeTab={activeTab} openModal={openModal} />
       <div className="size-full min-h-[50vh]">
         <Tabs
           value={activeTab}
@@ -637,77 +567,66 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
-            {events && events.length > 0 && (
-              <TimeLine schedules={schedules} addToCalendar={addToCalendar} />
+            {schedules && schedules.length > 0 ? (
+              <TimeLine
+                schedules={schedules}
+                toggleCalendarEvent={toggleCalendarEvent}
+                refetchCalendar={refetchCalendar}
+                instantSearch={instantSearch}
+              />
+            ) : (
+              <li className="flex h-[30vh] items-center justify-center">
+                <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                  <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
+                  <LuCalendarDays className="size-10 text-[#818181]" />
+                  <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+                    No events matched your query. Have dinner with us?
+                  </p>
+                </div>
+              </li>
             )}
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
-            <div className="w-full">
-              {selectedCalendar && selectedCalendar.length > 0 ? (
-                <TimeLine schedules={selectedCalendar} addToCalendar={addToCalendar} remove />
-              ) : (
+            {email ? (
+              <div className="w-full">
+                {isCalendarLoading && <p>Loading...</p>}
+                {myCalendarListError && <p>Error: {myCalendarListError.message}</p>}
+                {mySchedules && mySchedules.length > 0 ? (
+                  <TimeLine
+                    schedules={mySchedules}
+                    toggleCalendarEvent={toggleCalendarEvent}
+                    refetchCalendar={refetchCalendar}
+                    instantSearch={instantSearch}
+                  />
+                ) : (
+                  <div className="flex h-[30vh] items-center justify-center">
+                    <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                      <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">
+                        Empty
+                      </h3>
+                      <LuCalendarDays className="size-10 font-bold text-[#818181]" />
+                      <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
+                        <p className=" text-center text-base font-normal leading-6 text-gray-500">
+                          Please add some events on events tab.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="w-full">
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">
                     <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">
-                      Empty
+                      Auth to add events
                     </h3>
                     <LuCalendarDays className="size-10 font-bold text-[#818181]" />
-                    <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                      <p className=" text-center text-base font-normal leading-6 text-gray-500">
-                        Please add some events on events tab.
-                      </p>
-                    </div>
+                    <OpenAuthModal className="btn mt-auto flex h-11 w-full max-w-[335px] items-center rounded-3xl border-ctwLightPurple bg-white px-4 text-ctwLightPurple" />
                   </div>
                 </div>
-              )}
-            </div>
-            <Toast
-              ref={toastRefDanger}
-              color="blue"
-              icon={
-                <>
-                  {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9 9H9.01"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M15 9H15.01"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </>
-              }
-              text="You have removed this event from your calendar"
-              duration={5000}
-            />
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
@@ -731,7 +650,7 @@ const SearchEvents = () => {
       indexName="onde_col_week"
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Configure hitsPerPage={100} />
+      <Configure hitsPerPage={250} />
       <div className="lg:py-5">
         <ChatSearchUI />
       </div>

@@ -1,54 +1,44 @@
 import * as React from 'react';
-import armchair from './icons/armchair.svg';
-import beer from './icons/beer.svg';
-import bike from './icons/bike.svg';
-import chefHat from './icons/chef-hat.svg';
-import croissant from './icons/croissant.svg';
-import fish from './icons/fish.svg';
-import heartHandshake from './icons/heart-handshake.svg';
-import laptop from './icons/laptop.svg';
-import wand from './icons/wand.svg';
-import rocket from './icons/rocket.svg';
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 import { Button } from '../ui/button';
+import { useRefinementList } from 'react-instantsearch';
+import FilterIcons from './FilterIcons';
+import { RefinementListItem } from 'instantsearch.js/es/connectors/refinement-list/connectRefinementList';
 
-type FilterButtonProps = {
-  icon: string;
-  name: string;
-};
-
-const filters: FilterButtonProps[] = [
-  { icon: laptop, name: 'Coworking' },
-  { icon: chefHat, name: 'Dinner' },
-  { icon: wand, name: 'Experience' },
-  { icon: croissant, name: 'Breakfast / Brunch' },
-  { icon: beer, name: 'Happy Hour' },
-  { icon: armchair, name: 'Panel' },
-  { icon: heartHandshake, name: 'Mixer / Network' },
-  { icon: fish, name: 'Lunch' },
-  { icon: rocket, name: 'Workshop' },
-  { icon: bike, name: 'Workout' },
-];
-
-const FilterButton: React.FC<FilterButtonProps> = ({ icon, name }) => {
-  const [active, setActive] = React.useState(false);
+const FilterButton: React.FC<RefinementListItem & { refine: (value: string) => void }> = ({
+  refine,
+  label,
+  count,
+  value,
+  isRefined,
+}) => {
   return (
     <Button
-      onClick={() => setActive(!active)}
-      className={` ${active ? 'border-none bg-[#DBDBDB]' : 'border-gray-400'} flex min-w-max  items-center justify-center gap-2 rounded-md border px-2 py-1.5 text-lg  text-black`}
+      onClick={() => refine(value)}
+      className={`${isRefined ? 'border-none bg-[#DBDBDB]' : 'border-gray-400'} flex min-w-max  items-center justify-center gap-2 rounded-md border px-2 py-1.5 text-lg  text-black`}
     >
-      <Image loading="lazy" alt={name} src={icon} className="w-[18px]" width={18} height={18} />
+      <FilterIcons label={label} className="w-[28px]" />
       <div className="w-full">
-        <span className=" whitespace-nowrap">{name}</span>
+        <span className=" whitespace-nowrap">{label}</span>
       </div>
-      {active && <XMarkIcon color="#000" className="w-[18px] " />}
+      {isRefined && <XMarkIcon color="#000" className="w-[18px] " />} ({count})
     </Button>
   );
 };
 
 export const Filters: React.FC = () => {
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const formatRefinement = useRefinementList({
+    attribute: 'format',
+  });
+  const intentionRefinement = useRefinementList({
+    attribute: 'intention',
+  });
+
+  // Do not show the refinement list if there are no refinements
+  if (formatRefinement.items.length + intentionRefinement.items.length === 0) {
+    return null;
+  }
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -71,8 +61,11 @@ export const Filters: React.FC = () => {
       </button>
 
       <div ref={scrollRef} className="flex flex-1 gap-2.5 overflow-x-auto">
-        {filters.map((filter) => (
-          <FilterButton key={filter.name} {...filter} />
+        {formatRefinement.items.map((item) => (
+          <FilterButton key={item.label} {...item} refine={formatRefinement.refine} />
+        ))}
+        {intentionRefinement.items.map((item) => (
+          <FilterButton key={item.label} {...item} refine={intentionRefinement.refine} />
         ))}
       </div>
 

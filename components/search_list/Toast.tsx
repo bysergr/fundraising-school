@@ -1,52 +1,31 @@
 import type React from 'react';
-import { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 
-interface ToastProps {
+export interface ToastProps {
   color?: 'green' | 'blue' | 'red' | 'yellow';
   icon?: React.ReactNode;
   text: string;
   duration?: number;
+  onClose: () => void;
 }
 
-export interface ToastRef {
-  show: () => void;
-}
+export const Toast: React.FC<ToastProps> = ({ color = 'green', icon, text, onClose }) => {
+  const colorClasses = {
+    green: 'bg-green-500',
+    blue: 'bg-blue-500',
+    red: 'bg-red-500',
+    yellow: 'bg-yellow-500',
+  };
 
-export const Toast = forwardRef<ToastRef, ToastProps>(
-  ({ color = 'green', icon, text, duration = 3000 }, ref) => {
-    const [isVisible, setIsVisible] = useState(false);
-
-    useImperativeHandle(ref, () => ({
-      show: () => setIsVisible(true),
-    }));
-
-    useEffect(() => {
-      let timer: NodeJS.Timeout;
-      if (isVisible) {
-        timer = setTimeout(() => setIsVisible(false), duration);
-      }
-      return () => clearTimeout(timer);
-    }, [isVisible, duration]);
-
-    if (!isVisible) return null;
-
-    const colorClasses = {
-      green: 'bg-green-500',
-      blue: 'bg-blue-500',
-      red: 'bg-red-500',
-      yellow: 'bg-yellow-500',
-    };
-
-    return (
-      <div
-        className={`fixed right-4 top-4 z-50 mb-4 flex items-center rounded-lg p-4 text-white shadow ${colorClasses[color]}`}
-        role="alert"
-      >
-        {icon && <span className="mr-2">{icon}</span>}
-        <div className="text-sm font-normal">{text}</div>
-      </div>
-    );
-  },
-);
-
-Toast.displayName = 'Toast';
+  return (
+    <div
+      className={`mb-4 flex items-center rounded-lg p-4 text-white shadow ${colorClasses[color]} transition-opacity duration-300`}
+      role="alert"
+    >
+      {icon && <span className="mr-2">{icon}</span>}
+      <div className="text-sm font-normal">{text}</div>
+      <button onClick={onClose} className="ml-auto text-white hover:text-gray-200">
+        ×
+      </button>
+    </div>
+  );
+};
