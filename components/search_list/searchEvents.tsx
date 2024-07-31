@@ -34,11 +34,13 @@ import OpenAuthModal from '../auth/open-auth-modal';
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
     const name = key > 0 ? `, ${item.name[0]}` : item.name[0];
-    const link = item.linkedin[0] ? item.linkedin[0] : item.instagram[0];
+    const linkedInUrl = item.linkedin[0] && `https://linkedin.com/${item.linkedin[0]}`;
+    const igUrl = item.instagram[0] && `https://instagram.com/${item.instagram[0]}`;
+    const link = linkedInUrl || igUrl;
     if (!link) return <span key={item.name[0]}>{name}</span>;
     return (
       <Link key={item.name[0]} href={link} target="_blank">
-        <span>{name}</span>
+        <span className="mouse-pointer underline">{name}</span>
       </Link>
     );
   });
@@ -281,7 +283,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
                 {isOpen && (
                   <div
                     className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
-                      isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                      isOpen ? 'max-h-[9000px] opacity-100' : 'max-h-0 opacity-0'
                     }`}
                   >
                     {schedule.events
