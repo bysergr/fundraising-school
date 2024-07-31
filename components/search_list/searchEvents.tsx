@@ -3,7 +3,7 @@ import { useUserStore } from '@/providers/user-store-provider';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import FilterIcons from './FilterIcons';
-import { useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
+import { InstantSearchApi, useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
 import { LuCalendarDays, LuSettings2, LuUserX } from 'react-icons/lu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -114,13 +114,13 @@ const TimelineItem = ({
   separator,
   toggleCalendarEvent,
   refetchCalendar,
-  refreshSearchResults,
+  instantSearch,
 }: {
   event: TechWeekEvent;
   separator: boolean;
   toggleCalendarEvent: ToggleCalendarEventReturn;
   refetchCalendar: ListCalendarEventsReturn['refetch'];
-  refreshSearchResults: () => void;
+  instantSearch: InstantSearchApi;
 }) => {
   const { showToast } = useToast();
   const formatTime = (dateString: string): string =>
@@ -131,13 +131,10 @@ const TimelineItem = ({
     });
 
   const handleCalendarClick = () => {
-    toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar);
-    // IMPORTANT: Right now the Neon database takes some time to update after
-    // writing to it, this is a manufactured delay to make sure the calendar
-    // is updated in the db.
-    setTimeout(() => {
+    toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar, function callbackAfterMutate() {
+      // IMPORTANT: RACE CONDITIONS BEWARE
       refetchCalendar();
-      refreshSearchResults();
+      instantSearch.refresh();
       if (event.isAddedToCalendar) {
         showToast({
           color: 'red',
@@ -151,8 +148,10 @@ const TimelineItem = ({
         text: `Event added to calendar: ${event.title}`,
         duration: 3000,
       });
-    }, 200);
+    });
   };
+
+  const isLoading = toggleCalendarEvent.isLoading || instantSearch.status === 'loading';
 
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
@@ -198,14 +197,14 @@ const TimelineItem = ({
 
           <CalendarToggleButton
             isAddedToCalendar={event.isAddedToCalendar}
-            isLoading={toggleCalendarEvent.isLoading}
+            isLoading={isLoading}
             onClick={handleCalendarClick}
             className="hidden lg:flex"
           />
         </div>
         <CalendarToggleButton
           isAddedToCalendar={event.isAddedToCalendar}
-          isLoading={toggleCalendarEvent.isLoading}
+          isLoading={isLoading}
           onClick={handleCalendarClick}
           className="lg:hidden"
         />
@@ -219,7 +218,7 @@ interface TimeLineProps {
   schedules: ScheduleProps[];
   toggleCalendarEvent: ToggleCalendarEventReturn;
   refetchCalendar: ListCalendarEventsReturn['refetch'];
-  refreshSearchResults: () => void;
+  instantSearch: InstantSearchApi;
   remove?: boolean;
 }
 
@@ -258,7 +257,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
   schedules,
   toggleCalendarEvent,
   refetchCalendar,
-  refreshSearchResults,
+  instantSearch,
 }) => {
   const [openDates, setOpenDates] = React.useState<Set<string>>(
     new Set(schedules.map((s) => formatDate(s.date))),
@@ -319,7 +318,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
                           separator={i < schedule.events.length - 1}
                           toggleCalendarEvent={toggleCalendarEvent}
                           refetchCalendar={refetchCalendar}
-                          refreshSearchResults={refreshSearchResults}
+                          instantSearch={instantSearch}
                         />
                       ))}
                   </div>
@@ -525,7 +524,7 @@ const ChatSearchUI = () => {
     toggleCalendarEvent,
     refetch: refetchCalendar,
   } = useListCalendarEvents(email);
-  const { refresh: refreshSearchResults } = useInstantSearch();
+  const instantSearch = useInstantSearch();
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('matches');
@@ -635,7 +634,7 @@ const ChatSearchUI = () => {
                 schedules={schedules}
                 toggleCalendarEvent={toggleCalendarEvent}
                 refetchCalendar={refetchCalendar}
-                refreshSearchResults={refreshSearchResults}
+                instantSearch={instantSearch}
               />
             )}
           </TabsContent>
@@ -648,7 +647,7 @@ const ChatSearchUI = () => {
                   schedules={mySchedules}
                   toggleCalendarEvent={toggleCalendarEvent}
                   refetchCalendar={refetchCalendar}
-                  refreshSearchResults={refreshSearchResults}
+                  instantSearch={instantSearch}
                 />
               ) : (
                 <div className="flex h-[30vh] items-center justify-center">

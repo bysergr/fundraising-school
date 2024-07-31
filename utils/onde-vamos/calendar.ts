@@ -47,7 +47,7 @@ export interface ListCalendarEventsParams {
 }
 
 export interface ToggleCalendarEventReturn {
-  mutate: (eventId: string, isAdding: boolean) => Promise<void>;
+  mutate: (eventId: string, isAdding: boolean, callback?: () => unknown) => Promise<void>;
   isLoading: boolean;
   error: ApiError | null;
 }
@@ -107,7 +107,7 @@ export const useToggleCalendarEvent = (
   const [error, setError] = useState<ApiError | null>(null);
 
   const mutate = useCallback(
-    async (eventId: string, isAdding: boolean) => {
+    async (eventId: string, isAdding: boolean, callback?: () => unknown) => {
       setIsLoading(true);
       setError(null);
       try {
@@ -118,6 +118,8 @@ export const useToggleCalendarEvent = (
         setError(err instanceof ApiError ? err : new ApiError('Unknown error', 500));
         setIsLoading(false);
         throw err;
+      } finally {
+        callback?.();
       }
     },
     [email, onToggle],
