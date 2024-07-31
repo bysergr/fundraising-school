@@ -289,9 +289,8 @@ const TimeLine: React.FC<TimeLineProps> = ({
                   />
                 </button>
                 <div
-                  className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
-                    isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-                  }`}
+                  className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
                 >
                   {schedule.events
                     .sort(
@@ -317,7 +316,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
   );
 };
 
-interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
+interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> { }
 
 interface CitySelectProps {
   className: string;
