@@ -25,20 +25,25 @@ const FilterButton: React.FC<UnifiedRefinementItem> = ({ refine, label, value, i
   );
 };
 
-interface FiltersProps {
-  attributes: string[];
-}
-
-export const Filters: React.FC<FiltersProps> = ({ attributes }) => {
+export const Filters: React.FC = ({}) => {
   const scrollRef = React.useRef<HTMLDivElement>(null);
-
-  const refinementLists = [];
-  for (const attribute of attributes) {
-    refinementLists.push({
-      attribute,
-      ...useRefinementList({ attribute }),
-    });
-  }
+  const formatRefinementList = useRefinementList({ attribute: 'format' });
+  const intentionRefinementList = useRefinementList({ attribute: 'intention' });
+  const topicRefinementList = useRefinementList({ attribute: 'topic' });
+  const refinementLists = [
+    {
+      attribute: 'format',
+      ...formatRefinementList,
+    },
+    {
+      attribute: 'intention',
+      ...intentionRefinementList,
+    },
+    {
+      attribute: 'topic',
+      ...topicRefinementList,
+    },
+  ];
 
   const unifiedRefinements: UnifiedRefinementItem[] = refinementLists.flatMap(
     ({ attribute, items, refine }) => items.map((item) => ({ ...item, attribute, refine })),

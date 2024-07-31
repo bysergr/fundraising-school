@@ -499,7 +499,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
           <LuSettings2 className="size-4 font-bold text-white" />
         </Button>
       </form>
-      <Filters attributes={['format', 'intention', 'topic']} />
+      <Filters />
     </div>
   );
 };
