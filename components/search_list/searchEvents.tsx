@@ -1,5 +1,6 @@
 'use client';
 import { useUserStore } from '@/providers/user-store-provider';
+import { useAppStore } from '@/providers/app-store-providers';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import FilterIcons from './FilterIcons';
@@ -29,6 +30,7 @@ import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos
 import { useToast } from '@/providers/toast-provider';
 import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
 import { format } from 'date-fns';
+import OpenAuthModal from '../auth/open-auth-modal';
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
@@ -42,28 +44,6 @@ const Host = ({ host }: { host: HostProps[] }) => {
     );
   });
   return ui;
-};
-
-const NumPeople = ({ out }: { out: boolean }) => {
-  return (
-    <div className="flex items-end">
-      {out ? (
-        <>
-          <LuUserX className="mr-2 size-4 text-black" />
-          <span className="text-right font-sans text-base font-semibold leading-none text-black">
-            Soldout
-          </span>
-        </>
-      ) : (
-        <>
-          <UsersIcon className="mr-2 size-4 text-black" />
-          <span className="text-right font-sans text-base font-semibold leading-none text-black">
-            (150/200)
-          </span>
-        </>
-      )}
-    </div>
-  );
 };
 
 const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
@@ -121,6 +101,8 @@ const TimelineItem = ({
   refetchCalendar: ListCalendarEventsReturn['refetch'];
   instantSearch: InstantSearchApi;
 }) => {
+  const { email } = useUserStore((state) => state);
+  const { openSignInModal } = useAppStore((state) => state);
   const { showToast } = useToast();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
@@ -130,24 +112,32 @@ const TimelineItem = ({
     });
 
   const handleCalendarClick = () => {
-    toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar, function callbackAfterMutate() {
-      // IMPORTANT: RACE CONDITIONS BEWARE
-      refetchCalendar();
-      instantSearch.refresh();
-      if (event.isAddedToCalendar) {
-        showToast({
-          color: 'red',
-          text: `Event removed from calendar: ${event.title}`,
-          duration: 3000,
-        });
-        return;
-      }
-      showToast({
-        color: 'green',
-        text: `Event added to calendar: ${event.title}`,
-        duration: 3000,
-      });
-    });
+    if (email) {
+      toggleCalendarEvent.mutate(
+        event.id,
+        !event.isAddedToCalendar,
+        function callbackAfterMutate() {
+          // IMPORTANT: RACE CONDITIONS BEWARE
+          refetchCalendar();
+          instantSearch.refresh();
+          if (event.isAddedToCalendar) {
+            showToast({
+              color: 'red',
+              text: `Event removed from calendar: ${event.title}`,
+              duration: 3000,
+            });
+            return;
+          }
+          showToast({
+            color: 'green',
+            text: `Event added to calendar: ${event.title}`,
+            duration: 3000,
+          });
+        },
+      );
+    } else {
+      openSignInModal();
+    }
   };
 
   const isLoading = toggleCalendarEvent.isLoading || instantSearch.status === 'loading';
@@ -186,7 +176,7 @@ const TimelineItem = ({
 
         <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
-          <NumPeople out={false} />
+          <div />
 
           <CalendarToggleButton
             isAddedToCalendar={event.isAddedToCalendar}
@@ -279,8 +269,9 @@ const TimeLine: React.FC<TimeLineProps> = ({
               <div className="flex flex-col">
                 <button
                   onClick={() => toggleDate(formattedDate)}
-                  className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple focus:outline-none focus:ring-2 focus:ring-ctwLightPurple focus:ring-opacity-50 lg:pl-2 lg:pt-2"
+                  className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple lg:pl-2 lg:pt-2"
                   aria-expanded={isOpen}
+                  type="button"
                 >
                   <span>{formattedDate}</span>
                   <IoIosArrowDown
@@ -288,25 +279,29 @@ const TimeLine: React.FC<TimeLineProps> = ({
                     aria-hidden="true"
                   />
                 </button>
-                <div
-                  className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-                    }`}
-                >
-                  {schedule.events
-                    .sort(
-                      (a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
-                    )
-                    .map((event, i) => (
-                      <TimelineItem
-                        key={`${event.title}-${event.start_time}`}
-                        event={event}
-                        separator={i < schedule.events.length - 1}
-                        toggleCalendarEvent={toggleCalendarEvent}
-                        refetchCalendar={refetchCalendar}
-                        instantSearch={instantSearch}
-                      />
-                    ))}
-                </div>
+                {
+                  isOpen && (
+                    <div
+                      className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                    >
+                      {schedule.events
+                        .sort(
+                          (a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+                        )
+                        .map((event, i) => (
+                          <TimelineItem
+                            key={`${event.title}-${event.start_time}`}
+                            event={event}
+                            separator={i < schedule.events.length - 1}
+                            toggleCalendarEvent={toggleCalendarEvent}
+                            refetchCalendar={refetchCalendar}
+                            instantSearch={instantSearch}
+                          />
+                        ))}
+                    </div>
+                  )
+                }
               </div>
             </li>
           );
@@ -432,7 +427,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         }}
       >
         <div
-          className={`col-span-5 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4 ${activeTab === 'my_calendar' ? 'col-span-3 lg:col-span-3' : ''}  `}
+          className={`col-span-5 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4 ${activeTab === 'my_calendar' ? 'col-span-3 lg:col-span-4' : ''}  `}
         >
           <Input
             ref={inputRef}
@@ -468,20 +463,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         >
           <LuSettings2 className="size-4 font-bold text-white" />
         </Button>
-        {activeTab === 'my_calendar' && (
-          <Button
-            className="inset-y-0 right-0 z-10  col-span-2 my-1 flex cursor-pointer items-center rounded-[1px] bg-[#3C0560] px-2 text-white focus:outline-none lg:col-span-1"
-            variant="ghost"
-            type="button"
-            onClick={openModalShare}
-          >
-            Send{' '}
-            <span className="ml-1 hidden lg:block">
-              {activeTab === 'my_calendar' && 'My calendar'}
-            </span>
-            <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
-          </Button>
-        )}
       </form>
       <Filters />
     </div>
@@ -559,7 +540,7 @@ const ChatSearchUI = () => {
             Send
             <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
           </Button>
-          <div></div>
+          <div />
         </div>
       </CustomModal>
 
@@ -610,32 +591,46 @@ const ChatSearchUI = () => {
             )}
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
-            <div className="w-full">
-              {isCalendarLoading && <p>Loading...</p>}
-              {myCalendarListError && <p>Error: {myCalendarListError.message}</p>}
-              {mySchedules && mySchedules.length > 0 ? (
-                <TimeLine
-                  schedules={mySchedules}
-                  toggleCalendarEvent={toggleCalendarEvent}
-                  refetchCalendar={refetchCalendar}
-                  instantSearch={instantSearch}
-                />
-              ) : (
+            {email ? (
+              <div className="w-full">
+                {isCalendarLoading && <p>Loading...</p>}
+                {myCalendarListError && <p>Error: {myCalendarListError.message}</p>}
+                {mySchedules && mySchedules.length > 0 ? (
+                  <TimeLine
+                    schedules={mySchedules}
+                    toggleCalendarEvent={toggleCalendarEvent}
+                    refetchCalendar={refetchCalendar}
+                    instantSearch={instantSearch}
+                  />
+                ) : (
+                  <div className="flex h-[30vh] items-center justify-center">
+                    <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                      <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">
+                        Empty
+                      </h3>
+                      <LuCalendarDays className="size-10 font-bold text-[#818181]" />
+                      <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
+                        <p className=" text-center text-base font-normal leading-6 text-gray-500">
+                          Please add some events on events tab.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="w-full">
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">
                     <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">
-                      Empty
+                      Auth to add events
                     </h3>
                     <LuCalendarDays className="size-10 font-bold text-[#818181]" />
-                    <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                      <p className=" text-center text-base font-normal leading-6 text-gray-500">
-                        Please add some events on events tab.
-                      </p>
-                    </div>
+                    <OpenAuthModal className="btn mt-auto flex h-11 w-full max-w-[335px] items-center rounded-3xl border-ctwLightPurple bg-white px-4 text-ctwLightPurple" />
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

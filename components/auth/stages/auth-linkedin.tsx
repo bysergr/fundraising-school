@@ -1,8 +1,11 @@
 import React from 'react';
 import LinkedInSignIn from '@/components/auth/linkedin-sign-in';
 import Logo from '@/components/ui/logo-ctw';
+import { useAppStore } from '@/providers/app-store-providers';
 
 export default function AuthLinkedinStage() {
+  const { closeSignInModal } = useAppStore((state) => state);
+
   return (
     <div className="flex size-full flex-col justify-around px-8 py-6 lg:p-0">
       <div className="flex flex-col items-center justify-between gap-12 ">
@@ -17,8 +20,18 @@ export default function AuthLinkedinStage() {
         </h3>
 
         <LinkedInSignIn className="hidden lg:flex" />
+        <LinkedInSignIn className="mx-auto lg:hidden" />
+        <div className="flex">
+          <button
+            onClick={closeSignInModal}
+            className="m-0 border-0 p-0 underline"
+            rel="noopener noreferrer"
+            type="button"
+          >
+            Or continue later
+          </button>
+        </div>
       </div>
-      <LinkedInSignIn className="mx-auto lg:hidden" />
     </div>
   );
 }
