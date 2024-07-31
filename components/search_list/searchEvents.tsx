@@ -23,7 +23,12 @@ import { Filters } from './Filters';
 import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
 import { type ToastRef, Toast } from './Toast';
-import { getOndeVamosClient, useAddToCalendar, useListCalendarEvents } from '@/utils/onde-vamos';
+import {
+  getOndeVamosClient,
+  useAddToCalendar,
+  useListCalendarEvents,
+  useRemoveFromCalendar,
+} from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 import { TechWeekEvent, TechWeekHit, ScheduleProps } from '@/utils/onde-vamos/common';
@@ -108,20 +113,24 @@ const TimelineItem = ({
 }) => {
   const { email } = useUserStore((state) => state);
   const addToCalendarMutation = useAddToCalendar();
+  const removeFromCalendarMutation = useRemoveFromCalendar();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
     });
+  // The `remove` property is passed down so that the myCalendar view can always have the remove button
+  const showRemove = remove || event.isAddedToCalendar;
 
   const handleAddCalendar = () => {
     addToCalendar();
+    if (showRemove) {
+      removeFromCalendarMutation.mutate({ email, eventId: event.id });
+      return;
+    }
     addToCalendarMutation.mutate({ email, eventId: event.id });
   };
-
-  // The `remove` property is passed down so that the myCalendar view can always have the remove button
-  const showRemove = remove || event.isAddedToCalendar;
 
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
@@ -626,7 +635,7 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
-            {events && events.length > 0 && (
+            {schedules && schedules.length > 0 && (
               <TimeLine schedules={schedules} addToCalendar={addToCalendar} />
             )}
           </TabsContent>
