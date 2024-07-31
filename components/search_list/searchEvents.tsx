@@ -23,16 +23,15 @@ import { Select, SelectItem } from '@/components/ui/select';
 import { Filters } from './Filters';
 import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
-import { type ToastRef, Toast } from './Toast';
 import {
   getOndeVamosClient,
-  useAddToCalendar,
   useListCalendarEvents,
-  useRemoveFromCalendar,
+  type ToggleCalendarEventReturn,
 } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 import { TechWeekEvent, TechWeekHit, ScheduleProps } from '@/utils/onde-vamos/common';
+import { useToast } from '@/providers/toast-provider';
 
 const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
   let color: string;
@@ -117,7 +116,7 @@ const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
       )}
       {event.topic && (
         <Badge className="bg-violet-500 text-white">
-          <FilterIcons className="w-4 px-1" label={event.topic} className="pr-1" /> {event.topic}
+          <FilterIcons className="w-4 px-1" label={event.topic} /> {event.topic}
         </Badge>
       )}
     </div>
@@ -130,12 +129,12 @@ const ExpandableParagraph = ({ text }: { text: string }) => {
 
   return (
     <div className="flex flex-col">
-      <p className={`line-clamp-${expanded ? 'none' : '4'}`}>{text}</p>
+      <p className={`${expanded ? '' : 'line-clamp-4'}`}>{text}</p>
 
       <button
         type="button"
         data-action={expanded ? 'collapse' : 'expand'}
-        className="text-md ml-auto cursor-pointer px-2 lg:text-xs"
+        className="ml-auto cursor-pointer px-2 text-sm lg:text-xs"
         onMouseDown={toggleExpanded}
       >
         {expanded ? 'Read less' : 'Read more'}
@@ -147,33 +146,35 @@ const ExpandableParagraph = ({ text }: { text: string }) => {
 const TimelineItem = ({
   event,
   separator,
-  addToCalendar,
-  remove,
+  toggleCalendarEvent,
 }: {
   event: TechWeekEvent;
   separator: boolean;
-  addToCalendar: () => void;
-  remove?: boolean;
+  toggleCalendarEvent: ToggleCalendarEventReturn;
 }) => {
   const { email } = useUserStore((state) => state);
-  const addToCalendarMutation = useAddToCalendar();
-  const removeFromCalendarMutation = useRemoveFromCalendar();
+  const { showToast } = useToast();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
     });
-  // The `remove` property is passed down so that the myCalendar view can always have the remove button
-  const showRemove = remove || event.isAddedToCalendar;
-
-  const handleAddCalendar = () => {
-    addToCalendar();
-    if (showRemove) {
-      removeFromCalendarMutation.mutate({ email, eventId: event.id });
+  const handleCalendarClick = () => {
+    toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar);
+    if (event.isAddedToCalendar) {
+      showToast({
+        color: 'red',
+        text: `Event removed from calendar: ${event.title}`,
+        duration: 3000,
+      });
       return;
     }
-    addToCalendarMutation.mutate({ email, eventId: event.id });
+    showToast({
+      color: 'green',
+      text: `Event added to calendar: ${event.title}`,
+      duration: 3000,
+    });
   };
 
   return (
@@ -217,12 +218,14 @@ const TimelineItem = ({
         <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
           <NumPeople out={false} />
+          {toggleCalendarEvent.isLoading}
           <Button
-            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${showRemove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
+            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${event.isAddedToCalendar ? 'bg-[red]' : 'bg-[#3C0560]'}`}
             variant="ghost"
-            onClick={handleAddCalendar}
+            disabled={toggleCalendarEvent.isLoading}
+            onClick={handleCalendarClick}
           >
-            {showRemove ? (
+            {event.isAddedToCalendar ? (
               <>
                 <LuCalendarMinus className="mr-2 size-4 text-white" />
                 Quitar
@@ -236,11 +239,11 @@ const TimelineItem = ({
           </Button>
         </div>
         <Button
-          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${showRemove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
+          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${event.isAddedToCalendar ? 'bg-[red]' : 'bg-[#3C0560]'}`}
           variant="ghost"
-          onClick={handleAddCalendar}
+          onClick={handleCalendarClick}
         >
-          {showRemove ? (
+          {event.isAddedToCalendar ? (
             <>
               <LuCalendarMinus className="mr-2 size-4 text-white" />
               Quitar
@@ -261,7 +264,7 @@ const TimelineItem = ({
 type CalendarItemProps = { date: string; event: TechWeekEvent };
 interface TimeLineProps {
   schedules: ScheduleProps[];
-  addToCalendar: (params: CalendarItemProps) => void;
+  toggleCalendarEvent: ToggleCalendarEventReturn;
   remove?: boolean;
 }
 
@@ -294,7 +297,7 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   });
 
-const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove }) => {
+const TimeLine: React.FC<TimeLineProps> = ({ schedules, toggleCalendarEvent, remove }) => {
   const [openDates, setOpenDates] = React.useState<Set<string>>(
     new Set(schedules.map((s) => formatDate(s.date))),
   );
@@ -333,7 +336,7 @@ const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove })
                   >
                     <span>{formattedDate}</span>
                     <IoIosArrowDown
-                      className={`transform transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+                      className={`transition-transform duration-300 ease-in-out${isOpen ? 'rotate-180' : ''}`}
                       aria-hidden="true"
                     />
                   </button>
@@ -352,8 +355,7 @@ const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove })
                           key={`${event.title}-${event.start_time}`}
                           event={event}
                           separator={i < schedule.events.length - 1}
-                          remove={remove}
-                          addToCalendar={() => addToCalendar({ date: schedule.date, event })}
+                          toggleCalendarEvent={toggleCalendarEvent}
                         />
                       ))}
                   </div>
@@ -365,7 +367,7 @@ const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove })
           <li className="flex h-[30vh] items-center justify-center">
             <div className="flex w-full flex-col items-center justify-center space-y-2.5">
               <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
-              <LuCalendarDays className="h-10 w-10 text-[#818181]" />
+              <LuCalendarDays className="size-10 text-[#818181]" />
               <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
                 No events matched your query. Have dinner with us?
               </p>
@@ -513,11 +515,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
 const ChatSearchUI = () => {
   const { email } = useUserStore((state) => state);
   // This makes a call to the calendar list but we have to figure out how to make the call again after adding a new event to the calendar
-  const { data: myCalendarList } = useListCalendarEvents(email);
+  const {
+    data: myCalendarList,
+    isLoading: isCalendarLoading,
+    error: myCalendarListError,
+    toggleCalendarEvent,
+  } = useListCalendarEvents(email);
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const toastRef = React.useRef<ToastRef>(null);
-  const toastRefDanger = React.useRef<ToastRef>(null);
   const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
   const [activeTab, setActiveTab] = React.useState('matches');
   const { items } = useHits<TechWeekHit>();
@@ -533,16 +538,6 @@ const ChatSearchUI = () => {
       }),
     );
   }
-
-  console.log({ mySchedules });
-
-  const handleShowToast = () => {
-    toastRef.current?.show();
-  };
-
-  const handleShowToastDelete = () => {
-    toastRefDanger.current?.show();
-  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -572,47 +567,6 @@ const ChatSearchUI = () => {
       });
   }, []);
 
-  const addToCalendar = (event: CalendarItemProps) => {
-    /* const eventIndex = selectedCalendar.findIndex((item) => item.date === event.date);
-  * if (eventIndex !== -1) {
-  *   const existingEventIndex = selectedCalendar[eventIndex].events.indexOf(event.event);
-  
-  *   if (existingEventIndex !== -1) {
-  *     // Remove the event if it already exists
-  *     const updatedEvents = selectedCalendar[eventIndex].events.filter((e) => e !== event.event);
-  *     const updatedCalendar = [...selectedCalendar];
-  *     if (updatedEvents.length > 0) {
-  *       updatedCalendar[eventIndex].events = updatedEvents;
-  *     } else {
-  *       updatedCalendar.splice(eventIndex, 1);
-  *     }
-  *     setSelectedCalendar(updatedCalendar);
-  *     handleShowToastDelete();
-  *   } else {
-  *     // Add the event if it does not exist
-  *     const updatedCalendar = [...selectedCalendar];
-  *     const newEvent = {
-  *       ...event.event,
-  *       remove: true,
-  *     };
-  *     updatedCalendar[eventIndex].events.push(newEvent);
-  *     setSelectedCalendar(updatedCalendar);
-  *   }
-  * } else {
-  *   // Add new date and event
-  *   const newEvent = {
-  *     ...event.event,
-  *     remove: true,
-  *   };
-  *   const newSchedule = {
-  *     date: event.date,
-  *     events: [newEvent],
-  *   };
-  *   setSelectedCalendar([...selectedCalendar, newSchedule]);
-  * } */
-    /* setActiveTab('my_calendar'); */
-  };
-
   if (!events.length) return <></>;
 
   return (
@@ -636,46 +590,11 @@ const ChatSearchUI = () => {
           <Button
             className="cursor-pointer rounded-md bg-[#3C0560] px-2 font-semibold text-white focus:outline-none"
             variant="ghost"
-            onClick={handleShowToast}
           >
             Send
             <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
           </Button>
-          <div>
-            <Toast
-              ref={toastRef}
-              color="green"
-              icon={
-                <>
-                  {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M22 2L11 13"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M22 2L15 22L11 13L2 9L22 2Z"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </>
-              }
-              text="Calendar sent successfully"
-              duration={5000}
-            />
-          </div>
+          <div></div>
         </div>
       </CustomModal>
 
@@ -707,13 +626,15 @@ const ChatSearchUI = () => {
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
             {schedules && schedules.length > 0 && (
-              <TimeLine schedules={schedules} addToCalendar={addToCalendar} />
+              <TimeLine schedules={schedules} toggleCalendarEvent={toggleCalendarEvent} />
             )}
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
             <div className="w-full">
+              {isCalendarLoading && <p>Loading...</p>}
+              {myCalendarListError && <p>Error: {myCalendarListError.message}</p>}
               {mySchedules && mySchedules.length > 0 ? (
-                <TimeLine schedules={mySchedules} addToCalendar={addToCalendar} remove />
+                <TimeLine schedules={mySchedules} toggleCalendarEvent={toggleCalendarEvent} />
               ) : (
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">
@@ -730,53 +651,6 @@ const ChatSearchUI = () => {
                 </div>
               )}
             </div>
-            <Toast
-              ref={toastRefDanger}
-              color="blue"
-              icon={
-                <>
-                  {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9 9H9.01"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M15 9H15.01"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </>
-              }
-              text="You have removed this event from your calendar"
-              duration={5000}
-            />
           </TabsContent>
         </Tabs>
       </div>

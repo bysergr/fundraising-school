@@ -16,6 +16,7 @@ export type HostProps = {
 };
 
 export type TechWeekHit = {
+  id: string;
   title: string;
   description: string;
   categories: string[];
