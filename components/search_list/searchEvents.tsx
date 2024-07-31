@@ -119,6 +119,10 @@ const TimelineItem = ({
     /* addToCalendar(); */
     addToCalendarMutation.mutate({ email, eventId: event.id });
   };
+
+  // The `remove` property is passed down so that the myCalendar view can always have the remove button
+  const showRemove = remove || event.isAddedToCalendar;
+
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
       <div className="flex w-full flex-row items-center justify-between gap-1 text-sm text-gray-500 lg:w-auto lg:flex-col lg:items-end dark:text-gray-400">
@@ -159,11 +163,11 @@ const TimelineItem = ({
         <div className="flex w-full justify-between">
           <NumPeople out={false} />
           <Button
-            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
+            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${showRemove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
             variant="ghost"
             onClick={handleAddCalendar}
           >
-            {remove ? (
+            {showRemove ? (
               <>
                 <LuCalendarMinus className="mr-2 size-4 text-white" />
                 Quitar
@@ -177,11 +181,11 @@ const TimelineItem = ({
           </Button>
         </div>
         <Button
-          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${remove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
+          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${showRemove ? 'bg-[red]' : 'bg-[#3C0560]'}`}
           variant="ghost"
           onClick={handleAddCalendar}
         >
-          {remove ? (
+          {showRemove ? (
             <>
               <LuCalendarMinus className="mr-2 size-4 text-white" />
               Quitar
@@ -439,6 +443,8 @@ const ChatSearchUI = () => {
   const { items } = useHits<TechWeekHit>();
   const schedules = groupAndOrderEventsByDate(items);
 
+  // Transform the myCalendar response to a format that can be used by the TimeLine component
+  // Probably better to have the whole MyCalendar component be the one that makes this logic
   let mySchedules: ScheduleProps[] = [];
   if (myCalendarList && myCalendarList.data && myCalendarList.data.events.length > 0) {
     mySchedules = groupAndOrderEventsByDate(

@@ -31,7 +31,11 @@ export type TechWeekHit = {
     remove?: boolean;
 };
 
-export type TechWeekEvent = TechWeekHit;
+// This type is a type returned from our search + some customization based on the user context.
+// Like isAddedToCalendar that tracks whether the event is added to the user's calendar.
+export type TechWeekEvent = TechWeekHit & {
+    isAddedToCalendar?: boolean;
+};
 
 export type ScheduleProps = {
     date: string;
