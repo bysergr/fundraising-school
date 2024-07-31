@@ -311,7 +311,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
                 >
                   <span>{formattedDate}</span>
                   <IoIosArrowDown
-                    className={`transition-transform duration-300 ease-in-out${isOpen ? 'rotate-180' : ''}`}
+                    className={`transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`}
                     aria-hidden="true"
                   />
                 </button>
