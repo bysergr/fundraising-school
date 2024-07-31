@@ -180,7 +180,7 @@ const TimelineItem = ({
         text: `Event added to calendar: ${event.title}`,
         duration: 3000,
       });
-    }, 100);
+    }, 200);
   };
 
   return (
