@@ -7,6 +7,7 @@ import { deepMerge } from '@/utils/lib';
 import { ONDE_VAMOS_HOST, ONDE_VAMOS_API_KEY } from './common';
 // There is an issue with this being compatible with vite
 // https://github.com/typesense/typesense-instantsearch-adapter/issues/199
+// @typescript-eslint/no-explicit-any
 export const TypesenseInstantSearchAdapter =
   (TypesenseInstantSearchAdapterExport as any).default ?? TypesenseInstantSearchAdapterExport;
 

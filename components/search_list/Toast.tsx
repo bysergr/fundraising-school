@@ -1,5 +1,4 @@
 import type React from 'react';
-import { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 
 interface ToastProps {
   color?: 'green' | 'blue' | 'red' | 'yellow';

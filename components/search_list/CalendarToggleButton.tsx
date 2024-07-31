@@ -24,12 +24,12 @@ const CalendarToggleButton = ({ isAddedToCalendar, isLoading, onClick, className
         ${className}
       `}
     >
-      <Icon className="mr-2 h-5 w-5" />
+      <Icon className="mr-2 size-5" />
       <span className="hidden sm:inline">{buttonText}</span>
       <span className="sm:hidden">{isAddedToCalendar ? 'Remove' : 'Add'}</span>
       {isLoading && (
         <svg
-          className="ml-2 h-5 w-5 animate-spin text-white"
+          className="ml-2 size-5 animate-spin text-white"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

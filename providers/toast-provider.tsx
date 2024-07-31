@@ -15,18 +15,21 @@ interface ToastItem extends ToastProps {
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = useCallback((props: Omit<ToastProps, 'onClose'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const newToast: ToastItem = { ...props, id, onClose: () => removeToast(id) };
-    setToasts((prevToasts) => [...prevToasts, newToast]);
-
-    // Automatically remove toast after duration
-    setTimeout(() => removeToast(id), props.duration || 3000);
-  }, []);
-
   const removeToast = useCallback((id: string) => {
     setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
   }, []);
+
+  const showToast = useCallback(
+    (props: Omit<ToastProps, 'onClose'>) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      const newToast: ToastItem = { ...props, id, onClose: () => removeToast(id) };
+      setToasts((prevToasts) => [...prevToasts, newToast]);
+
+      // Automatically remove toast after duration
+      setTimeout(() => removeToast(id), props.duration || 3000);
+    },
+    [removeToast],
+  );
 
   return (
     <ToastContext.Provider value={{ showToast }}>

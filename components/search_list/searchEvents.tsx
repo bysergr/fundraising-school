@@ -4,13 +4,7 @@ import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import FilterIcons from './FilterIcons';
 import { useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
-import {
-  LuCalendarDays,
-  LuCalendarMinus,
-  LuCalendarPlus,
-  LuSettings2,
-  LuUserX,
-} from 'react-icons/lu';
+import { LuCalendarDays, LuSettings2, LuUserX } from 'react-icons/lu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -250,7 +244,6 @@ const TimelineItem = ({
   );
 };
 
-type CalendarItemProps = { date: string; event: TechWeekEvent };
 interface TimeLineProps {
   schedules: ScheduleProps[];
   toggleCalendarEvent: ToggleCalendarEventReturn;
@@ -523,7 +516,6 @@ const ChatSearchUI = () => {
   const { refresh: refreshSearchResults } = useInstantSearch();
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
   const [activeTab, setActiveTab] = React.useState('matches');
   const { items } = useHits<TechWeekHit>();
   const schedules = groupAndOrderEventsByDate(items);
