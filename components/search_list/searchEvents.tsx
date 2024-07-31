@@ -27,7 +27,6 @@ import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos/common';
 import { useToast } from '@/providers/toast-provider';
-import RelevanceBadge from '@/components/search_list/RelevanceBadge';
 import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
 import { format } from 'date-fns';
 
@@ -175,12 +174,6 @@ const TimelineItem = ({
               Por <Host host={event.host} />
             </p>
           )}
-          {event.relevanceScore && (
-            <RelevanceBadge
-              score={Number(event.relevanceScore)}
-              explanation={event.relevanceExplanation}
-            />
-          )}{' '}
           {event.full_address && (
             <span className=" ml-2 hidden font-semibold leading-normal text-[#313A5E] lg:ml-0 lg:block">
               {event.full_address}
