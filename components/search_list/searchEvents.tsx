@@ -268,68 +268,50 @@ const TimeLine: React.FC<TimeLineProps> = ({
     });
   }, []);
 
-  const sortedSchedules = React.useMemo(
-    () => schedules.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-    [schedules],
-  );
-
   return (
     <div className="p-0">
       <ul className="grid max-w-full gap-y-8">
-        {sortedSchedules.length > 0 ? (
-          sortedSchedules.map((schedule) => {
-            const formattedDate = formatDate(schedule.date);
-            const isOpen = openDates.has(formattedDate);
-            return (
-              <li key={formattedDate} className="flex flex-col rounded-lg bg-white p-3 shadow-sm">
-                <div className="flex flex-col">
-                  <button
-                    onClick={() => toggleDate(formattedDate)}
-                    className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple focus:outline-none focus:ring-2 focus:ring-ctwLightPurple focus:ring-opacity-50 lg:pl-2 lg:pt-2"
-                    aria-expanded={isOpen}
-                  >
-                    <span>{formattedDate}</span>
-                    <IoIosArrowDown
-                      className={`transition-transform duration-300 ease-in-out${isOpen ? 'rotate-180' : ''}`}
-                      aria-hidden="true"
-                    />
-                  </button>
-                  <div
-                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
-                      isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    {schedule.events
-                      .sort(
-                        (a, b) =>
-                          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
-                      )
-                      .map((event, i) => (
-                        <TimelineItem
-                          key={`${event.title}-${event.start_time}`}
-                          event={event}
-                          separator={i < schedule.events.length - 1}
-                          toggleCalendarEvent={toggleCalendarEvent}
-                          refetchCalendar={refetchCalendar}
-                          instantSearch={instantSearch}
-                        />
-                      ))}
-                  </div>
+        {schedules.map((schedule) => {
+          const formattedDate = formatDate(schedule.date);
+          const isOpen = openDates.has(formattedDate);
+          return (
+            <li key={formattedDate} className="flex flex-col rounded-lg bg-white p-3 shadow-sm">
+              <div className="flex flex-col">
+                <button
+                  onClick={() => toggleDate(formattedDate)}
+                  className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple focus:outline-none focus:ring-2 focus:ring-ctwLightPurple focus:ring-opacity-50 lg:pl-2 lg:pt-2"
+                  aria-expanded={isOpen}
+                >
+                  <span>{formattedDate}</span>
+                  <IoIosArrowDown
+                    className={`transition-transform duration-300 ease-in-out${isOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+                <div
+                  className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
+                    isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  {schedule.events
+                    .sort(
+                      (a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+                    )
+                    .map((event, i) => (
+                      <TimelineItem
+                        key={`${event.title}-${event.start_time}`}
+                        event={event}
+                        separator={i < schedule.events.length - 1}
+                        toggleCalendarEvent={toggleCalendarEvent}
+                        refetchCalendar={refetchCalendar}
+                        instantSearch={instantSearch}
+                      />
+                    ))}
                 </div>
-              </li>
-            );
-          })
-        ) : (
-          <li className="flex h-[30vh] items-center justify-center">
-            <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-              <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
-              <LuCalendarDays className="size-10 text-[#818181]" />
-              <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
-                No events matched your query. Have dinner with us?
-              </p>
-            </div>
-          </li>
-        )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -518,7 +500,6 @@ const ChatSearchUI = () => {
     refetch: refetchCalendar,
   } = useListCalendarEvents(email);
   const instantSearch = useInstantSearch();
-  const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('matches');
   const { items } = useHits<TechWeekEvent>();
@@ -552,18 +533,6 @@ const ChatSearchUI = () => {
   const closeModalShare = () => {
     setIsModalOpenShare(false);
   };
-
-  React.useEffect(() => {
-    fetch(
-      'https://gist.githubusercontent.com/CestDiego/e2cf07f13a287619dc563a344b124133/raw/b1d918ae195f1374322f0199662b83d8d8ab8abb/events_sample.',
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setEvents(res);
-      });
-  }, []);
-
-  if (!events.length) return <></>;
 
   return (
     <div className="flex flex-col space-y-5">
@@ -622,13 +591,23 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
-            {schedules && schedules.length > 0 && (
+            {schedules && schedules.length > 0 ? (
               <TimeLine
                 schedules={schedules}
                 toggleCalendarEvent={toggleCalendarEvent}
                 refetchCalendar={refetchCalendar}
                 instantSearch={instantSearch}
               />
+            ) : (
+              <li className="flex h-[30vh] items-center justify-center">
+                <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                  <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
+                  <LuCalendarDays className="size-10 text-[#818181]" />
+                  <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+                    No events matched your query. Have dinner with us?
+                  </p>
+                </div>
+              </li>
             )}
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
