@@ -4,7 +4,14 @@ import { useAppStore } from '@/providers/app-store-providers';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import FilterIcons from './FilterIcons';
-import { InstantSearchApi, useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
+import {
+  InstantSearchApi,
+  useInstantSearch,
+  useMenu,
+  useRefinementList,
+  useSearchBox,
+  useStats,
+} from 'react-instantsearch';
 import { LuCalendarDays, LuSettings2 } from 'react-icons/lu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -40,31 +47,59 @@ const Host = ({ host }: { host: HostProps[] }) => {
     if (!link) return <span key={item.name[0]}>{name}</span>;
     return (
       <Link key={item.name[0]} href={link} target="_blank">
-        <span className="mouse-pointer underline">{name}</span>
+        <span className="cursor-pointer underline">{name}</span>
       </Link>
     );
   });
   return ui;
 };
 
+const RefinementBadge = ({
+  value,
+  attribute,
+  label,
+}: {
+  value: string;
+  attribute: string;
+  label: string;
+}) => {
+  const { refine, items } = useRefinementList({
+    attribute,
+  });
+
+  const refinementItem = items.find((item) => item.value === value);
+  const isRefined = refinementItem?.isRefined || false;
+
+  const handleClick = () => {
+    // Maybe track refinements?
+    refine(value);
+  };
+  return (
+    <Badge
+      className={`cursor-pointer ${isRefined ? 'bg-violet-900' : 'bg-violet-500'} text-white`}
+      onClick={handleClick}
+    >
+      <FilterIcons className="w-4 px-1" label={label} /> {label}
+    </Badge>
+  );
+};
+
 const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
+  const refinementList = ['format', 'intention', 'topic'] as const;
   return (
     <div className="flex flex-wrap gap-2">
-      {event.format && (
-        <Badge className="bg-violet-500 text-white">
-          <FilterIcons className="w-4 px-1" label={event.format} /> {event.format}
-        </Badge>
-      )}
-      {event.intention && (
-        <Badge className="bg-violet-500 text-white">
-          <FilterIcons className="w-4 px-1" label={event.intention} /> {event.intention}
-        </Badge>
-      )}
-      {event.topic && (
-        <Badge className="bg-violet-500 text-white">
-          <FilterIcons className="w-4 px-1" label={event.topic} /> {event.topic}
-        </Badge>
-      )}
+      {refinementList.map((refinement) => {
+        return (
+          event[refinement] && (
+            <RefinementBadge
+              key={refinement}
+              value={event[refinement]}
+              label={event[refinement]}
+              attribute={refinement}
+            />
+          )
+        );
+      })}
     </div>
   );
 };
@@ -453,7 +488,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
           </Button>
         </div>
         <CitySelect className="hidden lg:block" />
-        <TopicSelect className="hidden lg:block" />
+        {false && <TopicSelect className="hidden lg:block" />}
 
         <Button
           className="inset-y-0 right-0  z-10 my-1  flex cursor-pointer items-center rounded-[1px]  bg-[#3C0560] px-2 text-white focus:outline-none lg:hidden"
@@ -464,7 +499,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
           <LuSettings2 className="size-4 font-bold text-white" />
         </Button>
       </form>
-      <Filters />
+      <Filters attributes={['format', 'intention', 'topic']} />
     </div>
   );
 };
@@ -483,6 +518,7 @@ const ChatSearchUI = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('matches');
   const { items } = useHits<TechWeekEvent>();
+  const { processingTimeMS, nbHits } = useStats();
   const schedules = groupAndOrderEventsByDate(items);
 
   // Transform the myCalendar response to a format that can be used by the TimeLine component
@@ -567,6 +603,9 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
+            <p>
+              {nbHits} results in {processingTimeMS / 1000} seconds
+            </p>
             {schedules && schedules.length > 0 ? (
               <TimeLine
                 schedules={schedules}
