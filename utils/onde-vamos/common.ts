@@ -26,6 +26,9 @@ export type TechWeekHit = {
   url: string;
   host?: HostProps[];
   neighborhood?: string;
+  format: string;
+  intention: string;
+  topic: string;
   relevanceExplanation?: string;
   relevanceScore: number;
   remove?: boolean;

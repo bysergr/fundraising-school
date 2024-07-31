@@ -2,6 +2,7 @@
 import { useUserStore } from '@/providers/user-store-provider';
 import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
+import FilterIcons from './FilterIcons';
 import { useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
 import {
   LuCalendarDays,
@@ -100,6 +101,28 @@ const NumPeople = ({ out }: { out: boolean }) => {
     </div>
   );
 };
+
+const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {event.format && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons label={event.format} /> {event.format}
+        </Badge>
+      )}
+      {event.intention && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons label={event.intention} /> {event.intention}
+        </Badge>
+      )}
+      {event.topic && (
+        <Badge className="bg-violet-500 text-white">
+          <FilterIcons label={event.topic} className="pr-1" /> {event.topic}
+        </Badge>
+      )}
+    </div>
+  );
+};
 const TimelineItem = ({
   event,
   separator,
@@ -169,6 +192,7 @@ const TimelineItem = ({
 
         <p className="line-clamp-4 max-w-full">{event.description}</p>
 
+        <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
           <NumPeople out={false} />
           <Button
