@@ -351,7 +351,8 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
   });
 
   const handleSelect = (e: SelectEvent): void => {
-    const value: string = e.target.value;
+    const value: string = e.target.value === 'all' ? '' : e.target.value;
+
     refineCity(value);
     if (onSelect) {
       onSelect(value);
@@ -360,6 +361,9 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
 
   return (
     <Select className={`${className}`} onChange={handleSelect}>
+      <SelectItem key="all" value="all">
+        Select City
+      </SelectItem>
       {cityOptions.map(({ count, label, value, isRefined }) => (
         <SelectItem aria-checked={isRefined} key={label} value={value}>
           {value} ({count})
