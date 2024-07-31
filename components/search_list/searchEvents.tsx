@@ -272,6 +272,37 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   });
 
+const TimelineSkeleton = ({ numberOfDays = 2, eventsPerDay = 3 }) => {
+  return (
+    <div className="animate-pulse space-y-8">
+      <p className="h-4 w-48 rounded bg-gray-200"></p>
+      {[...Array(numberOfDays)].map((_, dayIndex) => (
+        <div key={dayIndex} className="space-y-4">
+          <div className="h-6 w-64 rounded bg-purple-200"></div>
+          {[...Array(eventsPerDay)].map((_, eventIndex) => (
+            <div key={eventIndex} className="flex space-x-4">
+              <div className="w-24 space-y-2">
+                <div className="h-4 w-16 rounded bg-gray-200"></div>
+                <div className="h-4 w-20 rounded bg-gray-200"></div>
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-3/4 rounded bg-gray-200"></div>
+                <div className="h-4 w-1/2 rounded bg-gray-200"></div>
+                <div className="h-20 rounded bg-gray-100"></div>
+                <div className="flex space-x-2">
+                  {[...Array(3)].map((_, badgeIndex) => (
+                    <div key={badgeIndex} className="h-6 w-20 rounded-full bg-purple-100"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const TimeLine: React.FC<TimeLineProps> = ({
   schedules,
   toggleCalendarEvent,
@@ -603,10 +634,11 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
+            {instantSearch.status === 'loading' && <TimelineSkeleton />}
             <p>
               {nbHits} results in {processingTimeMS / 1000} seconds
             </p>
-            {schedules && schedules.length > 0 ? (
+            {instantSearch.error || (schedules && schedules.length) > 0 ? (
               <TimeLine
                 schedules={schedules}
                 toggleCalendarEvent={toggleCalendarEvent}
