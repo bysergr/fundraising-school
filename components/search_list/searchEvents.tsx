@@ -27,39 +27,8 @@ import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 import { TechWeekEvent, type HostProps, ScheduleProps } from '@/utils/onde-vamos/common';
 import { useToast } from '@/providers/toast-provider';
-import CalendarToggleButton from './CalendarToggleButton';
-
-const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
-  let color: string;
-  let text: string;
-  let emoji: string;
-
-  if (score >= 90) {
-    color = 'bg-green-100 text-green-800';
-    text = 'Excelente ajuste';
-    emoji = '🎯';
-  } else if (score >= 70) {
-    color = 'bg-yellow-100 text-yellow-800';
-    text = 'Buen ajuste';
-    emoji = '👍';
-  } else if (score >= 50) {
-    color = 'bg-orange-100 text-orange-800';
-    text = 'Algo relevante';
-    emoji = '🤔';
-  } else {
-    color = 'bg-red-100 text-red-800';
-    text = 'Menos relevante';
-    emoji = '🔍';
-  }
-
-  return (
-    <Badge className={`${color} px-2 py-1 text-sm font-medium`}>
-      <a href="" aria-label={explanation}>
-        {emoji} {text}
-      </a>
-    </Badge>
-  );
-};
+import RelevanceBadge from '@/components/search_list/RelevanceBadge';
+import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
@@ -159,6 +128,7 @@ const TimelineItem = ({
       minute: 'numeric',
       hour12: true,
     });
+
   const handleCalendarClick = () => {
     toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar);
     // IMPORTANT: Right now the Neon database takes some time to update after
