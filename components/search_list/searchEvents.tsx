@@ -107,22 +107,43 @@ const RefinementBadges = ({ event }: { event: TechWeekEvent }) => {
     <div className="flex flex-wrap gap-2">
       {event.format && (
         <Badge className="bg-violet-500 text-white">
-          <FilterIcons label={event.format} /> {event.format}
+          <FilterIcons className="w-4 px-1" label={event.format} /> {event.format}
         </Badge>
       )}
       {event.intention && (
         <Badge className="bg-violet-500 text-white">
-          <FilterIcons label={event.intention} /> {event.intention}
+          <FilterIcons className="w-4 px-1" label={event.intention} /> {event.intention}
         </Badge>
       )}
       {event.topic && (
         <Badge className="bg-violet-500 text-white">
-          <FilterIcons label={event.topic} className="pr-1" /> {event.topic}
+          <FilterIcons className="w-4 px-1" label={event.topic} className="pr-1" /> {event.topic}
         </Badge>
       )}
     </div>
   );
 };
+
+const ExpandableParagraph = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = React.useState(false);
+  const toggleExpanded = () => setExpanded(!expanded);
+
+  return (
+    <div className="flex flex-col">
+      <p className={`line-clamp-${expanded ? 'none' : '4'}`}>{text}</p>
+
+      <button
+        type="button"
+        data-action={expanded ? 'collapse' : 'expand'}
+        className="text-md ml-auto cursor-pointer px-2 lg:text-xs"
+        onMouseDown={toggleExpanded}
+      >
+        {expanded ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  );
+};
+
 const TimelineItem = ({
   event,
   separator,
@@ -190,7 +211,8 @@ const TimelineItem = ({
           )}
         </div>
 
-        <p className="line-clamp-4 max-w-full">{event.description}</p>
+        <ExpandableParagraph text={event.description} />
+        {/* <p className="line-clamp-4 max-w-full">{event.description}</p> */}
 
         <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
@@ -273,63 +295,88 @@ const formatDate = (dateString: string): string =>
   });
 
 const TimeLine: React.FC<TimeLineProps> = ({ schedules, addToCalendar, remove }) => {
+  const [openDates, setOpenDates] = React.useState<Set<string>>(
+    new Set(schedules.map((s) => formatDate(s.date))),
+  );
+
+  const toggleDate = React.useCallback((date: string) => {
+    setOpenDates((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(date)) {
+        newSet.delete(date);
+      } else {
+        newSet.add(date);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const sortedSchedules = React.useMemo(
+    () => schedules.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    [schedules],
+  );
+
   return (
     <div className="p-0">
-      <div className=" grid max-w-full gap-y-8">
-        {schedules.length > 0 ? (
-          schedules.map((schedule) => (
-            <div key={formatDate(schedule.date)} className="flex flex-col bg-white p-3">
-              <details className="flex " open>
-                <summary className="flex cursor-pointer justify-between text-xl font-bold uppercase text-ctwLightPurple lg:pl-2 lg:pt-2">
-                  {formatDate(schedule.date)}
-                  <IoIosArrowDown />
-                </summary>
-                <div className="mt-5 flex h-full flex-col lg:space-y-16">
-                  {schedule.events
-                    .sort(
-                      (left, right) =>
-                        new Date(left.start_time).getTime() - new Date(right.start_time).getTime(),
-                    )
-                    .filter(() => {
-                      return true;
-                      /* We don't have relevance scores yet */
-                      /* return event.relevanceScore > 40 */
-                    })
-                    .map((event, i) => (
-                      <TimelineItem
-                        key={event.title}
-                        event={event}
-                        separator={i < schedule.events.length - 1}
-                        remove={remove}
-                        addToCalendar={() => {
-                          addToCalendar({
-                            date: schedule.date,
-                            event: event,
-                          });
-                        }}
-                      />
-                    ))}
+      <ul className="grid max-w-full gap-y-8">
+        {sortedSchedules.length > 0 ? (
+          sortedSchedules.map((schedule) => {
+            const formattedDate = formatDate(schedule.date);
+            const isOpen = openDates.has(formattedDate);
+            return (
+              <li key={formattedDate} className="flex flex-col rounded-lg bg-white p-3 shadow-sm">
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => toggleDate(formattedDate)}
+                    className="flex w-full items-center justify-between text-xl font-bold uppercase text-ctwLightPurple focus:outline-none focus:ring-2 focus:ring-ctwLightPurple focus:ring-opacity-50 lg:pl-2 lg:pt-2"
+                    aria-expanded={isOpen}
+                  >
+                    <span>{formattedDate}</span>
+                    <IoIosArrowDown
+                      className={`transform transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
+                      isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    {schedule.events
+                      .sort(
+                        (a, b) =>
+                          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+                      )
+                      .map((event, i) => (
+                        <TimelineItem
+                          key={`${event.title}-${event.start_time}`}
+                          event={event}
+                          separator={i < schedule.events.length - 1}
+                          remove={remove}
+                          addToCalendar={() => addToCalendar({ date: schedule.date, event })}
+                        />
+                      ))}
+                  </div>
                 </div>
-              </details>
-            </div>
-          ))
+              </li>
+            );
+          })
         ) : (
-          <div className="flex h-[30vh] items-center justify-center">
+          <li className="flex h-[30vh] items-center justify-center">
             <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-              <h3 className=" text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
-              <LuCalendarDays className="size-10 font-bold text-[#818181]" />
-              <div className="flex items-center justify-center gap-2.5 self-stretch p-2.5 px-5">
-                <p className=" text-center text-base font-normal leading-6 text-gray-500">
-                  No events matched your query. Have dinner with us?
-                </p>
-              </div>
+              <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
+              <LuCalendarDays className="h-10 w-10 text-[#818181]" />
+              <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+                No events matched your query. Have dinner with us?
+              </p>
             </div>
-          </div>
+          </li>
         )}
-      </div>
+      </ul>
     </div>
   );
 };
+
 interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
 interface CitySelectProps {
   className: string;
@@ -753,7 +800,7 @@ const SearchEvents = () => {
       indexName="onde_col_week"
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Configure hitsPerPage={100} />
+      <Configure hitsPerPage={250} />
       <div className="lg:py-5">
         <ChatSearchUI />
       </div>
