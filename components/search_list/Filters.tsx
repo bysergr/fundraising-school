@@ -37,13 +37,16 @@ export const Filters: React.FC = () => {
   const topicRefinement = useRefinementList({
     attribute: 'topic',
   });
-  formatRefinement.refine;
-  const refinements = [
-    ...formatRefinement.items,
-    ...intentionRefinement.items,
-    ...topicRefinement.items,
-  ];
-  console.log({ refinements });
+
+  // Do not show the refinement list if there are no refinements
+  if (
+    formatRefinement.items.length +
+      intentionRefinement.items.length +
+      topicRefinement.items.length ===
+    0
+  ) {
+    return null;
+  }
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
