@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { CheckIcon, XMarkIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { AppLink, Countries, UserFormRoles } from '@/data/enums';
+import { Countries, UserFormRoles } from '@/data/enums';
+import { Session } from 'next-auth';
+import { useAppStore } from '@/providers/app-store-providers';
 
-export default function ConfirmUserDataForm() {
-  const router = useRouter();
+export default function ConfirmUserDataForm({ data }: { data: Session | null }) {
+  const { setSignInStage } = useAppStore((state) => state);
 
   const [phoneNumber, setPhoneNumber] = useState<string>('57 3199876543');
-
   const [validWhatsApp, setValidWhatsApp] = useState<boolean>(true);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,13 +25,31 @@ export default function ConfirmUserDataForm() {
     setLoading(true);
 
     try {
-      // await updateContactInfoUser({
-      //   email: data?.user?.email as string,
-      // });
+      const countrySelect = e.currentTarget.elements.namedItem('country') as HTMLSelectElement;
+      const roleSelect = e.currentTarget.elements.namedItem('role') as HTMLSelectElement;
 
-      // updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
+      const response = await fetch('/api/user/auth', {
+        method: 'POST',
+        body: JSON.stringify({
+          nickname: data?.user?.name as string,
+          email: data?.user?.email as string,
+          phone_number: phoneNumber,
+          location: countrySelect.value,
+        }),
+      });
 
-      router.replace(AppLink.Activation.Round);
+      if (response.status !== 201) {
+        console.error('Error update contact info');
+        return;
+      }
+
+      if (roleSelect.value === 'Entrepreneur (Founder)') {
+        setSignInStage('founder');
+      } else if (roleSelect.value === 'Investor') {
+        setSignInStage('investor');
+      } else if (roleSelect.value === 'Attendee') {
+        setSignInStage('attendee');
+      }
     } catch {
       console.error('Error update contact info');
     } finally {

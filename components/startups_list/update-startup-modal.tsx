@@ -13,10 +13,6 @@ export default function UpdateStartupModal() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countries, setCountries] = useState<string[]>([]);
 
-  // const [round, setRound] = useState<number>(0);
-  // const [traction, setTraction] = useState<number>(0);
-  // const [industry, setIndustry] = useState<number>(0);
-
   const { role, email } = useUserStore((state) => state);
   const { openUpdateStartupModal, closeUpdateStartupModal, modal_update_startup } = useAppStore(
     (state) => state,
@@ -34,6 +30,10 @@ export default function UpdateStartupModal() {
   }, [closeUpdateStartupModal, modal_update_startup, openUpdateStartupModal]);
 
   useEffect(() => {
+    if (!modal_update_startup) {
+      return;
+    }
+
     setIsLoading(true);
 
     if (role === 'startup') {
@@ -64,8 +64,6 @@ export default function UpdateStartupModal() {
 
       fetch(`/api/startups/filter/countries`).then((response) => {
         if (!response.ok) {
-          const status = response.status;
-          console.log({ status });
           return;
         }
         response
@@ -82,7 +80,7 @@ export default function UpdateStartupModal() {
     } else {
       dialogRef.current?.close();
     }
-  }, [email, role]);
+  }, [email, role, modal_update_startup]);
 
   useEffect(() => {
     const dialog = document.getElementById('modal-update-startup');
@@ -111,13 +109,52 @@ export default function UpdateStartupModal() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('submit');
+    try {
+      const response = await fetch(`/api/startups/${startup?.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          linkedin:
+            (e.currentTarget.elements.namedItem('startup_linkedin') as HTMLInputElement)?.value ||
+            null,
+          name:
+            (e.currentTarget.elements.namedItem('startup_name') as HTMLInputElement)?.value || null,
+          calendly:
+            (e.currentTarget.elements.namedItem('startup_calendly') as HTMLInputElement)?.value ||
+            null,
+          email:
+            (e.currentTarget.elements.namedItem('startup_email') as HTMLInputElement)?.value ||
+            null,
+          deck:
+            (e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)?.value || null,
+          description:
+            (e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement)
+              ?.value || null,
+          phone_number:
+            (e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement)?.value ||
+            null,
+          website:
+            (e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement)?.value || null,
+          one_sentence_description:
+            (e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement)?.value ||
+            null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update startup profile');
+      }
+
+      dialogRef.current?.close();
+      closeUpdateStartupModal();
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
     <dialog
       id="modal-update-startup"
-      className="left-auto right-0 top-0 m-0 h-screen w-1/2 max-w-[763px] overflow-y-auto bg-neutral-50 px-14 py-8 focus:outline-none"
+      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[763px] overflow-y-auto bg-neutral-50 px-6 py-8 lg:w-1/2 lg:px-14"
       ref={dialogRef}
       onCancel={closeUpdateStartupModal}
     >
@@ -139,7 +176,7 @@ export default function UpdateStartupModal() {
             <Image
               className="my-auto block rounded-md bg-black"
               alt={startup?.name}
-              src={startup?.photo}
+              src={startup?.photo || 'https://naurat.com/favicon.svg'}
               width={120}
               height={120}
             />
@@ -154,20 +191,34 @@ export default function UpdateStartupModal() {
             <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4">
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Startup Name
-                <input required type="text" name="" id="" placeholder="Startup Name" />
+                <input
+                  required
+                  type="text"
+                  id="startup_name"
+                  placeholder={startup?.name || 'Startup Name'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Email
-                <input required type="text" name="" id="" placeholder="Email" />
+                <input
+                  required
+                  type="text"
+                  id="startup_email"
+                  placeholder={startup.email || 'Email'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Phone Number
-                <input required type="text" name="" id="" placeholder="Phone Numer" />
+                <input
+                  required
+                  type="text"
+                  id="startup_phone"
+                  placeholder={startup.phone_number || 'Phone Numer'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location
-                <select required name="" id="">
-                  <option value="Lagos">- Select your country -</option>
+                <select required id="startup_country">
                   {countries.map((country) => {
                     return <option key={country}>{country}</option>;
                   })}
@@ -175,38 +226,63 @@ export default function UpdateStartupModal() {
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Calendly
-                <input required type="text" name="" id="" placeholder="Calendly" />
+                <input
+                  required
+                  type="text"
+                  id="startup_calendly"
+                  placeholder={startup.calendly || 'Calendly'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Deck
-                <input required type="text" name="" id="" placeholder="Deck" />
+                <input
+                  required
+                  type="text"
+                  id="startup_deck"
+                  placeholder={startup.deck || 'Deck'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 URL
-                <input required type="text" name="" id="" placeholder="URL" />
+                <input
+                  required
+                  type="text"
+                  id="startup_url"
+                  placeholder={startup.website || 'URL'}
+                />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
-                Linkedin
-                <input required type="text" name="" id="" placeholder="Linkedin" />
+                Linkedin Link
+                <input
+                  required
+                  type="text"
+                  id="startup_linkedin"
+                  placeholder={startup.linkedin || 'Linkedin'}
+                />
               </label>
             </div>
             <label className="mt-4 flex flex-col gap-1 text-sm font-semibold">
-              Your Startup in one sectence
-              <input required type="text" name="" id="" placeholder="Linkedin" />
+              Your Startup in One Sentence
+              <input
+                required
+                type="text"
+                id="startup_sentence"
+                placeholder={startup.one_sentence_description || 'Your Startup in One Sentence'}
+              />
             </label>
             <label className="mt-4 flex flex-col gap-1 text-sm font-semibold">
-              About Me
-              <textarea name="" id="" placeholder="Linkedin" />
+              Description
+              <textarea
+                id="startup_description"
+                placeholder={startup.description || 'Description'}
+              />
             </label>
             <div className="mt-4 flex w-full justify-end">
-              <button className="rounded-lg bg-red-300 px-4 py-2" type="submit">
+              <button className="rounded-lg bg-[#32083E] px-4 py-2 text-white" type="submit">
                 Save Profile
               </button>
             </div>
           </form>
-
-          <hr className="my-4" />
-          <h3 className="mb-6 text-xl font-semibold text-neutral-700">Investment and traction</h3>
         </div>
       )}
     </dialog>

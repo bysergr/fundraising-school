@@ -42,7 +42,7 @@ export default function AuthModal({ data }: { data: Session | null }) {
   return (
     <dialog
       id="modal-auth"
-      className="left-auto right-0 top-0 m-0 h-screen w-1/2 max-w-[763px] overflow-y-auto bg-neutral-50 px-14 py-8"
+      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[763px] overflow-y-auto bg-neutral-50 px-6 py-8 md:w-1/2 md:px-14"
       ref={dialogRef}
     >
       {sign_in_stage === null && <AuthLinkedinStage />}

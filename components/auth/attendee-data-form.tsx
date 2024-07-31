@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { HomeIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { AppLink, JobLevel, EcosystemRoles } from '@/data/enums';
+import { JobLevel, EcosystemRoles } from '@/data/enums';
+import { Session } from 'next-auth';
+import { useAppStore } from '@/providers/app-store-providers';
 
-export default function AttendeeDataForm() {
-  const router = useRouter();
+export default function AttendeeDataForm({ data }: { data: Session | null }) {
+  const { closeSignInModal } = useAppStore((state) => state);
 
   const [companyName, setCompanyName] = useState<string>('Naurat');
-
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,15 +19,29 @@ export default function AttendeeDataForm() {
     setLoading(true);
 
     try {
-      // await updateContactInfoUser({
-      //   email: data?.user?.email as string,
-      // });
+      const jobSelect = e.currentTarget.elements.namedItem('job') as HTMLSelectElement;
+      const roleSelect = e.currentTarget.elements.namedItem('role') as HTMLSelectElement;
 
-      // updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
+      const response = await fetch('/api/user/auth/attendee', {
+        method: 'PUT',
+        body: JSON.stringify([
+          {
+            email: data?.user?.email,
+            startup_name: companyName,
+            job_level: jobSelect.value,
+            ecosystem_role: roleSelect.value,
+          },
+        ]),
+      });
 
-      router.replace(AppLink.Activation.Round);
+      if (response.status !== 201) {
+        console.error('Error create founder');
+        return;
+      }
+
+      closeSignInModal();
     } catch {
-      console.error('Error update contact info');
+      console.error('Error create founder');
     } finally {
       setLoading(false);
     }
@@ -61,25 +75,19 @@ export default function AttendeeDataForm() {
           />
         </div>
 
-        <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
-        >
+        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold" htmlFor="job">
           Job Level
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select id="job" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
           {JobLevel.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
         </select>
 
-        <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
-        >
+        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold" htmlFor="role">
           Ecosystem Role
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select id="role" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
           {EcosystemRoles.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}

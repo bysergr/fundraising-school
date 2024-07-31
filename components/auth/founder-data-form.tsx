@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { HomeIcon, LinkIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { AppLink, MainIndustries } from '@/data/enums';
+import { MainIndustries } from '@/data/enums';
+import { Session } from 'next-auth';
+import { useAppStore } from '@/providers/app-store-providers';
+import { useUserStore } from '@/providers/user-store-provider';
 
-export default function FounderDataForm() {
-  const router = useRouter();
+export default function FounderDataForm({ data }: { data: Session | null }) {
+  const { closeSignInModal, openUpdateStartupModal } = useAppStore((state) => state);
+  const { updateRole } = useUserStore((state) => state);
 
   const [companyName, setCompanyName] = useState<string>('Naurat');
   const [startupURL, setStartupURL] = useState<string>('https://naurat.com/');
@@ -21,15 +24,37 @@ export default function FounderDataForm() {
     setLoading(true);
 
     try {
-      // await updateContactInfoUser({
-      //   email: data?.user?.email as string,
-      // });
+      const industrySelect = e.currentTarget.elements.namedItem('industry') as HTMLSelectElement;
 
-      // updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
+      console.log({
+        email: data?.user?.email,
+        startup_name: companyName,
+        startup_url: startupURL,
+        role: jobTitle,
+        main_industry: industrySelect.value,
+      });
 
-      router.replace(AppLink.Activation.Round);
+      const response = await fetch('/api/user/auth/founder', {
+        method: 'PUT',
+        body: JSON.stringify({
+          email: data?.user?.email,
+          startup_name: companyName,
+          startup_url: startupURL,
+          role: jobTitle,
+          main_industry: industrySelect.value,
+        }),
+      });
+
+      if (response.status !== 201) {
+        console.error('Error create founder');
+        return;
+      }
+
+      closeSignInModal();
+      openUpdateStartupModal();
+      updateRole('startup');
     } catch {
-      console.error('Error update contact info');
+      console.error('Error create founder');
     } finally {
       setLoading(false);
     }
@@ -88,11 +113,11 @@ export default function FounderDataForm() {
 
         <label
           className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
+          htmlFor="industry"
         >
           Main Industries
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select id="industry" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
           {MainIndustries.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}

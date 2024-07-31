@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { AppLink, InvestmentStage, InvestmentGeography, MainIndustries } from '@/data/enums';
+import { InvestmentStage, InvestmentGeography, MainIndustries, TicketSize } from '@/data/enums';
+import { Session } from 'next-auth';
+import { useAppStore } from '@/providers/app-store-providers';
 
-export default function InvestorDataForm() {
-  const router = useRouter();
+export default function InvestorDataForm({ data }: { data: Session | null }) {
+  const { closeSignInModal } = useAppStore((state) => state);
 
   const [jobTitle, setJobTitle] = useState<string>('CEO');
-
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,15 +19,36 @@ export default function InvestorDataForm() {
     setLoading(true);
 
     try {
-      // await updateContactInfoUser({
-      //   email: data?.user?.email as string,
-      // });
+      const investmentStageSelect = e.currentTarget.elements.namedItem(
+        'investment_stage',
+      ) as HTMLSelectElement;
+      const investmentGeographySelect = e.currentTarget.elements.namedItem(
+        'investment_geography',
+      ) as HTMLSelectElement;
+      const industrySelect = e.currentTarget.elements.namedItem('industry') as HTMLSelectElement;
+      const ticketSelect = e.currentTarget.elements.namedItem('ticket_size') as HTMLSelectElement;
 
-      // updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
+      const response = await fetch('/api/user/auth/investor', {
+        method: 'PUT',
+        body: JSON.stringify([
+          {
+            email: data?.user?.email,
+            investment_stage: investmentStageSelect.value,
+            investment_geography: investmentGeographySelect.value,
+            industry_to_invest: industrySelect.value,
+            check_size: ticketSelect.value,
+          },
+        ]),
+      });
 
-      router.replace(AppLink.Activation.Round);
+      if (response.status !== 201) {
+        console.error('Error create founder');
+        return;
+      }
+
+      closeSignInModal();
     } catch {
-      console.error('Error update contact info');
+      console.error('Error create founder');
     } finally {
       setLoading(false);
     }
@@ -61,11 +82,14 @@ export default function InvestorDataForm() {
 
         <label
           className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
+          htmlFor="investment_stage"
         >
           Investment Stage
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select
+          id="investment_stage"
+          className="w-full max-w-[335px] rounded-md focus:border-fsPurple"
+        >
           {InvestmentStage.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
@@ -73,11 +97,14 @@ export default function InvestorDataForm() {
 
         <label
           className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
+          htmlFor="investment_geography"
         >
           Investment Geography
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select
+          id="investment_geography"
+          className="w-full max-w-[335px] rounded-md focus:border-fsPurple"
+        >
           {InvestmentGeography.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
@@ -85,12 +112,24 @@ export default function InvestorDataForm() {
 
         <label
           className="mt-2 block w-full max-w-[335px] text-left font-semibold"
-          htmlFor="country"
+          htmlFor="industry"
         >
           Industry to Invest
         </label>
-        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select id="industry" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
           {MainIndustries.map((Name, i) => (
+            <option key={i}>{Name}</option>
+          ))}
+        </select>
+
+        <label
+          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          htmlFor="ticket_size"
+        >
+          Ticket Size
+        </label>
+        <select id="ticket_size" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+          {TicketSize.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
         </select>

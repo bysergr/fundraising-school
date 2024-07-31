@@ -2,7 +2,6 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { Session } from 'next-auth';
-import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -16,9 +15,9 @@ import { useAppStore } from '@/providers/app-store-providers';
 export default function ValidateUser({ user }: { user: Session | null }) {
   const { updateUserInfo } = useUserStore((state) => state);
   const setSignInStage = useAppStore((state) => state.setSignInStage);
+  const closeSignInModal = useAppStore((state) => state.closeSignInModal);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
     return () => {
@@ -34,8 +33,8 @@ export default function ValidateUser({ user }: { user: Session | null }) {
       return;
     }
 
-    await validateUser(user, router, updateUserInfo, setSignInStage);
-  }, [user, router, updateUserInfo, setSignInStage]);
+    await validateUser(user, updateUserInfo, setSignInStage, closeSignInModal);
+  }, [user, updateUserInfo, setSignInStage, closeSignInModal]);
 
   if (loading) {
     return (

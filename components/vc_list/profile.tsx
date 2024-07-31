@@ -46,7 +46,7 @@ export default function Profile({
           <SignOutButton className="flex w-auto text-sm" text="Sign Out" />
           {role === 'startup' && (
             <button
-              className="mt-2 rounded-md bg-fsPurple px-3 py-1 text-sm font-semibold text-white"
+              className="mt-2 rounded-md bg-[#32083E] px-3 py-1 text-sm font-semibold text-white"
               onClick={openUpdateStartupModal}
               type="button"
             >

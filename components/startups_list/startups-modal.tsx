@@ -112,7 +112,7 @@ export default function FundModal() {
   return (
     <dialog
       id="modal-startups"
-      className="left-auto right-0 top-0 m-0 h-screen w-1/2 max-w-[763px] overflow-y-auto bg-neutral-50 px-14 py-8"
+      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[763px] overflow-y-auto bg-neutral-50 px-6 py-8 lg:w-1/2 lg:px-14"
       ref={dialogRef}
       onCancel={closeModal}
     >
@@ -125,8 +125,8 @@ export default function FundModal() {
         <div className="flex gap-8 align-middle">
           <Image
             className="my-auto block rounded-md bg-black"
-            alt={`image of ${modal_startup.name}`}
-            src={modal_startup.photo}
+            alt={modal_startup.name}
+            src={modal_startup.photo || 'https://naurat.com/favicon.svg'}
             width={120}
             height={120}
           />
@@ -139,7 +139,7 @@ export default function FundModal() {
           is_modal
           size="size-6"
           fund_id={modal_startup.id}
-          favorite={modal_startup.favorite}
+          favorite={modal_startup.favorite || false}
         />
       </div>
       <div className="mt-6 flex w-full gap-2">
@@ -159,7 +159,7 @@ export default function FundModal() {
         </a>
       </div>
       <h3 className="mb-2 mt-4 text-base font-semibold text-neutral-700">Description</h3>
-      <p className="text-sm text-neutral-500">{modal_startup.description}</p>
+      <p className="text-sm text-neutral-500">{modal_startup.description || 'Empty'}</p>
       <hr className="my-4" />
       <h3 className="mb-6 text-xl font-semibold text-neutral-700">Investment Preferences</h3>
 
@@ -258,11 +258,11 @@ export default function FundModal() {
               key={founder?.id}
               className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
             >
-              {founder?.photo_url !== null ? (
+              {founder?.photo_url !== null || founder?.photo_url !== '' ? (
                 <Image
                   className="rounded-full"
                   alt={founder?.nickname}
-                  src={founder?.photo_url}
+                  src={founder?.photo_url || defaultImageProfile}
                   width={90}
                   height={90}
                 />

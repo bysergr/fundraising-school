@@ -23,10 +23,10 @@ export default function BasicInfoStage({ data, stage }: { data: Session | null; 
         />
         <h3 className="h3 text-center">{data?.user?.name}</h3>
       </div>
-      {stage === 'basic' && <ConfirmUserDataForm />}
-      {stage === 'founder' && <FounderDataForm />}
-      {stage === 'attendee' && <AttendeeDataForm />}
-      {stage === 'investor' && <InvestorDataForm />}
+      {stage === 'basic' && <ConfirmUserDataForm data={data} />}
+      {stage === 'founder' && <FounderDataForm data={data} />}
+      {stage === 'attendee' && <AttendeeDataForm data={data} />}
+      {stage === 'investor' && <InvestorDataForm data={data} />}
     </div>
   );
 }

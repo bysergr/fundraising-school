@@ -46,6 +46,13 @@ export const Rounds: Round[] = [
 
 export const ProtectedRoutes: string[] = ['/product', '/activation'];
 
+export const TicketSize: string[] = [
+  '$150,000 a $500,000',
+  '$500,000 a $1,000,000',
+  '$1,000,000 a $5,000,000',
+  'More de $5,000,000',
+];
+
 export const MainIndustries: string[] = [
   'Fintech',
   'Healthtech',
