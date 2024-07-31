@@ -341,6 +341,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
 };
 
 interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
+
 interface CitySelectProps {
   className: string;
   onSelect?: (value: string) => void;
@@ -365,6 +366,39 @@ const CitySelect: React.FC<CitySelectProps> = ({ className, onSelect }) => {
         Select City
       </SelectItem>
       {cityOptions.map(({ count, label, value, isRefined }) => (
+        <SelectItem aria-checked={isRefined} key={label} value={value}>
+          {value} ({count})
+        </SelectItem>
+      ))}
+    </Select>
+  );
+};
+
+interface TopicSelectProps {
+  className: string;
+  onSelect?: (value: string) => void;
+}
+
+const TopicSelect: React.FC<TopicSelectProps> = ({ className, onSelect }) => {
+  const { items, refine } = useMenu({
+    attribute: 'topic',
+  });
+
+  const handleSelect = (e: SelectEvent): void => {
+    const value: string = e.target.value === 'all' ? '' : e.target.value;
+
+    refine(value);
+    if (onSelect) {
+      onSelect(value);
+    }
+  };
+
+  return (
+    <Select className={`${className}`} onChange={handleSelect}>
+      <SelectItem key="all" value="all">
+        Select Topic
+      </SelectItem>
+      {items.map(({ count, label, value, isRefined }) => (
         <SelectItem aria-checked={isRefined} key={label} value={value}>
           {value} ({count})
         </SelectItem>
@@ -448,6 +482,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
           </Button>
         </div>
         <CitySelect className="hidden lg:block" />
+        <TopicSelect className="hidden lg:block" />
 
         <Button
           className="inset-y-0 right-0  z-10 my-1  flex cursor-pointer items-center rounded-[1px]  bg-[#3C0560] px-2 text-white focus:outline-none lg:hidden"
@@ -542,6 +577,7 @@ const ChatSearchUI = () => {
       <CustomModal key="filters" isOpen={isModalOpen} onClose={closeModal} title="Filters">
         <div className="flex w-full flex-col space-y-5">
           <CitySelect className="w-full" onSelect={closeModal} />
+          <TopicSelect className="w-full" onSelect={closeModal} />
         </div>
       </CustomModal>
 

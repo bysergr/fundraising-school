@@ -34,17 +34,9 @@ export const Filters: React.FC = () => {
   const intentionRefinement = useRefinementList({
     attribute: 'intention',
   });
-  const topicRefinement = useRefinementList({
-    attribute: 'topic',
-  });
 
   // Do not show the refinement list if there are no refinements
-  if (
-    formatRefinement.items.length +
-      intentionRefinement.items.length +
-      topicRefinement.items.length ===
-    0
-  ) {
+  if (formatRefinement.items.length + intentionRefinement.items.length === 0) {
     return null;
   }
 
@@ -74,9 +66,6 @@ export const Filters: React.FC = () => {
         ))}
         {intentionRefinement.items.map((item) => (
           <FilterButton key={item.label} {...item} refine={intentionRefinement.refine} />
-        ))}
-        {topicRefinement.items.map((item) => (
-          <FilterButton key={item.label} {...item} refine={topicRefinement.refine} />
         ))}
       </div>
 
