@@ -5,7 +5,7 @@ import * as React from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import FilterIcons from './FilterIcons';
 import { InstantSearchApi, useInstantSearch, useMenu, useSearchBox } from 'react-instantsearch';
-import { LuCalendarDays, LuSettings2, LuUserX } from 'react-icons/lu';
+import { LuCalendarDays, LuSettings2 } from 'react-icons/lu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,6 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import './styles.css';
 import { Select, SelectItem } from '@/components/ui/select';
 import { Filters } from './Filters';
-import { UsersIcon } from '@heroicons/react/24/outline';
 import { CustomModal } from './Modal';
 import {
   getOndeVamosClient,
@@ -279,29 +278,29 @@ const TimeLine: React.FC<TimeLineProps> = ({
                     aria-hidden="true"
                   />
                 </button>
-                {
-                  isOpen && (
-                    <div
-                      className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-                        }`}
-                    >
-                      {schedule.events
-                        .sort(
-                          (a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
-                        )
-                        .map((event, i) => (
-                          <TimelineItem
-                            key={`${event.title}-${event.start_time}`}
-                            event={event}
-                            separator={i < schedule.events.length - 1}
-                            toggleCalendarEvent={toggleCalendarEvent}
-                            refetchCalendar={refetchCalendar}
-                            instantSearch={instantSearch}
-                          />
-                        ))}
-                    </div>
-                  )
-                }
+                {isOpen && (
+                  <div
+                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
+                      isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    {schedule.events
+                      .sort(
+                        (a, b) =>
+                          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+                      )
+                      .map((event, i) => (
+                        <TimelineItem
+                          key={`${event.title}-${event.start_time}`}
+                          event={event}
+                          separator={i < schedule.events.length - 1}
+                          toggleCalendarEvent={toggleCalendarEvent}
+                          refetchCalendar={refetchCalendar}
+                          instantSearch={instantSearch}
+                        />
+                      ))}
+                  </div>
+                )}
               </div>
             </li>
           );
@@ -311,7 +310,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
   );
 };
 
-interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> { }
+interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
 
 interface CitySelectProps {
   className: string;
@@ -381,10 +380,9 @@ const TopicSelect: React.FC<TopicSelectProps> = ({ className, onSelect }) => {
 interface SearchBarProps {
   activeTab: string;
   openModal: () => void;
-  openModalShare: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalShare }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
   const [value, setValue] = React.useState(query);
@@ -506,10 +504,6 @@ const ChatSearchUI = () => {
 
   const [isModalOpenShare, setIsModalOpenShare] = React.useState(false);
 
-  const openModalShare = () => {
-    setIsModalOpenShare(true);
-  };
-
   const closeModalShare = () => {
     setIsModalOpenShare(false);
   };
@@ -544,7 +538,7 @@ const ChatSearchUI = () => {
         </div>
       </CustomModal>
 
-      <SearchBar activeTab={activeTab} openModal={openModal} openModalShare={openModalShare} />
+      <SearchBar activeTab={activeTab} openModal={openModal} />
       <div className="size-full min-h-[50vh]">
         <Tabs
           value={activeTab}
