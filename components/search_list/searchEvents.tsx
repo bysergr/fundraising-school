@@ -116,7 +116,7 @@ const TimelineItem = ({
     });
 
   const handleAddCalendar = () => {
-    /* addToCalendar(); */
+    addToCalendar();
     addToCalendarMutation.mutate({ email, eventId: event.id });
   };
 
@@ -493,45 +493,44 @@ const ChatSearchUI = () => {
   }, []);
 
   const addToCalendar = (event: CalendarItemProps) => {
-    const eventIndex = selectedCalendar.findIndex((item) => item.date === event.date);
-
-    if (eventIndex !== -1) {
-      const existingEventIndex = selectedCalendar[eventIndex].events.indexOf(event.event);
-
-      if (existingEventIndex !== -1) {
-        // Remove the event if it already exists
-        const updatedEvents = selectedCalendar[eventIndex].events.filter((e) => e !== event.event);
-        const updatedCalendar = [...selectedCalendar];
-        if (updatedEvents.length > 0) {
-          updatedCalendar[eventIndex].events = updatedEvents;
-        } else {
-          updatedCalendar.splice(eventIndex, 1);
-        }
-        setSelectedCalendar(updatedCalendar);
-        handleShowToastDelete();
-      } else {
-        // Add the event if it does not exist
-        const updatedCalendar = [...selectedCalendar];
-        const newEvent = {
-          ...event.event,
-          remove: true,
-        };
-        updatedCalendar[eventIndex].events.push(newEvent);
-        setSelectedCalendar(updatedCalendar);
-      }
-    } else {
-      // Add new date and event
-      const newEvent = {
-        ...event.event,
-        remove: true,
-      };
-      const newSchedule = {
-        date: event.date,
-        events: [newEvent],
-      };
-      setSelectedCalendar([...selectedCalendar, newSchedule]);
-    }
-    setActiveTab('my_calendar');
+    /* const eventIndex = selectedCalendar.findIndex((item) => item.date === event.date);
+  * if (eventIndex !== -1) {
+  *   const existingEventIndex = selectedCalendar[eventIndex].events.indexOf(event.event);
+  
+  *   if (existingEventIndex !== -1) {
+  *     // Remove the event if it already exists
+  *     const updatedEvents = selectedCalendar[eventIndex].events.filter((e) => e !== event.event);
+  *     const updatedCalendar = [...selectedCalendar];
+  *     if (updatedEvents.length > 0) {
+  *       updatedCalendar[eventIndex].events = updatedEvents;
+  *     } else {
+  *       updatedCalendar.splice(eventIndex, 1);
+  *     }
+  *     setSelectedCalendar(updatedCalendar);
+  *     handleShowToastDelete();
+  *   } else {
+  *     // Add the event if it does not exist
+  *     const updatedCalendar = [...selectedCalendar];
+  *     const newEvent = {
+  *       ...event.event,
+  *       remove: true,
+  *     };
+  *     updatedCalendar[eventIndex].events.push(newEvent);
+  *     setSelectedCalendar(updatedCalendar);
+  *   }
+  * } else {
+  *   // Add new date and event
+  *   const newEvent = {
+  *     ...event.event,
+  *     remove: true,
+  *   };
+  *   const newSchedule = {
+  *     date: event.date,
+  *     events: [newEvent],
+  *   };
+  *   setSelectedCalendar([...selectedCalendar, newSchedule]);
+  * } */
+    /* setActiveTab('my_calendar'); */
   };
 
   if (!events.length) return <></>;

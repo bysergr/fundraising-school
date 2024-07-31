@@ -4,7 +4,7 @@
  * @see index.ts
  */
 export const ONDE_VAMOS_HOST =
-  process.env.NODE_ENV === 'production' ? 'api.onde-vamos.com' : 'api.diego.dev.onde-vamos.com';
+  process.env.NODE_ENV === 'production' ? 'api.onde-vamos.com' : 'api.dev.onde-vamos.com';
 export const ONDE_VAMOS_API_KEY = 'lasnf791hp3;iuTotallySafebnposcb-v97xoiusf';
 export const ONDE_VAMOS_API_BASE_URL = `https://${ONDE_VAMOS_HOST}/colombiatechweek`;
 
