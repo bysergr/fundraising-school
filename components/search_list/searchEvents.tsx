@@ -27,11 +27,13 @@ import {
   getOndeVamosClient,
   useListCalendarEvents,
   type ToggleCalendarEventReturn,
+  type ListCalendarEventsReturn,
 } from '@/utils/onde-vamos';
 import { debounce } from '@/utils/lib';
 import { Configure, InstantSearch, useHits } from 'react-instantsearch';
 import { TechWeekEvent, TechWeekHit, ScheduleProps } from '@/utils/onde-vamos/common';
 import { useToast } from '@/providers/toast-provider';
+import CalendarToggleButton from './CalendarToggleButton';
 
 const RelevanceBadge = ({ score, explanation }: { score: number; explanation?: string }) => {
   let color: string;
@@ -147,12 +149,15 @@ const TimelineItem = ({
   event,
   separator,
   toggleCalendarEvent,
+  refetchCalendar,
+  refreshSearchResults,
 }: {
   event: TechWeekEvent;
   separator: boolean;
   toggleCalendarEvent: ToggleCalendarEventReturn;
+  refetchCalendar: ListCalendarEventsReturn['refetch'];
+  refreshSearchResults: () => void;
 }) => {
-  const { email } = useUserStore((state) => state);
   const { showToast } = useToast();
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
@@ -162,19 +167,26 @@ const TimelineItem = ({
     });
   const handleCalendarClick = () => {
     toggleCalendarEvent.mutate(event.id, !event.isAddedToCalendar);
-    if (event.isAddedToCalendar) {
+    // IMPORTANT: Right now the Neon database takes some time to update after
+    // writing to it, this is a manufactured delay to make sure the calendar
+    // is updated in the db.
+    setTimeout(() => {
+      refetchCalendar();
+      refreshSearchResults();
+      if (event.isAddedToCalendar) {
+        showToast({
+          color: 'red',
+          text: `Event removed from calendar: ${event.title}`,
+          duration: 3000,
+        });
+        return;
+      }
       showToast({
-        color: 'red',
-        text: `Event removed from calendar: ${event.title}`,
+        color: 'green',
+        text: `Event added to calendar: ${event.title}`,
         duration: 3000,
       });
-      return;
-    }
-    showToast({
-      color: 'green',
-      text: `Event added to calendar: ${event.title}`,
-      duration: 3000,
-    });
+    }, 100);
   };
 
   return (
@@ -218,43 +230,20 @@ const TimelineItem = ({
         <RefinementBadges event={event} />
         <div className="flex w-full justify-between">
           <NumPeople out={false} />
-          {toggleCalendarEvent.isLoading}
-          <Button
-            className={`hidden cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:flex ${event.isAddedToCalendar ? 'bg-[red]' : 'bg-[#3C0560]'}`}
-            variant="ghost"
-            disabled={toggleCalendarEvent.isLoading}
+
+          <CalendarToggleButton
+            isAddedToCalendar={event.isAddedToCalendar}
+            isLoading={toggleCalendarEvent.isLoading}
             onClick={handleCalendarClick}
-          >
-            {event.isAddedToCalendar ? (
-              <>
-                <LuCalendarMinus className="mr-2 size-4 text-white" />
-                Quitar
-              </>
-            ) : (
-              <>
-                <LuCalendarPlus className="mr-2 size-4 text-white" />
-                My Cal
-              </>
-            )}
-          </Button>
+            className="hidden lg:flex"
+          />
         </div>
-        <Button
-          className={`flex w-full cursor-pointer rounded-md px-2 font-semibold text-white focus:outline-none lg:hidden ${event.isAddedToCalendar ? 'bg-[red]' : 'bg-[#3C0560]'}`}
-          variant="ghost"
+        <CalendarToggleButton
+          isAddedToCalendar={event.isAddedToCalendar}
+          isLoading={toggleCalendarEvent.isLoading}
           onClick={handleCalendarClick}
-        >
-          {event.isAddedToCalendar ? (
-            <>
-              <LuCalendarMinus className="mr-2 size-4 text-white" />
-              Quitar
-            </>
-          ) : (
-            <>
-              <LuCalendarPlus className="mr-2 size-4 text-white" />
-              My Cal
-            </>
-          )}
-        </Button>
+          className="lg:hidden"
+        />
       </div>
       {separator && <Separator className="my-5 block lg:hidden" />}
     </div>
@@ -265,6 +254,8 @@ type CalendarItemProps = { date: string; event: TechWeekEvent };
 interface TimeLineProps {
   schedules: ScheduleProps[];
   toggleCalendarEvent: ToggleCalendarEventReturn;
+  refetchCalendar: ListCalendarEventsReturn['refetch'];
+  refreshSearchResults: () => void;
   remove?: boolean;
 }
 
@@ -297,7 +288,12 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   });
 
-const TimeLine: React.FC<TimeLineProps> = ({ schedules, toggleCalendarEvent, remove }) => {
+const TimeLine: React.FC<TimeLineProps> = ({
+  schedules,
+  toggleCalendarEvent,
+  refetchCalendar,
+  refreshSearchResults,
+}) => {
   const [openDates, setOpenDates] = React.useState<Set<string>>(
     new Set(schedules.map((s) => formatDate(s.date))),
   );
@@ -356,6 +352,8 @@ const TimeLine: React.FC<TimeLineProps> = ({ schedules, toggleCalendarEvent, rem
                           event={event}
                           separator={i < schedule.events.length - 1}
                           toggleCalendarEvent={toggleCalendarEvent}
+                          refetchCalendar={refetchCalendar}
+                          refreshSearchResults={refreshSearchResults}
                         />
                       ))}
                   </div>
@@ -520,7 +518,9 @@ const ChatSearchUI = () => {
     isLoading: isCalendarLoading,
     error: myCalendarListError,
     toggleCalendarEvent,
+    refetch: refetchCalendar,
   } = useListCalendarEvents(email);
+  const { refresh: refreshSearchResults } = useInstantSearch();
   const [events, setEvents] = React.useState<TechWeekEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedCalendar, setSelectedCalendar] = React.useState<ScheduleProps[]>([]);
@@ -626,7 +626,12 @@ const ChatSearchUI = () => {
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
             {schedules && schedules.length > 0 && (
-              <TimeLine schedules={schedules} toggleCalendarEvent={toggleCalendarEvent} />
+              <TimeLine
+                schedules={schedules}
+                toggleCalendarEvent={toggleCalendarEvent}
+                refetchCalendar={refetchCalendar}
+                refreshSearchResults={refreshSearchResults}
+              />
             )}
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
@@ -634,7 +639,12 @@ const ChatSearchUI = () => {
               {isCalendarLoading && <p>Loading...</p>}
               {myCalendarListError && <p>Error: {myCalendarListError.message}</p>}
               {mySchedules && mySchedules.length > 0 ? (
-                <TimeLine schedules={mySchedules} toggleCalendarEvent={toggleCalendarEvent} />
+                <TimeLine
+                  schedules={mySchedules}
+                  toggleCalendarEvent={toggleCalendarEvent}
+                  refetchCalendar={refetchCalendar}
+                  refreshSearchResults={refreshSearchResults}
+                />
               ) : (
                 <div className="flex h-[30vh] items-center justify-center">
                   <div className="flex w-full flex-col items-center justify-center space-y-2.5">

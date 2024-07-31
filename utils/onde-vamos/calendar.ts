@@ -123,7 +123,7 @@ export const useToggleCalendarEvent = (
 export const useListCalendarEvents = (
   email: string,
   page = 1,
-  limit = 150,
+  limit = 250,
 ): ListCalendarEventsReturn => {
   const [data, setData] = useState<ApiResponse<PaginatedCalendarEvents> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
