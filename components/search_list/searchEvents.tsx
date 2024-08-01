@@ -140,6 +140,7 @@ const TimelineItem = ({
   const { email } = useUserStore((state) => state);
   const { openSignInModal } = useAppStore((state) => state);
   const { showToast } = useToast();
+  const [isClicked, setIsClicked] = React.useState(false);
   const formatTime = (dateString: string): string =>
     new Date(dateString).toLocaleString('en-US', {
       hour: 'numeric',
@@ -148,6 +149,7 @@ const TimelineItem = ({
     });
 
   const handleCalendarClick = () => {
+    setIsClicked(true);
     if (email) {
       toggleCalendarEvent.mutate(
         event.id,
@@ -156,6 +158,7 @@ const TimelineItem = ({
           // IMPORTANT: RACE CONDITIONS BEWARE
           refetchCalendar();
           instantSearch.refresh();
+          setIsClicked(false);
           if (event.isAddedToCalendar) {
             showToast({
               color: 'red',
@@ -176,7 +179,8 @@ const TimelineItem = ({
     }
   };
 
-  const isLoading = toggleCalendarEvent.isLoading || instantSearch.status === 'loading';
+  const isLoading =
+    isClicked && (toggleCalendarEvent.isLoading || instantSearch.status === 'loading');
 
   return (
     <div className=" flex w-full max-w-full flex-col items-start gap-4 lg:flex-row lg:gap-7">
@@ -634,7 +638,7 @@ const ChatSearchUI = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="matches" className="!mt-3 h-screen w-full">
-            {instantSearch.status === 'loading' && <TimelineSkeleton />}
+            {instantSearch.status === 'stalled' && <TimelineSkeleton />}
             <p>
               {nbHits} results in {processingTimeMS / 1000} seconds
             </p>
@@ -719,6 +723,7 @@ const SearchEvents = () => {
     <InstantSearch
       searchClient={searchClient}
       indexName="onde_col_week"
+      stalledSearchDelay={500}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={250} />
