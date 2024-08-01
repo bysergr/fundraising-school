@@ -4,9 +4,34 @@ import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
+import edit_button from '@/public/images/ctw/edit_button.png';
+import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
+import { ContactCard, ContactInfo } from '../search_list/ContactCard';
+
+const lookingForOptions: Framework[] = [
+  { value: 'funding', label: 'Funding' },
+  { value: 'partnerships', label: 'Partnerships' },
+  { value: 'mentorship', label: 'Mentorship' },
+  { value: 'networking', label: 'Networking' },
+  { value: 'talent', label: 'Talent' },
+];
+const tractionUSDOptions: Framework[] = [
+  { value: '0-500k', label: '0 - 500K USD' },
+  { value: '500k-1m', label: '500K - 1M USD' },
+  { value: '1m-5m', label: '1M - 5M USD' },
+  { value: '5m-10m', label: '5M - 10M USD' },
+  { value: '10m+', label: '10M+ USD' },
+];
+const mainIndustryOptions: Framework[] = [
+  { value: 'technology', label: 'Technology' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'education', label: 'Education' },
+  { value: 'manufacturing', label: 'Manufacturing' },
+];
 
 export default function UpdateStartupModal() {
   const [startup, setStartup] = useState<StartupProfile>();
@@ -151,15 +176,24 @@ export default function UpdateStartupModal() {
     }
   };
 
+  const contact: ContactInfo = {
+    name: 'John Doe',
+    title: 'CEO',
+    email: 'john.doe@example.com',
+    phone: '+57 3178558867',
+    linkedin: 'linkedin.com/in/johndoe',
+    action: 'Remove',
+  };
+
   return (
     <dialog
       id="modal-update-startup"
-      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[763px] overflow-y-auto bg-neutral-50 px-6 py-8 lg:w-1/2 lg:px-14"
+      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[100vw] overflow-y-auto bg-neutral-50 px-2  lg:w-4/5 lg:px-14"
       ref={dialogRef}
       onCancel={closeUpdateStartupModal}
     >
-      <div className="flex w-full justify-end ">
-        <button onClick={closeUpdateStartupModal}>
+      <div className="absolute right-3 top-6 z-30 justify-end lg:right-4 lg:top-6">
+        <button onClick={closeUpdateStartupModal} type="button">
           <XMarkIcon className="size-5 text-neutral-500" />
         </button>
       </div>
@@ -172,7 +206,13 @@ export default function UpdateStartupModal() {
 
       {startup && (
         <div>
-          <div className="flex gap-8 align-middle">
+          <div className="mb-4 flex h-24 w-full flex-col justify-center bg-white pl-3">
+            <div className="flex items-center">
+              <h2 className="text-2xl font-black text-darkFsGray">Startup Profile</h2>
+            </div>
+            <p className="block font-normal ">You can edit and view profile preferences</p>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-5 align-middle lg:flex-row lg:justify-start">
             <Image
               className="my-auto block rounded-md bg-black"
               alt={startup?.name}
@@ -180,18 +220,30 @@ export default function UpdateStartupModal() {
               width={120}
               height={120}
             />
-            <div className="my-auto">
+            <div className=" flex flex-col items-center  lg:items-start">
               <p className="text-lg font-normal">Upload your photo</p>
               <p className="text-sm font-normal">Your photo should be in PNG or JPG format</p>
-              <input type="file" accept="image/png, image/jpeg" className="mt-4" />
+              <label
+                htmlFor="edit_button"
+                className="mt-4 flex cursor-pointer items-center justify-center"
+              >
+                <Image src={edit_button} alt="edit-button" className="w-16" />
+              </label>
+              <input
+                type="file"
+                id="edit_button"
+                accept="image/png, image/jpeg"
+                className="mt-4 hidden"
+              />
             </div>
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4">
+            <div className="mt-6 grid grid-cols-1 gap-x-6  gap-y-4 lg:grid-cols-3">
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Startup Name
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_name"
@@ -201,15 +253,26 @@ export default function UpdateStartupModal() {
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Email
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_email"
                   placeholder={startup.email || 'Email'}
                 />
               </label>
+              <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
+                Your Startup in One Sentence
+                <textarea
+                  className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                  required
+                  id="startup_sentence"
+                  placeholder={startup.one_sentence_description || 'Your Startup in One Sentence'}
+                />
+              </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Phone Number
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_phone"
@@ -218,7 +281,11 @@ export default function UpdateStartupModal() {
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location
-                <select required id="startup_country">
+                <select
+                  required
+                  id="startup_country"
+                  className="rounded-md border border-[#DBDBDB] p-2"
+                >
                   {countries.map((country) => {
                     return <option key={country}>{country}</option>;
                   })}
@@ -227,6 +294,7 @@ export default function UpdateStartupModal() {
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Calendly
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_calendly"
@@ -236,15 +304,25 @@ export default function UpdateStartupModal() {
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Deck
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_deck"
                   placeholder={startup.deck || 'Deck'}
                 />
               </label>
+              <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
+                Description
+                <textarea
+                  className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                  id="startup_description"
+                  placeholder={startup.description || 'Description'}
+                />
+              </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 URL
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_url"
@@ -252,8 +330,9 @@ export default function UpdateStartupModal() {
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
-                Linkedin Link
+                LinkedIn Link
                 <input
+                  className="rounded-md border border-[#DBDBDB] p-2"
                   required
                   type="text"
                   id="startup_linkedin"
@@ -261,25 +340,50 @@ export default function UpdateStartupModal() {
                 />
               </label>
             </div>
-            <label className="mt-4 flex flex-col gap-1 text-sm font-semibold">
-              Your Startup in One Sentence
-              <input
-                required
-                type="text"
-                id="startup_sentence"
-                placeholder={startup.one_sentence_description || 'Your Startup in One Sentence'}
-              />
-            </label>
-            <label className="mt-4 flex flex-col gap-1 text-sm font-semibold">
-              Description
-              <textarea
-                id="startup_description"
-                placeholder={startup.description || 'Description'}
-              />
-            </label>
+
+            <hr className="my-5 h-0.5 w-full bg-[#DBDBDB] text-[#DBDBDB]" />
+
+            <div className="mb-2.5 flex items-center">
+              <h2 className="text-xl font-normal text-darkFsGray">Investment and Traction</h2>
+            </div>
+            <div className=" grid grid-cols-1 gap-x-6  gap-y-4 lg:grid-cols-3">
+              <div className="flex flex-col gap-1 text-sm font-semibold">
+                Looking for
+                <FancyMultiSelect data={lookingForOptions} />
+              </div>
+              <div className="flex flex-col gap-1 text-sm font-semibold">
+                Traction USD
+                <FancyMultiSelect data={tractionUSDOptions} />
+              </div>
+              <div className="flex flex-col gap-1 text-sm font-semibold">
+                Main Industry
+                <FancyMultiSelect data={mainIndustryOptions} />
+              </div>
+            </div>
+
+            <hr className="my-5 h-0.5 w-full bg-[#DBDBDB] text-[#DBDBDB]" />
+
+            <div className="mb-2.5 flex justify-between">
+              <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
+              <button
+                className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
+                type="button"
+              >
+                <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
+                Add founder
+              </button>
+            </div>
+            <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
+              <ContactCard contact={contact} />
+              <ContactCard contact={contact} />
+              <ContactCard contact={contact} />
+              <ContactCard contact={contact} />
+              <ContactCard contact={contact} />
+              <ContactCard contact={contact} />
+            </div>
             <div className="mt-4 flex w-full justify-end">
-              <button className="rounded-lg bg-[#32083E] px-4 py-2 text-white" type="submit">
-                Save Profile
+              <button className="rounded-lg bg-ctwLightPurple px-4 py-2 text-white" type="submit">
+                Save
               </button>
             </div>
           </form>
