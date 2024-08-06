@@ -25,6 +25,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
           className="mr-4 size-16 rounded-full"
           src="https://via.placeholder.com/64"
           alt={`${contact.name} profile`}
+          width={64}
+          height={64}
         />
         <div className="text-left">
           <div className="text-xl font-bold">{contact.name}</div>

@@ -3,7 +3,7 @@
 import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -37,6 +37,28 @@ export default function UpdateStartupModal() {
   const [startup, setStartup] = useState<StartupProfile>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countries, setCountries] = useState<string[]>([]);
+  const [fileStr, setFileStr] = useState<string>(
+    startup?.photo || 'https://naurat.com/favicon.svg',
+  );
+  const [file, setFile] = useState<File>();
+
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+
+    setFile(event.target.files[0]);
+  }
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFileStr(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [file]);
 
   const { role, email } = useUserStore((state) => state);
   const { openUpdateStartupModal, closeUpdateStartupModal, modal_update_startup } = useAppStore(
@@ -216,11 +238,11 @@ export default function UpdateStartupModal() {
             <Image
               className="my-auto block rounded-md bg-black"
               alt={startup?.name}
-              src={startup?.photo || 'https://naurat.com/favicon.svg'}
+              src={fileStr}
               width={120}
               height={120}
             />
-            <div className=" flex flex-col items-center  lg:items-start">
+            <div className=" flex flex-col items-center lg:items-start">
               <p className="text-lg font-normal">Upload your photo</p>
               <p className="text-sm font-normal">Your photo should be in PNG or JPG format</p>
               <label
@@ -234,6 +256,7 @@ export default function UpdateStartupModal() {
                 id="edit_button"
                 accept="image/png, image/jpeg"
                 className="mt-4 hidden"
+                onChange={handleChange}
               />
             </div>
           </div>
