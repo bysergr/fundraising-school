@@ -111,12 +111,9 @@ export default async function Page({ params }: { params: { course: string; class
 
   return (
     <>
-      <TitleSection
-        icon="camera"
-        nameSection="Courses"
-        description="All you need for fundraising"
-        children={<MobileAside courseData={courseData} />}
-      />
+      <TitleSection icon="camera" nameSection="Courses" description="All you need for fundraising">
+        <MobileAside courseData={courseData} />
+      </TitleSection>
       <div className="grid h-[calc(100vh-84px-0.25rem)] w-full bg-white pl-7 lg:grid-cols-courseLayout">
         <div className="h-full overflow-y-auto pb-12 pr-4 pt-4">
           <VideoSection

@@ -45,7 +45,7 @@ export default function MobileAside({ courseData }: { courseData: CourseInfo }) 
   }, [openModal]);
 
   return (
-    <div className="ml-auto">
+    <>
       <button
         onClick={() => setOpenModal(!openModal)}
         className="ml-auto mr-2 rounded-md bg-ctwPurple p-1 lg:hidden"
@@ -69,6 +69,6 @@ export default function MobileAside({ courseData }: { courseData: CourseInfo }) 
         <Progress progress={courseData.progress} />
         <Lesson courseData={courseData} />
       </dialog>
-    </div>
+    </>
   );
 }
