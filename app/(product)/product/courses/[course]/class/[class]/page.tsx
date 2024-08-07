@@ -115,7 +115,7 @@ export default async function Page({ params }: { params: { course: string; class
         nameSection="Courses"
         description="All you need for fundraising"
       />
-      <div className="grid h-[calc(100vh-84px-0.25rem)] w-full grid-cols-courseLayout bg-white pl-7">
+      <div className="grid h-[calc(100vh-84px-0.25rem)] w-full bg-white pl-7 lg:grid-cols-courseLayout">
         <div className="h-full overflow-y-auto pb-12 pr-4 pt-4">
           <VideoSection
             nextSessionName={nextClassName}
@@ -132,7 +132,7 @@ export default async function Page({ params }: { params: { course: string; class
             <Summary sourceText={currentClass?.description} />
           </div>
         </div>
-        <div className="h-full overflow-y-auto p-4">
+        <div className="hidden h-full overflow-y-auto p-4 lg:block">
           <Progress progress={courseData.progress} />
           <Lesson courseData={courseData} />
         </div>
