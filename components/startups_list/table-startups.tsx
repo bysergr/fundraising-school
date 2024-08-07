@@ -83,7 +83,7 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
   ]);
 
   return (
-    <table className="mt-6 size-full">
+    <table className="mt-6 h-[calc(100%-170px)] w-full">
       <thead className="border-b border-neutral-200">
         <tr className="my-4 mr-16 flex items-center justify-between text-xs uppercase [&>th]:text-left [&>th]:text-black">
           <th className="w-60">Startups ({total})</th>
@@ -101,7 +101,7 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
           </th>
         </tr>
       </thead>
-      <tbody className="mt-6 block h-[calc(100%-11.9rem)] overflow-y-scroll [&>tr]:mr-12 [&>tr]:flex [&>tr]:justify-between">
+      <tbody className="mt-6 block h-[calc(100%)] overflow-y-scroll [&>tr]:mr-12 [&>tr]:flex [&>tr]:justify-between">
         {loading && (
           <tr className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
             <td className="m-auto block">

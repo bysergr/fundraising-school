@@ -126,7 +126,9 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
             />
             {data && data.user && (
               <NavItem
-                icon={<HomeIcon stroke={pathname === '/product/courses' ? '#fff' : '#32083E'} />}
+                icon={
+                  <HomeIcon stroke={pathname.startsWith('/product/courses') ? '#fff' : '#32083E'} />
+                }
                 text="Courses"
                 collapsed={isCollapsed}
                 href="/product/courses"

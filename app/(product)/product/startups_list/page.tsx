@@ -20,7 +20,7 @@ export default async function Page() {
         nameSection="Startups List"
         description="Browse all Startups"
       />
-      <div className="size-full bg-white px-7">
+      <div className="h-[calc(100%-108px)] w-full bg-white px-7">
         <div className="flex items-end justify-between pt-4">
           <SearchInput searchType="Startup" />
           <DownloadStartups />
