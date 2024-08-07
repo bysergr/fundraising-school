@@ -48,11 +48,14 @@ export default async function Page({ params }: { params: { course: string; class
   const classes = courseData.course.modules.flatMap((module) => module.classes);
 
   let classID = 0;
+  let classRelativeIndex = 0;
 
   const currentClass = classes
-    .filter((classObj) => {
+    .filter((classObj, id) => {
       if (slugify(classObj.title) === params.class) {
         classID = classObj.id;
+        classRelativeIndex = id + 1;
+
         return true;
       }
 
@@ -117,7 +120,7 @@ export default async function Page({ params }: { params: { course: string; class
           <VideoSection
             nextSessionName={nextClassName}
             prevSessionName={prevClassName}
-            currentLesson={classID}
+            currentLesson={classRelativeIndex}
             courseName={courseData.course.title}
             numberOfLessons={classes.length}
             sessionName={currentClass?.title}
