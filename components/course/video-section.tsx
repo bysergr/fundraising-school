@@ -51,7 +51,7 @@ export default function VideoSection({
         <p className="text-sm font-semibold">{`Lesson ${currentLesson} of ${numberOfLessons}`}</p>
         <YouTubeEmbed videoid={videoId} params="controls=1&autoplay=1" />
         <div className="mt-3 flex flex-col justify-between lg:flex-row">
-          <div className="mb-3 flex flex-row justify-around gap-1 lg:mb-0">
+          <div className="mb-1 flex flex-row justify-around gap-1 lg:mb-0">
             <button
               onClick={() => {
                 if (prevSessionName) {
@@ -60,7 +60,7 @@ export default function VideoSection({
                   );
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-3 py-2 text-white"
+              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-2 py-2 text-white lg:px-3"
             >
               <ChevronLeftIcon className="size-4" />
               <span className="text-xs font-semibold">Previous lesson</span>
@@ -76,7 +76,7 @@ export default function VideoSection({
                   router.refresh();
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-3 py-2 text-white lg:hidden"
+              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-2 py-2 text-white lg:hidden"
             >
               <span className="text-xs font-semibold">Next lesson</span>
               <ChevronRightIcon className="size-4" />
@@ -89,7 +89,7 @@ export default function VideoSection({
                 completeClass({ sessionID, email });
                 router.refresh();
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-3 py-2 text-ctwPurple"
+              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-2 py-2 text-ctwPurple lg:px-3"
             >
               <CheckCircleIcon className="size-4" />
               <span className="text-xs font-semibold">I Completed This</span>
@@ -102,7 +102,7 @@ export default function VideoSection({
                   );
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-3 py-2 text-ctwPurple"
+              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-2 py-2 text-ctwPurple lg:px-3"
             >
               <NoSymbolIcon className="size-4" />
               <span className="text-xs font-semibold">Skip - Not Relevant</span>

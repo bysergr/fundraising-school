@@ -11,6 +11,7 @@ import { CourseInfo } from '@/models/course';
 import { authOptions } from '@/utils/auth';
 import { getServerSession, Session } from 'next-auth';
 import { slugify } from '@/utils/validations';
+import MobileAside from '@/components/course/mobile-aside';
 
 export default async function Page({ params }: { params: { course: string; class: string } }) {
   if (params.course.trim() === '') {
@@ -114,6 +115,7 @@ export default async function Page({ params }: { params: { course: string; class
         icon="camera"
         nameSection="Courses"
         description="All you need for fundraising"
+        children={<MobileAside courseData={courseData} />}
       />
       <div className="grid h-[calc(100vh-84px-0.25rem)] w-full bg-white pl-7 lg:grid-cols-courseLayout">
         <div className="h-full overflow-y-auto pb-12 pr-4 pt-4">
@@ -132,10 +134,10 @@ export default async function Page({ params }: { params: { course: string; class
             <Summary sourceText={currentClass?.description} />
           </div>
         </div>
-        <div className="hidden h-full overflow-y-auto p-4 lg:block">
+        <aside className="hidden h-full overflow-y-auto p-4 lg:block">
           <Progress progress={courseData.progress} />
           <Lesson courseData={courseData} />
-        </div>
+        </aside>
       </div>
     </>
   );
