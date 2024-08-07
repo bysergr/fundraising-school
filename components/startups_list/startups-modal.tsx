@@ -3,7 +3,7 @@
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import VCLinks from '@/components/startups_list/table_startups/startups-links';
+import StartupsLinks from '@/components/startups_list/table_startups/startups-links';
 import {
   XMarkIcon,
   HandThumbUpIcon,
@@ -15,12 +15,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa6';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
-import clsx from 'clsx';
+import { InvestmentPreferenceSection } from '@/components/shared/InvestmentPreferenceSection';
 import { Founder } from '@/models/vc_list';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-export default function FundModal() {
+export default function StartupModal() {
   const [founders, setFounders] = useState<Founder[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -118,7 +118,7 @@ export default function FundModal() {
     >
       <div className="flex w-full justify-end ">
         <button onClick={closeModal}>
-          <XMarkIcon className="size-5 text-neutral-500" />
+          <XMarkIcon className="size-5 text-black" />
         </button>
       </div>
       <div className="flex justify-between pr-16">
@@ -132,7 +132,7 @@ export default function FundModal() {
           />
           <div className="">
             <h3 className="text-2xl font-semibold">{modal_startup.name}</h3>
-            <VCLinks startup_profile={modal_startup} size="size-5" />
+            <StartupsLinks startup_profile={modal_startup} size="size-5" />
           </div>
         </div>
         <FavVC
@@ -145,101 +145,52 @@ export default function FundModal() {
       <div className="mt-6 flex w-full gap-2">
         <a
           href={modal_startup.calendly || '#'}
-          className="flex w-full justify-center gap-2 rounded-lg bg-secondLightFsPurple px-2 py-1 text-center text-sm font-semibold text-fsPurple"
+          className="flex w-full justify-center gap-2 rounded-lg  bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
         >
-          <CalendarIcon className="size-5 text-fsPurple" />
+          <CalendarIcon className="size-5 text-ctwDarkGreen2" />
           My Calendly Link
         </a>
         <a
           href={modal_startup.deck || '#'}
-          className="flex w-full justify-center gap-2 rounded-lg bg-secondLightFsPurple px-2 py-1 text-center text-sm font-semibold text-fsPurple"
+          className="flex w-full justify-center gap-2 rounded-lg bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
         >
-          <RocketLaunchIcon className="size-5 text-fsPurple" />
+          <RocketLaunchIcon className="size-5 text-ctwDarkGreen2" />
           Deck
         </a>
       </div>
-      <h3 className="mb-2 mt-4 text-base font-semibold text-neutral-700">Description</h3>
-      <p className="text-sm text-neutral-500">{modal_startup.description || 'Empty'}</p>
-      <hr className="my-4" />
-      <h3 className="mb-6 text-xl font-semibold text-neutral-700">Investment Preferences</h3>
+      <h3 className="mb-2 mt-10 text-xl font-semibold text-black">Description</h3>
+      <p className="text-base text-black">{modal_startup.description || 'Empty'}</p>
+
+      <h3 className="my-10 text-xl font-semibold text-black">Investment Preferences</h3>
 
       {/* Traction */}
       {startup_traction.length > 0 && (
-        <div className="my-8 flex gap-16">
-          <div className="flex">
-            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <CurrencyDollarIcon className="size-8 text-white" />
-            </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">Traction</p>
-          </div>
-          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {startup_traction.map((traction) => (
-              <li
-                key={traction}
-                className={clsx(
-                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
-                )}
-              >
-                {traction}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <InvestmentPreferenceSection
+          IconComponent={CurrencyDollarIcon}
+          title="Traction"
+          listItems={startup_traction}
+        />
       )}
 
       {/* Rounds */}
       {startup_rounds.length > 0 && (
-        <div className="my-8 flex gap-16">
-          <div className="flex">
-            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <HandThumbUpIcon className="size-8 text-white" />
-            </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">
-              Rounds they <br /> invest in
-            </p>
-          </div>
-          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {startup_rounds.map((round) => (
-              <li
-                key={round}
-                className={clsx(
-                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
-                )}
-              >
-                {round}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <InvestmentPreferenceSection
+          IconComponent={HandThumbUpIcon}
+          title="Rounds they invest in"
+          listItems={startup_rounds}
+        />
       )}
 
       {/* Sectors */}
       {startup_sectors.length > 0 && (
-        <div className="my-8 flex gap-16">
-          <div className="flex">
-            <div className="my-auto size-fit rounded-md bg-fsPurple p-2">
-              <BriefcaseIcon className="size-8 text-white" />
-            </div>
-            <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">Main Industry</p>
-          </div>
-          <ul className="my-auto flex w-[65%] flex-wrap gap-2">
-            {startup_sectors.map((sector) => (
-              <li
-                key={sector}
-                className={clsx(
-                  'rounded-lg bg-secondLightFsPurple px-2 py-1 text-sm font-semibold text-fsPurple',
-                )}
-              >
-                {sector}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <InvestmentPreferenceSection
+          IconComponent={BriefcaseIcon}
+          title="Main Industry"
+          listItems={startup_sectors}
+        />
       )}
 
-      <hr className="my-4" />
-
-      <h3 className="mb-6 text-xl font-semibold text-neutral-700">Founders</h3>
+      <h3 className="mb-6 text-xl font-semibold text-black">Founders</h3>
       <ul className="flex flex-wrap justify-around gap-2">
         {isLoading && (
           <div className="grid place-content-center">
@@ -277,9 +228,7 @@ export default function FundModal() {
               )}
               <div>
                 <p className="text-center text-base font-semibold">{founder?.nickname}</p>
-                <p className="text-center text-sm font-semibold text-neutral-500">
-                  {founder?.role}
-                </p>
+                <p className="text-center text-sm font-semibold text-black">{founder?.role}</p>
                 <div className="mt-2 flex w-full justify-center gap-1">
                   {founder?.linkedin_url && (
                     <a target="_blank" rel="noreferrer" href={founder?.linkedin_url}>
