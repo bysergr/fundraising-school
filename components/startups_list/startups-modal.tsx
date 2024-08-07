@@ -139,7 +139,7 @@ export default function StartupModal() {
               />
             </div>
             <span>{modal_startup?.sector?.name || ''}</span>
-            <VCLinks startup_profile={modal_startup} size="size-5" />
+            <StartupsLinks startup_profile={modal_startup} size="size-5" />
             <div className="mt-5 flex w-full gap-2">
               <a
                 href={modal_startup.calendly || '#'}
