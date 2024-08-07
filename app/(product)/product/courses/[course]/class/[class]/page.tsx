@@ -50,9 +50,9 @@ export default async function Page({ params }: { params: { course: string; class
   let classID = 0;
 
   const currentClass = classes
-    .filter((classObj, id) => {
+    .filter((classObj) => {
       if (slugify(classObj.title) === params.class) {
-        classID = id + 1;
+        classID = classObj.id;
         return true;
       }
 

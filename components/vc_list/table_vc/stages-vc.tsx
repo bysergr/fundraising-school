@@ -16,7 +16,7 @@ export default function stages({ stages }: { stages: Round[] }) {
         return (
           <span
             key={nanoid()}
-            className="bg-ctwLightGreen/35 text-ctwDarkGreen2 mx-0.5 mt-1 w-full rounded-sm px-2 py-1 text-center text-xs font-semibold"
+            className="mx-0.5 mt-1 w-full rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-center text-xs font-semibold text-ctwDarkGreen2"
           >
             {round}
           </span>

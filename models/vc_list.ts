@@ -73,6 +73,7 @@ interface StartupProfile {
   traction: Traction;
   round: Round;
   favorite: boolean;
+  one_sentence_description: string;
 }
 
 interface Founder {

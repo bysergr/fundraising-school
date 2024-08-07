@@ -2,45 +2,39 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { Session } from 'next-auth';
-import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import SignOutButton from '@/components/auth/sign-out-button';
 import { AppLink } from '@/data/enums';
-import { validateNewUser } from '@/utils/auth';
+import validateUser from '@/utils/validateUser';
 import { useUserStore } from '@/providers/user-store-provider';
+import { useAppStore } from '@/providers/app-store-providers';
 
 export default function ValidateUser({ user }: { user: Session | null }) {
   const { updateUserInfo } = useUserStore((state) => state);
+  const setSignInStage = useAppStore((state) => state.setSignInStage);
+  const closeSignInModal = useAppStore((state) => state.closeSignInModal);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
-    // When the component is mounted, setLoading is set to false
-
     return () => {
       setLoading(false);
     };
   }, []);
 
-  /**
-   * Handles the button click event.
-   * If there is no user, it signs out and redirects to the sign-in page.
-   * Otherwise, it validates the new user and performs necessary actions.
-   */
   const handleButton = useCallback(async () => {
     setLoading(true);
 
     if (!user) {
-      signOut({ callbackUrl: AppLink.Auth.SignIn });
+      signOut({ callbackUrl: AppLink.Product.Home });
       return;
     }
 
-    await validateNewUser(user, router, updateUserInfo);
-  }, [user, router, updateUserInfo]);
+    await validateUser(user, updateUserInfo, setSignInStage, closeSignInModal);
+  }, [user, updateUserInfo, setSignInStage, closeSignInModal]);
 
   if (loading) {
     return (
@@ -55,7 +49,7 @@ export default function ValidateUser({ user }: { user: Session | null }) {
     <div className="flex h-28 w-full flex-col items-center gap-4 lg:gap-2">
       <button
         onClick={handleButton}
-        className="btn flex h-11 w-full max-w-[335px] items-center rounded-3xl bg-fsPurple px-4 text-white"
+        className="btn flex h-11 w-full max-w-[335px] items-center rounded-3xl bg-ctwLightPurple px-4 text-white"
       >
         Continue
       </button>

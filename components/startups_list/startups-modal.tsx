@@ -112,7 +112,7 @@ export default function StartupModal() {
   return (
     <dialog
       id="modal-startups"
-      className="left-auto right-0 top-0 m-0 h-screen w-1/2 max-w-[763px] overflow-y-auto bg-neutral-50 px-14 py-8"
+      className="left-auto right-0 top-0 m-0 h-screen w-full max-w-[763px] overflow-y-auto bg-neutral-50 px-6 py-8 lg:w-1/2 lg:px-14"
       ref={dialogRef}
       onCancel={closeModal}
     >
@@ -125,8 +125,8 @@ export default function StartupModal() {
         <div className="flex gap-8 align-middle">
           <Image
             className="my-auto block rounded-md bg-black"
-            alt={`image of ${modal_startup.name}`}
-            src={modal_startup.photo}
+            alt={modal_startup.name}
+            src={modal_startup.photo || 'https://naurat.com/favicon.svg'}
             width={120}
             height={120}
           />
@@ -139,27 +139,27 @@ export default function StartupModal() {
           is_modal
           size="size-6"
           fund_id={modal_startup.id}
-          favorite={modal_startup.favorite}
+          favorite={modal_startup.favorite || false}
         />
       </div>
       <div className="mt-6 flex w-full gap-2">
         <a
           href={modal_startup.calendly || '#'}
-          className="bg-ctwLightGreen/35 text-ctwDarkGreen2 flex w-full justify-center  gap-2 rounded-lg px-2 py-1 text-center text-sm font-semibold"
+          className="flex w-full justify-center gap-2 rounded-lg  bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
         >
-          <CalendarIcon className="text-ctwDarkGreen2 size-5" />
+          <CalendarIcon className="size-5 text-ctwDarkGreen2" />
           My Calendly Link
         </a>
         <a
           href={modal_startup.deck || '#'}
-          className="bg-ctwLightGreen/35 text-ctwDarkGreen2 flex w-full justify-center gap-2 rounded-lg px-2 py-1 text-center text-sm font-semibold"
+          className="flex w-full justify-center gap-2 rounded-lg bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
         >
-          <RocketLaunchIcon className="text-ctwDarkGreen2 size-5" />
+          <RocketLaunchIcon className="size-5 text-ctwDarkGreen2" />
           Deck
         </a>
       </div>
       <h3 className="mb-2 mt-10 text-xl font-semibold text-black">Description</h3>
-      <p className="text-base text-black">{modal_startup.description}</p>
+      <p className="text-base text-black">{modal_startup.description || 'Empty'}</p>
 
       <h3 className="my-10 text-xl font-semibold text-black">Investment Preferences</h3>
 
@@ -209,11 +209,11 @@ export default function StartupModal() {
               key={founder?.id}
               className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
             >
-              {founder?.photo_url !== null ? (
+              {founder?.photo_url !== null || founder?.photo_url !== '' ? (
                 <Image
                   className="rounded-full"
                   alt={founder?.nickname}
-                  src={founder?.photo_url}
+                  src={founder?.photo_url || defaultImageProfile}
                   width={90}
                   height={90}
                 />

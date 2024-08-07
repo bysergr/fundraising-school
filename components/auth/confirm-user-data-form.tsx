@@ -1,47 +1,55 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { Session } from 'next-auth';
-import { useRouter } from 'next/navigation';
-import { UserIcon, EnvelopeIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { IsValidEmail, IsValidName } from '@/utils/validations';
-import { AppLink } from '@/data/enums';
-import { updateContactInfoUser } from '@/utils/auth';
-import { useUserStore } from '@/providers/user-store-provider';
+import { Countries, UserFormRoles } from '@/data/enums';
+import { Session } from 'next-auth';
+import { useAppStore } from '@/providers/app-store-providers';
 
 export default function ConfirmUserDataForm({ data }: { data: Session | null }) {
-  const router = useRouter();
+  const { setSignInStage } = useAppStore((state) => state);
 
-  const [name, setName] = useState<string>(data?.user?.name as string);
-  const [validName, setValidName] = useState<boolean>(true);
-
-  const [email, setEmail] = useState<string>(data?.user?.email as string);
-  const [validEmail, setValidEmail] = useState<boolean>(true);
+  const [phoneNumber, setPhoneNumber] = useState<string>('57 3199876543');
+  const [validWhatsApp, setValidWhatsApp] = useState<boolean>(true);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { updateUserInfo } = useUserStore((state) => state);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!validName || !validEmail) {
+    if (!validWhatsApp) {
       return;
     }
 
     setLoading(true);
 
     try {
-      await updateContactInfoUser({
-        contact_email: email,
-        email: data?.user?.email as string,
-        nickname: name,
+      const countrySelect = e.currentTarget.elements.namedItem('country') as HTMLSelectElement;
+      const roleSelect = e.currentTarget.elements.namedItem('role') as HTMLSelectElement;
+
+      const response = await fetch('/api/user/auth', {
+        method: 'POST',
+        body: JSON.stringify({
+          nickname: data?.user?.name as string,
+          email: data?.user?.email as string,
+          phone_number: phoneNumber,
+          location: countrySelect.value,
+        }),
       });
 
-      updateUserInfo(name, email, data?.user?.image as string, data?.user?.image as string, '');
+      if (response.status !== 201) {
+        console.error('Error update contact info');
+        return;
+      }
 
-      router.replace(AppLink.Activation.Round);
+      if (roleSelect.value === 'Entrepreneur (Founder)') {
+        setSignInStage('founder');
+      } else if (roleSelect.value === 'Investor') {
+        setSignInStage('investor');
+      } else if (roleSelect.value === 'Attendee') {
+        setSignInStage('attendee');
+      }
     } catch {
       console.error('Error update contact info');
     } finally {
@@ -50,22 +58,18 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
   };
 
   useEffect(() => {
-    // Validate name, if empty set validName to false
-    if (!IsValidName(name)) {
-      setValidName(false);
+    // Validate phone number, if empty set validWhatsApp to false
+    if (
+      phoneNumber.trim() === '' ||
+      phoneNumber.length < 6 ||
+      phoneNumber.length > 17 ||
+      isNaN(Number(phoneNumber.replace(/\s/g, '')))
+    ) {
+      setValidWhatsApp(false);
     } else {
-      setValidName(true);
+      setValidWhatsApp(true);
     }
-  }, [name]);
-
-  useEffect(() => {
-    // Validate email, if empty set validEmail to false
-    if (!IsValidEmail(email)) {
-      setValidEmail(false);
-    } else {
-      setValidEmail(true);
-    }
-  }, [email]);
+  }, [phoneNumber]);
 
   if (loading) {
     return (
@@ -79,39 +83,47 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex h-44 w-full flex-col items-center justify-between gap-12"
+      className="flex w-full flex-col items-center justify-between gap-12"
     >
       <div className="flex w-full flex-col items-center gap-1">
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 px-5 py-1">
-          <UserIcon className="size-6" />
+        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold">
+          WhatsApp Number
+          <span className="mt-2 block text-xs font-normal">With Country Code</span>
+        </label>
+        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+          <PhoneIcon className="size-6" />
           <input
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
-            type="text"
-            placeholder={name}
+            type="number"
+            placeholder={phoneNumber}
           />
-          {validName ? (
+          {validWhatsApp ? (
             <CheckIcon className="size-6 text-blue-500" />
           ) : (
             <XMarkIcon className="size-6 text-red-500" />
           )}
         </div>
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 px-5 py-1">
-          <EnvelopeIcon className="size-6" />
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
-            type="email"
-            placeholder={email}
-          />
-          {validEmail ? (
-            <CheckIcon className="size-6 text-blue-500" />
-          ) : (
-            <XMarkIcon className="size-6 text-red-500" />
-          )}
-        </div>
+        <label
+          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          htmlFor="country"
+        >
+          Country
+        </label>
+        <select id="country" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+          {Countries.map((Name, i) => (
+            <option key={i}>{Name}</option>
+          ))}
+        </select>
+        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold" htmlFor="role">
+          Role
+        </label>
+        <select id="role" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+          {UserFormRoles.map((Name, i) => (
+            <option key={i}>{Name}</option>
+          ))}
+        </select>
       </div>
-
       <button
         type="submit"
         className="btn flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"

@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { authOptions } from '@/utils/auth';
 
-import ConfirmUserDataForm from '@/components/auth/confirm-user-data-form';
+// import ConfirmUserDataForm from '@/components/auth/confirm-user-data-form';
 import { correctImage } from '@/utils/validations';
 
 export default async function Page() {
@@ -25,7 +25,7 @@ export default async function Page() {
         <h3 className="h3 text-center">{data?.user?.name}</h3>
         <p className="h4">Nice to see you!</p>
       </div>
-      <ConfirmUserDataForm data={data} />
+      {/* <ConfirmUserDataForm /> */}
     </div>
   );
 }

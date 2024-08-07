@@ -25,6 +25,7 @@ export default function FilterBar() {
 
     fetch(`/api/startups/filter/options`, {
       method: 'GET',
+      cache: 'no-store',
     })
       .then((response) => response.json())
       .then((data) => {

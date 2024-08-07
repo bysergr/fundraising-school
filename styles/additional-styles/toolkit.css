@@ -1,18 +1,18 @@
 .tooltip {
-    position: relative;
-    display: inline-block;
-  }
-  
+  position: relative;
+  display: inline-block;
+}
+
 /* Tooltip text */
 .tooltip .tooltiptext {
-  @apply bg-lightFsPurple text-black text-xs;
+  @apply bg-lightFsPurple text-xs text-black;
 
   visibility: hidden;
   width: 120px;
   text-align: center;
   padding: 5px;
   border-radius: 6px;
- 
+
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
