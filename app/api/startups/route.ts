@@ -43,6 +43,7 @@ export async function GET(req: NextRequest) {
 
   const resp = await fetch(`${process.env.BACKEND_GATEWAY_URL}/startups/all?${params}`, {
     method: 'GET',
+    cache: 'no-store',
   });
 
   if (!resp.ok) {

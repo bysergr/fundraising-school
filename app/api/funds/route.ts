@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
 
   const resp = await fetch(`${process.env.BACKEND_GATEWAY_URL}/vc_sheet/funds?${params}`, {
     method: 'GET',
+    cache: 'no-store',
   });
 
   if (!resp.ok) {

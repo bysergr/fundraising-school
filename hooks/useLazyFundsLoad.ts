@@ -58,6 +58,7 @@ function useLazyFundsLoad({ email_linkedin }: { email_linkedin: string }) {
 
           fetch(`/api/funds?` + url_params, {
             method: 'GET',
+            cache: 'no-store',
           })
             .then((response) => response.json())
             .then((data) => {

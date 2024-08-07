@@ -1,5 +1,6 @@
 export async function GET() {
   const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/vc_sheet/filter/options`, {
+    cache: 'no-store',
     method: 'GET',
   });
 

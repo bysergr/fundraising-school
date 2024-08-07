@@ -58,6 +58,7 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
 
     fetch(`/api/startups?` + url_params, {
       method: 'GET',
+      cache: 'no-store',
     })
       .then((response) => response.json())
       .then((data) => {
