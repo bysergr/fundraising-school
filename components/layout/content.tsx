@@ -22,7 +22,7 @@ export const Content = ({
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const asideAllows = ['/product/search_list'];
+  const asideAllows = ['/product/search_list', '/product/startups_list'];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -97,7 +97,7 @@ export const Content = ({
               <p className="text-gray-500">
                 To join, apply{' '}
                 <Link
-                  href="#"
+                  href="https://onde-vamos.com/dinners"
                   target="_blank"
                   className="text-gray-700  underline"
                   prefetch={false}
