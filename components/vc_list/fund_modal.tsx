@@ -89,7 +89,7 @@ export default function FundModal() {
           <div className="">
             <h3 className="text-2xl font-semibold">{modal_vc.name}</h3>
             <VCLinks vc_profile={modal_vc} size="size-5" />
-            <p className="text-ctwDarkGreen2 mt-4 font-semibold">{modal_vc.contact}</p>
+            <p className="mt-4 font-semibold text-ctwDarkGreen2">{modal_vc.contact}</p>
           </div>
         </div>
         <FavVC is_modal size="size-6" fund_id={modal_vc.id} favorite={modal_vc.favorite} />

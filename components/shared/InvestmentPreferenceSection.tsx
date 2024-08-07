@@ -12,7 +12,7 @@ function InvestmentPreferenceIcon({
   return (
     <div className="flex">
       <div className="my-auto size-fit rounded-md bg-ctwLightPurple p-2">
-        <IconComponent className="text-ctwLightGreen size-8" />
+        <IconComponent className="size-8 text-ctwLightGreen" />
       </div>
       <p className="my-auto ml-2 w-24 text-sm font-bold leading-5">{title}</p>
     </div>
@@ -46,7 +46,7 @@ export function InvestmentPreferenceSection({
         {listItems.map((item) => (
           <li
             key={item}
-            className="bg-ctwLightGreen/35 text-ctwDarkGreen2 rounded-lg px-2 py-1 text-sm font-semibold"
+            className="rounded-lg bg-ctwLightGreen/35 px-2 py-1 text-sm font-semibold text-ctwDarkGreen2"
           >
             {item}
           </li>
