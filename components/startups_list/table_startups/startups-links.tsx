@@ -14,36 +14,21 @@ export default function StartupsLinks({
     <ul className="mt-2 flex gap-1">
       {startup_profile.website && startup_profile.website.length !== 0 && (
         <li>
-          <a
-            href={startup_profile.website}
-            target="_blank"
-            rel="noreferrer"
-            className="text-neutral-600"
-          >
+          <a href={startup_profile.website} target="_blank" rel="noreferrer">
             <LinkIcon className={size} />
           </a>
         </li>
       )}
       {startup_profile.linkedin && startup_profile.linkedin.length !== 0 && (
         <li>
-          <a
-            href={startup_profile.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            className="text-neutral-600"
-          >
+          <a href={startup_profile.linkedin} target="_blank" rel="noreferrer">
             <FaLinkedin className={size} />
           </a>
         </li>
       )}
       {startup_profile.email && startup_profile.email.length !== 0 && (
         <li>
-          <a
-            href={startup_profile.email}
-            target="_blank"
-            rel="noreferrer"
-            className="text-neutral-600"
-          >
+          <a href={startup_profile.email} target="_blank" rel="noreferrer">
             <EnvelopeIcon className={size} />
           </a>
         </li>
