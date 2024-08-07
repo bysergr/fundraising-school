@@ -49,7 +49,7 @@ export default function VideoSection({
       <h2 className="mb-2 text-3xl font-bold">{sessionName}</h2>
       <div className="mb-4">
         <p className="text-sm font-semibold">{`Lesson ${currentLesson} of ${numberOfLessons}`}</p>
-        <YouTubeEmbed videoid={videoId} height={400} params="controls=1&autoplay=1" />
+        <YouTubeEmbed videoid={videoId} params="controls=1&autoplay=1" />
         <div className="mt-3 flex flex-row justify-between">
           <button
             onClick={() => {

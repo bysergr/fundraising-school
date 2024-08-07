@@ -22,3 +22,8 @@ thead tr tbody {
 dialog:modal {
   max-height: 100vh;
 }
+
+
+lite-youtube {
+  max-width: none !important;
+}
