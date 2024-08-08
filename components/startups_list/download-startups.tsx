@@ -10,9 +10,6 @@ export default function DownloadStartUps() {
     try {
       const response = await fetch(`/api/startups/fav/csv/${email}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'text/csv',
-        },
       });
 
       if (!response.ok) {
@@ -28,7 +25,7 @@ export default function DownloadStartUps() {
       const a = document.createElement('a');
 
       a.href = url;
-      a.download = 'favorite_startups.csv';
+      a.download = 'favorite_startups.xlsx';
       document.body.appendChild(a);
       a.click();
       a.remove();
