@@ -126,7 +126,7 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
       </div>
       <button
         type="submit"
-        className="btn flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
+        className="btn mb-12 flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
       >
         Continue
       </button>

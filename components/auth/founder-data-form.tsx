@@ -95,7 +95,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
           <input
             onChange={(e) => setStartupURL(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
-            type="url"
+            type="text"
             placeholder={startupURL}
           />
         </div>
@@ -125,7 +125,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
       </div>
       <button
         type="submit"
-        className="btn flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
+        className="btn mb-12 flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
       >
         Continue
       </button>
