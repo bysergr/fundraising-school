@@ -33,7 +33,11 @@ export default async function validateUser(
     if (response.ok) {
       const data = await response.json();
 
-      const role = data['response'];
+      console.log('Data:', data);
+
+      const role = data['user']['response'];
+
+      console.log('Role:', role);
 
       if (role !== undefined) {
         userRole = role;
