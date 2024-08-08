@@ -23,14 +23,32 @@ export default async function validateUser(
     return;
   }
 
-  console.log(data);
+  let userRole = 'guest';
+
+  try {
+    const response = await fetch(`/api/user/check/${user.user?.email}`, {
+      method: 'GET',
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      const role = data['response'];
+
+      if (role !== undefined) {
+        userRole = role;
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 
   updateUserInfo(
     data['nickname'] || (user.user?.name as string),
     data['contact_email'] || (user.user?.email as string),
     data['email'] || (user.user?.email as string),
     data['photo_url'] || (user.user?.image as string),
-    '',
+    userRole,
   );
 
   closeSignInModal();
