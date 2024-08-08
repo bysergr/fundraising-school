@@ -9,9 +9,6 @@ export default async function validateUser(
   setSignInStage: AppActions['setSignInStage'],
   closeSignInModal: AppActions['closeSignInModal'],
 ) {
-  setSignInStage('basic');
-  return;
-
   const response = await fetch(`/api/user/${user.user?.email}`);
 
   if (response.status !== 200) {
@@ -25,6 +22,8 @@ export default async function validateUser(
     setSignInStage('basic');
     return;
   }
+
+  console.log(data);
 
   updateUserInfo(
     data['nickname'] || (user.user?.name as string),
