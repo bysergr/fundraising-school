@@ -1,6 +1,10 @@
-import { AppLink } from '@/data/enums';
+import { getServerSession, Session } from 'next-auth';
+import OpenAuthModal from '../auth/open-auth-modal';
+import { authOptions } from '@/utils/auth';
 
-export default function Hero() {
+export default async function Hero() {
+  const data: Session | null = await getServerSession(authOptions);
+
   return (
     <section className="relative bg-white" id="about">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -8,9 +12,7 @@ export default function Hero() {
           <div className="pb-12 text-center md:pb-16">
             <h1 className="mb-4 text-4xl font-extrabold leading-tighter tracking-tighter md:text-[76px]">
               Matchmaking for <br />
-              <span className="bg-gradient-to-r from-fsPurple to-fsPink bg-clip-text text-transparent">
-                Startups and Investors
-              </span>
+              <span className="text-ctwLightGreen">Startups and Investors</span>
             </h1>
             <div className="mx-auto max-w-3xl">
               <p className="mb-8 text-lg text-gray-600">
@@ -22,14 +24,9 @@ export default function Hero() {
                 <p className="mb-4 w-full text-center text-2xl font-bold sm:w-auto">
                   August 26 to September 03
                 </p>
-                <a
-                  className="btn mb-4 w-full rounded-3xl border-fsPurple bg-white px-14 font-serif text-fsPurple duration-150 hover:bg-fsPurple hover:text-white focus:bg-darkFsPurple focus:text-white sm:mb-0 sm:w-auto"
-                  href={AppLink.Varius.JoinLinkAirtable}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Apply
-                </a>
+                {data === null && (
+                  <OpenAuthModal className="mx-auto w-fit rounded-sm bg-ctwLightPurple px-24 py-2 font-semibold text-white " />
+                )}
               </div>
             </div>
           </div>

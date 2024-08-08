@@ -28,7 +28,7 @@ export default function StartupsLinks({
       )}
       {startup_profile.email && startup_profile.email.length !== 0 && (
         <li>
-          <a href={startup_profile.email} target="_blank" rel="noreferrer">
+          <a href={`mailto:${startup_profile.email}`}>
             <EnvelopeIcon className={size} />
           </a>
         </li>

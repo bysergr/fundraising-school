@@ -14,7 +14,8 @@ import menu from '@/public/images/icons/menu.svg';
 import exit from '@/public/images/icons/exit.svg';
 import logo from '@/public/images/ctw/logo.svg';
 
-import { HomeIcon } from '@/public/images/icons/home';
+import { PlayIcon, NewspaperIcon } from '@heroicons/react/24/outline';
+
 import { VCListIcon } from '@/public/images/icons/vc_list';
 import { StartupsIcon } from '@/public/images/icons/startups';
 import { AgendaIcon } from '@/public/images/icons/agenda';
@@ -117,17 +118,26 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
           </div>
           <div className="space-y-4 px-2">
             <NavItem
-              icon={<HomeIcon stroke={pathname === '/product' ? '#fff' : '#32083E'} />}
-              text="Home"
+              icon={
+                <NewspaperIcon
+                  className="size-6"
+                  stroke={pathname === '/product' ? '#fff' : '#32083E'}
+                />
+              }
+              text="Match Making"
               collapsed={isCollapsed}
               href="/product"
               pathname={pathname}
               exact
             />
+
             {data && data.user && (
               <NavItem
                 icon={
-                  <HomeIcon stroke={pathname.startsWith('/product/courses') ? '#fff' : '#32083E'} />
+                  <PlayIcon
+                    className="size-6"
+                    stroke={pathname.startsWith('/product/courses') ? '#fff' : '#32083E'}
+                  />
                 }
                 text="Courses"
                 collapsed={isCollapsed}

@@ -61,9 +61,13 @@ export default function UpdateStartupModal() {
   }, [file]);
 
   const { role, email } = useUserStore((state) => state);
-  const { openUpdateStartupModal, closeUpdateStartupModal, modal_update_startup } = useAppStore(
-    (state) => state,
-  );
+  const {
+    openUpdateStartupModal,
+    closeUpdateStartupModal,
+    modal_update_startup,
+    selected_startups_filter_options,
+    setStartupSelectedFilterOptions,
+  } = useAppStore((state) => state);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
@@ -161,35 +165,80 @@ export default function UpdateStartupModal() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const body_request: { [key: string]: string } = {};
+
+    if ((e.currentTarget.elements.namedItem('startup_linkedin') as HTMLInputElement)?.value) {
+      body_request['linkedin'] = (
+        e.currentTarget.elements.namedItem('startup_linkedin') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_name') as HTMLInputElement)?.value) {
+      body_request['name'] = (
+        e.currentTarget.elements.namedItem('startup_name') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_calendly') as HTMLInputElement)?.value) {
+      body_request['calendly'] = (
+        e.currentTarget.elements.namedItem('startup_calendly') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_email') as HTMLInputElement)?.value) {
+      body_request['email'] = (
+        e.currentTarget.elements.namedItem('startup_email') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)?.value) {
+      body_request['deck'] = (
+        e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement)?.value) {
+      body_request['description'] = (
+        e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement)?.value) {
+      body_request['phone_number'] = (
+        e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement)?.value) {
+      body_request['website'] = (
+        e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement
+      )?.value;
+    }
+
+    if ((e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement)?.value) {
+      body_request['one_sentence_description'] = (
+        e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement
+      )?.value;
+    }
+
     try {
+      if (file) {
+        const formData = new FormData();
+        formData.append('startup_photo', file);
+
+        const response = await fetch(`/api/startups/image/${startup?.id}`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to upload startup photo');
+        }
+      }
+
       const response = await fetch(`/api/startups/${startup?.id}`, {
         method: 'PUT',
-        body: JSON.stringify({
-          linkedin:
-            (e.currentTarget.elements.namedItem('startup_linkedin') as HTMLInputElement)?.value ||
-            null,
-          name:
-            (e.currentTarget.elements.namedItem('startup_name') as HTMLInputElement)?.value || null,
-          calendly:
-            (e.currentTarget.elements.namedItem('startup_calendly') as HTMLInputElement)?.value ||
-            null,
-          email:
-            (e.currentTarget.elements.namedItem('startup_email') as HTMLInputElement)?.value ||
-            null,
-          deck:
-            (e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)?.value || null,
-          description:
-            (e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement)
-              ?.value || null,
-          phone_number:
-            (e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement)?.value ||
-            null,
-          website:
-            (e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement)?.value || null,
-          one_sentence_description:
-            (e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement)?.value ||
-            null,
-        }),
+        body: JSON.stringify(body_request),
       });
 
       if (!response.ok) {
@@ -197,6 +246,8 @@ export default function UpdateStartupModal() {
       }
 
       dialogRef.current?.close();
+
+      setStartupSelectedFilterOptions(selected_startups_filter_options);
       closeUpdateStartupModal();
     } catch (error) {
       console.error('Error:', error);
@@ -231,7 +282,7 @@ export default function UpdateStartupModal() {
         </div>
       )}
 
-      {startup && (
+      {startup && !isLoading && (
         <div>
           <div className="mb-4 flex h-24 w-full flex-col justify-center bg-white pl-3">
             <div className="flex items-center">
@@ -272,7 +323,6 @@ export default function UpdateStartupModal() {
                 Startup Name
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_name"
                   placeholder={startup?.name || 'Startup Name'}
@@ -282,7 +332,6 @@ export default function UpdateStartupModal() {
                 Email
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_email"
                   placeholder={startup.email || 'Email'}
@@ -292,7 +341,6 @@ export default function UpdateStartupModal() {
                 Your Startup in One Sentence
                 <textarea
                   className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
-                  required
                   id="startup_sentence"
                   placeholder={startup.one_sentence_description || 'Your Startup in One Sentence'}
                 />
@@ -301,7 +349,6 @@ export default function UpdateStartupModal() {
                 Phone Number
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_phone"
                   placeholder={startup.phone_number || 'Phone Numer'}
@@ -309,11 +356,7 @@ export default function UpdateStartupModal() {
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location
-                <select
-                  required
-                  id="startup_country"
-                  className="rounded-md border border-[#DBDBDB] p-2"
-                >
+                <select id="startup_country" className="rounded-md border border-[#DBDBDB] p-2">
                   {countries.map((country) => {
                     return <option key={country}>{country}</option>;
                   })}
@@ -323,7 +366,6 @@ export default function UpdateStartupModal() {
                 Calendly
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_calendly"
                   placeholder={startup.calendly || 'Calendly'}
@@ -333,7 +375,6 @@ export default function UpdateStartupModal() {
                 Deck
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_deck"
                   placeholder={startup.deck || 'Deck'}
@@ -351,7 +392,6 @@ export default function UpdateStartupModal() {
                 URL
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_url"
                   placeholder={startup.website || 'URL'}
@@ -361,7 +401,6 @@ export default function UpdateStartupModal() {
                 LinkedIn Link
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  required
                   type="text"
                   id="startup_linkedin"
                   placeholder={startup.linkedin || 'Linkedin'}

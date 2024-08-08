@@ -37,11 +37,13 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
       <FavStartup startup_id={startups_profile.id} favorite={startups_profile.favorite} />
       <td className="grid w-96 place-content-center">
         <p className="w-96 text-left text-sm  text-black">
-          {startups_profile.description
-            ? startups_profile.description.length > 120
-              ? startups_profile.description.substring(0, 115) + '...'
-              : startups_profile.description
-            : 'No description'}
+          {startups_profile.one_sentence_description
+            ? startups_profile.one_sentence_description
+            : startups_profile.description
+              ? startups_profile.description.length > 120
+                ? startups_profile.description.substring(0, 115) + '...'
+                : startups_profile.description
+              : 'No description'}
         </p>
       </td>
       <td className="grid w-36 place-content-center">

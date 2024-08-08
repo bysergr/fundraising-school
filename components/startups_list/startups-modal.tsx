@@ -146,6 +146,8 @@ export default function StartupModal() {
         <a
           href={modal_startup.calendly || '#'}
           className="flex w-full justify-center gap-2 rounded-lg  bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
+          target="_blank"
+          rel="noreferrer"
         >
           <CalendarIcon className="size-5 text-ctwDarkGreen2" />
           My Calendly Link
@@ -153,12 +155,15 @@ export default function StartupModal() {
         <a
           href={modal_startup.deck || '#'}
           className="flex w-full justify-center gap-2 rounded-lg bg-ctwLightGreen/35 px-2 py-1 text-center text-sm font-semibold text-ctwDarkGreen2"
+          target="_blank"
+          rel="noreferrer"
         >
           <RocketLaunchIcon className="size-5 text-ctwDarkGreen2" />
           Deck
         </a>
       </div>
-      <h3 className="mb-2 mt-10 text-xl font-semibold text-black">Description</h3>
+      <p className="mt-8 text-base text-black">{modal_startup.one_sentence_description}</p>
+      <h3 className="mb-2 mt-6 text-xl font-semibold text-black">Description</h3>
       <p className="text-base text-black">{modal_startup.description || 'Empty'}</p>
 
       <h3 className="my-10 text-xl font-semibold text-black">Investment Preferences</h3>
