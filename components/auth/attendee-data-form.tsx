@@ -24,14 +24,12 @@ export default function AttendeeDataForm({ data }: { data: Session | null }) {
 
       const response = await fetch('/api/user/auth/attendee', {
         method: 'PUT',
-        body: JSON.stringify([
-          {
-            email: data?.user?.email,
-            startup_name: companyName,
-            job_level: jobSelect.value,
-            ecosystem_role: roleSelect.value,
-          },
-        ]),
+        body: JSON.stringify({
+          email: data?.user?.email,
+          startup_name: companyName,
+          job_level: jobSelect.value,
+          ecosystem_role: roleSelect.value,
+        }),
       });
 
       if (response.status !== 201) {

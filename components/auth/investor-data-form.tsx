@@ -30,15 +30,13 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
 
       const response = await fetch('/api/user/auth/investor', {
         method: 'PUT',
-        body: JSON.stringify([
-          {
-            email: data?.user?.email,
-            investment_stage: investmentStageSelect.value,
-            investment_geography: investmentGeographySelect.value,
-            industry_to_invest: industrySelect.value,
-            check_size: ticketSelect.value,
-          },
-        ]),
+        body: JSON.stringify({
+          email: data?.user?.email,
+          investment_stage: investmentStageSelect.value,
+          investment_geography: investmentGeographySelect.value,
+          industry_to_invest: industrySelect.value,
+          check_size: ticketSelect.value,
+        }),
       });
 
       if (response.status !== 201) {
