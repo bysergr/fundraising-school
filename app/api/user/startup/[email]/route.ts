@@ -6,6 +6,7 @@ export async function GET(request: Request, context: { params: Params }) {
   const email = context.params.email;
 
   const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/get_startup/${email}`, {
+    cache: 'no-store',
     method: 'GET',
   });
 

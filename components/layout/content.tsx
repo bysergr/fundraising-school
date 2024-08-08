@@ -65,7 +65,7 @@ export const Content = ({
           </div>
         </header>
         <main className="flex h-screen flex-1 flex-col space-y-1 overflow-y-auto overflow-x-hidden bg-[#F9F9FA] px-2 lg:w-10/12 lg:px-0 lg:pl-4">
-          <div className="h-[100%] overflow-y-auto">{children}</div>
+          <div className="h-full overflow-y-auto">{children}</div>
         </main>
         {asideAllows.indexOf(pathname) !== -1 && (
           <aside className="hidden w-full flex-col items-center justify-center bg-[#F9F9FA] p-4 lg:flex lg:w-1/5 ">

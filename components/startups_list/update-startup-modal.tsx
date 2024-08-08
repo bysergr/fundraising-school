@@ -84,8 +84,13 @@ export default function UpdateStartupModal() {
     setIsLoading(true);
 
     if (role === 'startup') {
-      fetch(`/api/user/startup/${email}`)
+      fetch(`/api/user/startup/${email}`, {
+        cache: 'no-store',
+        method: 'GET',
+      })
         .then((response) => {
+          console.log({ response });
+
           if (!response.ok) {
             return;
           }
