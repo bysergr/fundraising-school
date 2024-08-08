@@ -14,7 +14,7 @@ import menu from '@/public/images/icons/menu.svg';
 import exit from '@/public/images/icons/exit.svg';
 import logo from '@/public/images/ctw/logo.svg';
 
-import { PlayIcon, NewspaperIcon } from '@heroicons/react/24/outline';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
 
 import { VCListIcon } from '@/public/images/icons/vc_list';
 import { StartupsIcon } from '@/public/images/icons/startups';

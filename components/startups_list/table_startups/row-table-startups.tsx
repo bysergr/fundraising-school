@@ -75,7 +75,6 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
               {startups_profile?.sector?.name || ''}
             </div>
           </div>
-          <div className="mt-2.5 flex w-[179px] max-w-full flex-col px-2.5 text-right"></div>
         </div>
       </div>
 

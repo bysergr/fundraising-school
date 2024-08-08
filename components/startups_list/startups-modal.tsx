@@ -120,7 +120,6 @@ export default function StartupModal() {
           </button>
         </div>
       </div>
-
       <div className="flex justify-between">
         <div className="flex basis-full gap-4 lg:gap-4 lg:align-middle">
           <Image

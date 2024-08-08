@@ -3,22 +3,21 @@ import { nanoid } from 'nanoid';
 
 import { Country } from '@/models/vc_list';
 
-const CONTAINER_STYLES =
-  'rounded-sm bg-ctwLightGreen/35 px-2 py-1 text-xs font-semibold text-ctwDarkGreen2';
+const CONTAINER_STYLES = 'py-1 text-xs font-normal';
 
 export default function CountriesVC({ countries }: { countries: Country[] }) {
   if (countries.length === 0) {
     return (
-      <td className="grid w-56 place-content-center">
+      <div className="">
         <div className={`${CONTAINER_STYLES} w-20`}>
           <span>😔</span>
         </div>
-      </td>
+      </div>
     );
   }
 
   return (
-    <td className="grid w-56 place-content-center">
+    <div className="">
       <div className={`${CONTAINER_STYLES} tooltip`}>
         {countries.slice(0, 6).map((country, index) => {
           if (index === 3) {
@@ -56,8 +55,10 @@ export default function CountriesVC({ countries }: { countries: Country[] }) {
           </>
         )}
 
-        <span className="tooltiptext">{countries.map((country) => country.name).join(', ')}</span>
+        <span className="tooltiptext left-[-10px] max-h-24 overflow-hidden text-ellipsis whitespace-pre-wrap break-words">
+          {countries.map((country) => country.name).join(', ')}
+        </span>
       </div>
-    </td>
+    </div>
   );
 }
