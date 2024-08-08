@@ -6,7 +6,7 @@ export default async function Hero() {
   const data: Session | null = await getServerSession(authOptions);
 
   return (
-    <section className="relative bg-white" id="about">
+    <section className="relative grid min-h-screen place-content-center bg-white" id="about">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 pt-32 md:pb-20 md:pt-40">
           <div className="pb-12 text-center md:pb-16">

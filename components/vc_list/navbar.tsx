@@ -103,7 +103,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={`flex flex-col justify-between bg-white text-black ${sidebarWidth} absolute inset-y-0 left-0 z-40 space-y-6 ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out md:relative md:translate-x-0`}
       >
         <div className="flex-col ">
-          <div className="flex justify-between px-5 py-2.5">
+          <div className="mb-6 flex justify-between px-5 py-2.5">
             <button
               className="hidden lg:block"
               onClick={() => setIsCollapsed(!isCollapsed)}
