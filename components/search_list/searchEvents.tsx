@@ -211,8 +211,9 @@ const TimelineItem = ({
           )}
         </div>
 
-        <ExpandableParagraph text={event.description} />
-        {/* <p className="line-clamp-4 max-w-full">{event.description}</p> */}
+        <div className="line-clamp-4 max-w-full">
+          <ExpandableParagraph text={event.description} />
+        </div>
 
         <RefinementBadges event={event} />
         <div className="flex w-full justify-between">

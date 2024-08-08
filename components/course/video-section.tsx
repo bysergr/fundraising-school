@@ -60,7 +60,7 @@ export default function VideoSection({
                   );
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-2 py-2 text-white lg:px-3"
+              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple p-2 text-white lg:px-3"
             >
               <ChevronLeftIcon className="size-4" />
               <span className="text-xs font-semibold">Previous lesson</span>
@@ -76,7 +76,7 @@ export default function VideoSection({
                   router.refresh();
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple px-2 py-2 text-white lg:hidden"
+              className="flex w-40 items-center justify-center gap-2 rounded-md bg-ctwPurple p-2 text-white lg:hidden"
             >
               <span className="text-xs font-semibold">Next lesson</span>
               <ChevronRightIcon className="size-4" />
@@ -89,7 +89,7 @@ export default function VideoSection({
                 completeClass({ sessionID, email });
                 router.refresh();
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-2 py-2 text-ctwPurple lg:px-3"
+              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white p-2 text-ctwPurple lg:px-3"
             >
               <CheckCircleIcon className="size-4" />
               <span className="text-xs font-semibold">I Completed This</span>
@@ -102,7 +102,7 @@ export default function VideoSection({
                   );
                 }
               }}
-              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white px-2 py-2 text-ctwPurple lg:px-3"
+              className="flex w-40 items-center justify-center gap-2 rounded-md border border-ctwPurple bg-white p-2 text-ctwPurple lg:px-3"
             >
               <NoSymbolIcon className="size-4" />
               <span className="text-xs font-semibold">Skip - Not Relevant</span>
