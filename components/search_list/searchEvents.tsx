@@ -198,7 +198,7 @@ const TimelineItem = ({
       <div className=" separator-item hidden lg:block" />
       <div className="grid w-full space-y-6 px-2">
         <div className="">
-          <h3 className="text-xl font-bold text-ctwLightPurple">{event.title}</h3>
+          <h3 className="break-all text-xl font-bold text-ctwLightPurple">{event.title}</h3>
           {event.host && (
             <p className=" pb-2 font-normal leading-normal text-[#313A5E]">
               Por <Host host={event.host} />
@@ -215,8 +215,10 @@ const TimelineItem = ({
           <ExpandableParagraph text={event.description} />
         </div>
 
-        <RefinementBadges event={event} />
-        <div className="flex w-full justify-between">
+        <div className="line-clamp-4 max-w-full">
+          <RefinementBadges event={event} />
+        </div>
+        <div className="flex w-full max-w-full justify-between">
           <div />
 
           <CalendarToggleButton
@@ -226,12 +228,15 @@ const TimelineItem = ({
             className="hidden lg:flex"
           />
         </div>
-        <CalendarToggleButton
-          isAddedToCalendar={event.isAddedToCalendar}
-          isLoading={isLoading}
-          onClick={handleCalendarClick}
-          className="lg:hidden"
-        />
+
+        <div className="line-clamp-4 max-w-full">
+          <CalendarToggleButton
+            isAddedToCalendar={event.isAddedToCalendar}
+            isLoading={isLoading}
+            onClick={handleCalendarClick}
+            className="lg:hidden"
+          />
+        </div>
       </div>
       {separator && <Separator className="my-5 block lg:hidden" />}
     </div>
@@ -354,7 +359,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
                 {isOpen && (
                   <div
                     className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
-                      isOpen ? 'max-h-[9000px] opacity-100' : 'max-h-0 opacity-0'
+                      isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
                     }`}
                   >
                     {schedule.events
