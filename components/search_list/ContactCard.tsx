@@ -1,8 +1,8 @@
-import { TrashIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import type React from 'react';
 import { FaMailBulk } from 'react-icons/fa';
 import { FaLinkedin, FaPhone } from 'react-icons/fa6';
+import defaultImageProfile from '@/public/images/default-profile.jpg';
 
 export type ContactInfo = {
   name: string;
@@ -10,7 +10,7 @@ export type ContactInfo = {
   email: string;
   phone: string;
   linkedin: string;
-  action: string;
+  photo: string;
 };
 
 type ContactCardProps = {
@@ -19,11 +19,11 @@ type ContactCardProps = {
 
 export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
   return (
-    <div className="w-full overflow-hidden rounded border p-4 shadow-lg">
+    <div className="size-full overflow-hidden rounded border p-4 pb-8 shadow-lg">
       <div className="flex items-center">
         <Image
           className="mr-4 size-16 rounded-full"
-          src="https://via.placeholder.com/64"
+          src={contact.photo || defaultImageProfile}
           alt={`${contact.name} profile`}
           width={64}
           height={64}
@@ -36,7 +36,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
       <div className="mt-4">
         <div className="flex items-center text-gray-700">
           <FaMailBulk className="mr-2" />
-          <span>{contact.email}</span>
+          <a href={`mailto:${contact.email}`} className="hover:underline">
+            {contact.email}
+          </a>
         </div>
         <div className="mt-2 flex items-center text-gray-700">
           <FaPhone className="mr-2" />
@@ -50,11 +52,13 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            {contact.linkedin}
+            {contact.linkedin.length > 40
+              ? `${contact.linkedin.slice(0, 40)}...`
+              : contact.linkedin}
           </a>
         </div>
       </div>
-      <div className="mt-4 text-right">
+      {/* <div className="mt-4 text-right">
         <button
           className="rounded-sm border border-red-500 p-2 text-red-500 hover:text-red-700"
           onClick={() => console.log('Remove contact')}
@@ -62,7 +66,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
         >
           <TrashIcon className="w-4 text-red-500 " />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -97,6 +97,7 @@ interface Founder {
   contact_email: string | null;
   location: string;
   phone_number: string;
+  country_code: string;
   seeking_capital: boolean | null;
 }
 

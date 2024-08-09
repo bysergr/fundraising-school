@@ -4,8 +4,8 @@ import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { StartupProfile } from '@/models/vc_list';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Founder, StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
 import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
@@ -41,6 +41,7 @@ export default function UpdateStartupModal() {
     startup?.photo || 'https://naurat.com/favicon.svg',
   );
   const [file, setFile] = useState<File>();
+  const [founders, setFounders] = useState<ContactInfo[]>([]);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || event.target.files.length === 0) {
@@ -137,6 +138,45 @@ export default function UpdateStartupModal() {
       dialogRef.current?.close();
     }
   }, [email, role, modal_update_startup]);
+
+  useEffect(() => {
+    if (!startup) {
+      return;
+    }
+
+    fetch(`/api/startups/founders/${startup.name}`, {
+      cache: 'no-store',
+      method: 'GET',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return;
+        }
+        response
+          .json()
+          .then((data) => {
+            console.log({ data });
+
+            const founders: ContactInfo[] = data.map((founder: Founder) => {
+              return {
+                name: founder.nickname,
+                email: founder.email,
+                title: founder.role,
+                phone: `+${founder.country_code} ${founder.phone_number}`,
+                linkedin: founder.linkedin_url,
+              };
+            });
+
+            setFounders(founders);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, [startup]);
 
   useEffect(() => {
     const dialog = document.getElementById('modal-update-startup');
@@ -254,15 +294,6 @@ export default function UpdateStartupModal() {
     }
   };
 
-  const contact: ContactInfo = {
-    name: 'John Doe',
-    title: 'CEO',
-    email: 'john.doe@example.com',
-    phone: '+57 3178558867',
-    linkedin: 'linkedin.com/in/johndoe',
-    action: 'Remove',
-  };
-
   return (
     <dialog
       id="modal-update-startup"
@@ -284,7 +315,7 @@ export default function UpdateStartupModal() {
 
       {startup && !isLoading && (
         <div>
-          <div className="mb-4 flex h-24 w-full flex-col justify-center bg-white pl-3">
+          <div className="mb-4 flex h-24 w-full flex-col justify-center pl-3">
             <div className="flex items-center">
               <h2 className="text-2xl font-black text-darkFsGray">Startup Profile</h2>
             </div>
@@ -432,21 +463,18 @@ export default function UpdateStartupModal() {
 
             <div className="mb-2.5 flex justify-between">
               <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
-              <button
+              {/* <button
                 className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
                 type="button"
               >
                 <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
                 Add founder
-              </button>
+              </button> */}
             </div>
             <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
-              <ContactCard contact={contact} />
-              <ContactCard contact={contact} />
-              <ContactCard contact={contact} />
-              <ContactCard contact={contact} />
-              <ContactCard contact={contact} />
-              <ContactCard contact={contact} />
+              {founders.map((founder) => {
+                return <ContactCard key={founder.email} contact={founder} />;
+              })}
             </div>
             <div className="mb-12 mt-4 flex w-full justify-end">
               <button className="rounded-lg bg-ctwLightPurple px-4 py-2 text-white" type="submit">
