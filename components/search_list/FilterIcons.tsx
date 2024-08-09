@@ -12,45 +12,62 @@ import {
   FaGraduationCap,
   FaHandHoldingUsd,
   FaLightbulb,
-  FaUsers,
   FaBuilding,
   FaChartLine,
   FaPiggyBank,
-  FaUniversity,
-  FaFemale,
-  FaBriefcase,
   FaMoneyBillWave,
   FaRocket,
   FaCogs,
+  FaRobot,
+  FaUserFriends,
+  FaStar,
+  FaHeart,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 
-const LabelIconMap: Record<string, IconType> = {
-  Coctel: FaCocktail,
-  'Conference/Panel': FaMicrophone,
+const NameToIconMap: Record<string, IconType> = {
+  // Audience
+  'Ecosystem Enthusiastic': FaHeart,
+  Corporativos: FaBuilding,
+  'Investors (VCs-LPs-Angel Investor-etc)': FaPiggyBank,
+  Founders: FaRocket,
+
+  // Event Types
   Workshop: FaTools,
-  'Sports event': FaFootballBall,
+  'Conferencia/Panel': FaMicrophone,
+  Café: FaCoffee,
+  Almuerzo: FaUtensils,
   'Happy Hour': FaBeer,
-  Lunch: FaUtensils,
-  Desayuno: FaCoffee,
-  Party: FaMusic,
-  'Hacer Networking': FaHandshake,
-  'Aprender de expertos': FaGraduationCap,
-  'Conectar con VCs': FaHandHoldingUsd,
-  'Inspirarte de cracks': FaLightbulb,
-  'Construyendo Ecosistema': FaUsers,
-  Corporate: FaBuilding,
+  'Evento Deportivo': FaFootballBall,
+  Cena: FaUtensils,
+  Fiesta: FaMusic,
+  Coctel: FaCocktail,
+  'Desayuno/Brunch': FaCoffee,
+
+  // Topics
+  'Ecosistema de Startups y Emprendimiento': FaRocket,
+  'Inteligencia Artificial': FaRobot,
+  'Tecnología e Innovación aplicada a otras industrias': FaCogs,
   Fintech: FaChartLine,
-  "VC's": FaPiggyBank,
-  Academy: FaUniversity,
-  'Women in Tech': FaFemale,
-  Empleability: FaBriefcase,
-  'Levantamiento Capital': FaMoneyBillWave,
-  'Startup Ecosystem': FaRocket,
-  Innovation: FaCogs,
+  'Experiencias únicas': FaStar,
+  'Inversión y Levantamiento de Capital': FaMoneyBillWave,
+  'Inclusión y Diversidad': FaUserFriends,
+
+  // Goals
+  Socializar: FaHandshake,
+  Escuchar: FaMicrophone,
+  Divertirme: FaMusic,
+  Construir: FaTools,
+  'Aprender de expertos': FaGraduationCap,
+  'Hacer Networking': FaHandshake,
+  'Conectar con VCs y/o Founders': FaHandHoldingUsd,
+  'Inspirarte de cracks': FaLightbulb,
+
+  // Fallback
+  Unknown: FaQuestion,
 };
 
 export default function FilterIcons({ label, className }: { label: string; className?: string }) {
-  const IconComponent = LabelIconMap[label] || FaQuestion; // FaQuestion as a fallback
+  const IconComponent = NameToIconMap[label] || FaQuestion; // FaQuestion as a fallback
   return <IconComponent className={className} />;
 }
