@@ -16,12 +16,16 @@ export default async function Page() {
     <>
       <FundModal />
       <TitleSection icon="identification" nameSection="VC List" description="Browse all funds" />
-      <div className="h-[calc(100%-108px)] w-full bg-white px-7">
-        <div className="flex items-end justify-between pt-4">
-          <SearchInput searchType="VC" />
-          <DownloadVC />
+      <div className="size-full px-2 lg:px-7">
+        <div className="flex flex-row flex-wrap lg:mt-5">
+          <div className="basis-full px-2 lg:basis-1/3">
+            <SearchInput searchType="Startup" />
+          </div>
+          <div className="flex basis-full items-end justify-between overflow-x-auto px-2 lg:basis-2/3">
+            <FilterBar />
+            <DownloadVC />
+          </div>
         </div>
-        <FilterBar />
         <TableVC email_linkedin={data.user?.email as string} />
       </div>
     </>

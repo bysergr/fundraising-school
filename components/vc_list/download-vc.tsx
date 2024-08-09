@@ -37,10 +37,11 @@ export default function DownloadVC() {
 
   return (
     <button
+      type="button"
       onClick={handleClick}
-      className="flex h-9 items-center gap-2 rounded-lg bg-ctwLightPurple px-3 text-white"
+      className="mx-2 flex items-center gap-2 rounded-lg bg-ctwLightPurple p-3 text-white"
     >
-      <span className="text-sm font-semibold">Download your favorite VCs</span>
+      {/* <span className="text-sm font-semibold">Download your favorite VCs</span> */}
       <ArrowDownOnSquareIcon className="size-5" />
     </button>
   );

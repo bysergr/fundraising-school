@@ -14,11 +14,12 @@ import menu from '@/public/images/icons/menu.svg';
 import exit from '@/public/images/icons/exit.svg';
 import logo from '@/public/images/ctw/logo.svg';
 
-import { PlayIcon, NewspaperIcon } from '@heroicons/react/24/outline';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
 
 import { VCListIcon } from '@/public/images/icons/vc_list';
 import { StartupsIcon } from '@/public/images/icons/startups';
 import { AgendaIcon } from '@/public/images/icons/agenda';
+import { ClassRoomIcon } from '@/public/images/icons/classroom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -131,14 +132,10 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               pathname={pathname}
               exact
             />
-
-            {data && data.user && (
+            {data?.user && (
               <NavItem
                 icon={
-                  <PlayIcon
-                    className="size-6"
-                    stroke={pathname.startsWith('/product/courses') ? '#fff' : '#32083E'}
-                  />
+                  <ClassRoomIcon stroke={pathname === '/product/courses' ? '#fff' : '#32083E'} />
                 }
                 text="Courses"
                 collapsed={isCollapsed}

@@ -35,3 +35,14 @@
   font-weight: 700;
   line-height: normal;
 }
+
+/* Ocultar scrollbars para todos los elementos */
+* {
+  scrollbar-width: none; /* Para Firefox */
+  -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+}
+
+/* Ocultar scrollbars para WebKit (Chrome, Safari, etc.) */
+*::-webkit-scrollbar {
+  display: none;
+}

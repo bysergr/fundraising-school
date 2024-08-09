@@ -661,7 +661,14 @@ const ChatSearchUI = () => {
                   <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Empty</h3>
                   <LuCalendarDays className="size-10 text-[#818181]" />
                   <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
-                    No events matched your query. Have dinner with us?
+                    No events matched your query. <br />
+                    <Link
+                      href="https://onde-vamos.com/dinners"
+                      target="_blank"
+                      className="underline"
+                    >
+                      Have dinner with us!
+                    </Link>
                   </p>
                 </div>
               </li>

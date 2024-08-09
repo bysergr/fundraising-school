@@ -20,12 +20,16 @@ export default async function Page() {
         nameSection="Startups List"
         description="Browse all Startups"
       />
-      <div className="h-[calc(100%-108px)] w-full bg-white px-7">
-        <div className="flex items-end justify-between pt-4">
-          <SearchInput searchType="Startup" />
-          <DownloadStartups />
+      <div className="size-full px-2 lg:px-7">
+        <div className="flex flex-row flex-wrap lg:mt-5">
+          <div className="basis-full px-2 lg:basis-1/2">
+            <SearchInput searchType="Startup" />
+          </div>
+          <div className="flex basis-full items-end justify-between overflow-x-auto px-2 lg:basis-1/2">
+            <FilterBar />
+            <DownloadStartups />
+          </div>
         </div>
-        <FilterBar />
         <TableStartups email_linkedin={data.user?.email as string} />
       </div>
     </>
