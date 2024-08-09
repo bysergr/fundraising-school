@@ -10,7 +10,7 @@ import { useAppStore } from '@/providers/app-store-providers';
 export default function InvestorDataForm({ data }: { data: Session | null }) {
   const { closeSignInModal } = useAppStore((state) => state);
 
-  const [jobTitle, setJobTitle] = useState<string>('CEO');
+  const [jobTitle, setJobTitle] = useState<string>('Partner');
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -67,8 +67,8 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
       className="flex w-full flex-col items-center justify-between gap-12"
     >
       <div className="flex w-full flex-col items-center gap-1">
-        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold">Job Title</label>
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+        <label className="mt-2 block w-full max-w-[365px] text-left font-semibold">Job Title</label>
+        <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
           <UserCircleIcon className="size-6" />
           <input
             onChange={(e) => setJobTitle(e.target.value)}
@@ -79,14 +79,14 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
         </div>
 
         <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          className="mt-2 block w-full max-w-[365px] text-left font-semibold"
           htmlFor="investment_stage"
         >
           Investment Stage
         </label>
         <select
           id="investment_stage"
-          className="w-full max-w-[335px] rounded-md focus:border-fsPurple"
+          className="w-full max-w-[365px] rounded-md focus:border-ctwLightPurple"
         >
           {InvestmentStage.map((Name, i) => (
             <option key={i}>{Name}</option>
@@ -94,14 +94,14 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
         </select>
 
         <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          className="mt-2 block w-full max-w-[365px] text-left font-semibold"
           htmlFor="investment_geography"
         >
           Investment Geography
         </label>
         <select
           id="investment_geography"
-          className="w-full max-w-[335px] rounded-md focus:border-fsPurple"
+          className="w-full max-w-[365px] rounded-md focus:border-ctwLightPurple"
         >
           {InvestmentGeography.map((Name, i) => (
             <option key={i}>{Name}</option>
@@ -109,24 +109,30 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
         </select>
 
         <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          className="mt-2 block w-full max-w-[365px] text-left font-semibold"
           htmlFor="industry"
         >
           Industry to Invest
         </label>
-        <select id="industry" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select
+          id="industry"
+          className="w-full max-w-[365px] rounded-md focus:border-ctwLightPurple"
+        >
           {MainIndustries.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
         </select>
 
         <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          className="mt-2 block w-full max-w-[365px] text-left font-semibold"
           htmlFor="ticket_size"
         >
           Ticket Size
         </label>
-        <select id="ticket_size" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select
+          id="ticket_size"
+          className="w-full max-w-[365px] rounded-md focus:border-ctwLightPurple"
+        >
           {TicketSize.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
@@ -134,7 +140,7 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
       </div>
       <button
         type="submit"
-        className="btn mb-12 flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
+        className="btn mb-12 flex h-11 w-full max-w-[365px] items-center gap-[6px] rounded-3xl bg-ctwLightPurple px-4 text-white"
       >
         Continue
       </button>

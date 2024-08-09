@@ -101,6 +101,7 @@ export const InvestmentGeography: string[] = [
 export const UserFormRoles: string[] = ['Entrepreneur (Founder)', 'Attendee', 'Investor'];
 
 export const Countries: string[] = [
+  'Colombia',
   'Afghanistan',
   'Albania',
   'Algeria',
@@ -137,7 +138,6 @@ export const Countries: string[] = [
   'Chad',
   'Chile',
   'China',
-  'Colombia',
   'Comoros',
   'Congo, Democratic Republic of the',
   'Congo, Republic of the',

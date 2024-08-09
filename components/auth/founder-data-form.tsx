@@ -26,14 +26,6 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
     try {
       const industrySelect = e.currentTarget.elements.namedItem('industry') as HTMLSelectElement;
 
-      console.log({
-        email: data?.user?.email,
-        startup_name: companyName,
-        startup_url: startupURL,
-        role: jobTitle,
-        main_industry: industrySelect.value,
-      });
-
       const response = await fetch('/api/user/auth/founder', {
         method: 'PUT',
         body: JSON.stringify({
@@ -72,13 +64,13 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full flex-col items-center justify-between gap-12"
+      className="mb-12 flex w-full flex-col items-center justify-between gap-12"
     >
       <div className="flex w-full flex-col items-center gap-1">
-        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold">
+        <label className="mt-2 block w-full max-w-[365px] text-left font-semibold">
           Company Name
         </label>
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+        <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
           <HomeIcon className="size-6" />
           <input
             onChange={(e) => setCompanyName(e.target.value)}
@@ -87,10 +79,10 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
             placeholder={companyName}
           />
         </div>
-        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold">
+        <label className="mt-2 block w-full max-w-[365px] text-left font-semibold">
           Startup URL
         </label>
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+        <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
           <LinkIcon className="size-6" />
           <input
             onChange={(e) => setStartupURL(e.target.value)}
@@ -100,8 +92,8 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
           />
         </div>
 
-        <label className="mt-2 block w-full max-w-[335px] text-left font-semibold">Job Title</label>
-        <div className="flex h-11 w-full max-w-[335px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+        <label className="mt-2 block w-full max-w-[365px] text-left font-semibold">Job Title</label>
+        <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
           <UserCircleIcon className="size-6" />
           <input
             onChange={(e) => setJobTitle(e.target.value)}
@@ -112,12 +104,15 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
         </div>
 
         <label
-          className="mt-2 block w-full max-w-[335px] text-left font-semibold"
+          className="mt-2 block w-full max-w-[365px] text-left font-semibold"
           htmlFor="industry"
         >
           Main Industries
         </label>
-        <select id="industry" className="w-full max-w-[335px] rounded-md focus:border-fsPurple">
+        <select
+          id="industry"
+          className="w-full max-w-[365px] rounded-md focus:border-ctwLightPurple"
+        >
           {MainIndustries.map((Name, i) => (
             <option key={i}>{Name}</option>
           ))}
@@ -125,7 +120,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
       </div>
       <button
         type="submit"
-        className="btn mb-12 flex h-11 w-full max-w-[335px] items-center gap-[6px] rounded-3xl bg-fsPurple px-4 text-white"
+        className="btn mb-12 flex h-11 w-full max-w-[365px] items-center gap-[6px] rounded-3xl bg-ctwLightPurple px-4 text-white"
       >
         Continue
       </button>
