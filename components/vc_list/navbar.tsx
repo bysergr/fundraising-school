@@ -199,6 +199,15 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               rel="noopener noreferrer"
             >
               Onde
+            </a>{' '}
+            and{' '}
+            <a
+              href="https://www.linkedin.com/in/rey-sergio/"
+              target="_blank"
+              className="underline"
+              rel="noopener noreferrer"
+            >
+              Sergio
             </a>
           </p>
         </div>
