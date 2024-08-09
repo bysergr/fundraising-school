@@ -10,9 +10,9 @@ import { useAppStore } from '@/providers/app-store-providers';
 export default function ConfirmUserDataForm({ data }: { data: Session | null }) {
   const { setSignInStage } = useAppStore((state) => state);
 
-  const [phoneNumber, setPhoneNumber] = useState<string>('319 6022224');
-  const [countryCode, setCountryCode] = useState<string>('57');
-  const [validWhatsApp, setValidWhatsApp] = useState<boolean>(true);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [countryCode, setCountryCode] = useState<string>('');
+  const [validWhatsApp, setValidWhatsApp] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
 

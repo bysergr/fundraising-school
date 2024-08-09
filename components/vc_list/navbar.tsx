@@ -71,6 +71,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
       const syncRole = async () => {
         const roleResponse = await fetch(`/api/user/startups/${email}`, {
           method: 'GET',
+          cache: 'no-store',
         });
 
         if (roleResponse.status !== 200) {
@@ -145,22 +146,6 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 pathname={pathname}
               />
             )}
-
-            {/* 
-            <NavItem
-              icon={<PodcastIcon stroke={pathname === "/podcast" ? '#fff' : "#32083E"} />}
-              text="Podcast"
-              collapsed={isCollapsed}
-              href="/podcast"
-              pathname={pathname}
-            />
-            <NavItem
-              icon={<ClassRoomIcon stroke={pathname === "/classroom" ? '#fff' : "#32083E"} />}
-              text="Classroom"
-              collapsed={isCollapsed}
-              href="/"
-              pathname={pathname}
-            /> */}
 
             {role === 'startup' && (
               <NavItem

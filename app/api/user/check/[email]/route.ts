@@ -7,6 +7,7 @@ export async function GET(request: Request, context: { params: Params }) {
 
   const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/check/${email}`, {
     method: 'GET',
+    cache: 'no-store',
   });
 
   if (response.status !== 200) {

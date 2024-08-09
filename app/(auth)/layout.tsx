@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <section className="flex h-screen w-full flex-col items-center gap-2 lg:px-8 lg:py-6">
         <nav className="hidden w-full lg:block">
           <div className="hidden w-32 lg:block ">
-            <LogoCTW />
+            <LogoCTW bgWhite />
           </div>
         </nav>
         {children}

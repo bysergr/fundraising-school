@@ -11,9 +11,6 @@ export async function GET(req: Request, context: { params: Params }) {
       {
         cache: 'no-store',
         method: 'GET',
-        headers: {
-          'Content-Type': 'text/csv',
-        },
       },
     );
 
@@ -23,11 +20,11 @@ export async function GET(req: Request, context: { params: Params }) {
 
     const blob = await response.blob();
     const buffer = await blob.arrayBuffer();
-    const fileName = 'favorite_funds.csv';
+    const fileName = 'favorite_funds.xlsx';
 
     const headers = new Headers();
     headers.append('Content-Disposition', `attachment; filename="${fileName}"`);
-    headers.append('Content-Type', 'text/csv');
+    headers.append('Content-Type', 'text/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
     return new Response(Buffer.from(buffer), { headers });
   } catch (error) {

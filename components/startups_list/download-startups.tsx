@@ -10,6 +10,7 @@ export default function DownloadStartUps() {
     try {
       const response = await fetch(`/api/startups/fav/csv/${email}`, {
         method: 'GET',
+        cache: 'no-store',
       });
 
       if (!response.ok) {

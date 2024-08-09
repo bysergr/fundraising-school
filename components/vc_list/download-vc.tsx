@@ -10,9 +10,7 @@ export default function DownloadVC() {
     try {
       const response = await fetch(`/api/funds/fav/csv/${email}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'text/csv',
-        },
+        cache: 'no-store',
       });
 
       if (!response.ok) {
@@ -28,7 +26,7 @@ export default function DownloadVC() {
       const a = document.createElement('a');
 
       a.href = url;
-      a.download = 'favorite_funds.csv';
+      a.download = 'favorite_funds.xlsx';
       document.body.appendChild(a);
       a.click();
       a.remove();

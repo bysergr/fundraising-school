@@ -6,9 +6,11 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { InvestmentStage, InvestmentGeography, MainIndustries, TicketSize } from '@/data/enums';
 import { Session } from 'next-auth';
 import { useAppStore } from '@/providers/app-store-providers';
+import { useUserStore } from '@/providers/user-store-provider';
 
 export default function InvestorDataForm({ data }: { data: Session | null }) {
   const { closeSignInModal } = useAppStore((state) => state);
+  const { updateRole } = useUserStore((state) => state);
 
   const [jobTitle, setJobTitle] = useState<string>('Partner');
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,6 +47,7 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
       }
 
       closeSignInModal();
+      updateRole('fund');
     } catch {
       console.error('Error create founder');
     } finally {

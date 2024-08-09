@@ -9,7 +9,10 @@ export default async function validateUser(
   setSignInStage: AppActions['setSignInStage'],
   closeSignInModal: AppActions['closeSignInModal'],
 ) {
-  const response = await fetch(`/api/user/${user.user?.email}`);
+  const response = await fetch(`/api/user/${user.user?.email}`, {
+    method: 'GET',
+    cache: 'no-store',
+  });
 
   if (response.status !== 200) {
     setSignInStage('basic');
@@ -17,6 +20,8 @@ export default async function validateUser(
   }
 
   const data = await response.json();
+
+  console.log({ data });
 
   if (data['phone_number'] === null) {
     setSignInStage('basic');

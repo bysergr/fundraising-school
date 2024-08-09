@@ -25,7 +25,7 @@ export default async function Hero() {
                   August 26 to September 03
                 </p>
                 {data === null && (
-                  <OpenAuthModal className="mx-auto w-fit rounded-sm bg-ctwLightPurple px-24 py-2 font-semibold text-white " />
+                  <OpenAuthModal className="mx-auto w-fit rounded-md bg-ctwLightPurple px-24 py-2 font-semibold text-white " />
                 )}
               </div>
             </div>

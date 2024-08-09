@@ -24,7 +24,7 @@ export async function GET(req: Request, context: { params: Params }) {
 
     const headers = new Headers();
     headers.append('Content-Disposition', `attachment; filename="${fileName}"`);
-    headers.append('Content-Type', 'text/vnd.openxmlformats-officedocument.spreadsheetml.sheet ');
+    headers.append('Content-Type', 'text/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
     return new Response(Buffer.from(buffer), { headers });
   } catch (error) {
