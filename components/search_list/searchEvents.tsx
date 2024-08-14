@@ -358,8 +358,9 @@ const TimeLine: React.FC<TimeLineProps> = ({
                 </button>
                 {isOpen && (
                   <div
-                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
-                      }`}
+                    className={`mt-5 flex flex-col overflow-hidden transition-all duration-300 ease-in-out lg:space-y-16 ${
+                      isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
+                    }`}
                   >
                     {schedule.events
                       .sort(
@@ -387,7 +388,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
   );
 };
 
-interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> { }
+interface SelectEvent extends React.ChangeEvent<HTMLSelectElement> {}
 
 interface CitySelectProps {
   className: string;
@@ -455,12 +456,11 @@ const TopicSelect: React.FC<TopicSelectProps> = ({ className, onSelect }) => {
 };
 
 interface SearchBarProps {
-  activeTab: string;
   openModal: () => void;
   openModalShare: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalShare }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ openModal, openModalShare }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
   const [value, setValue] = React.useState(query);
@@ -503,7 +503,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
         }}
       >
         <div
-          className={"col-span-4 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4"}
+          className={
+            'col-span-4 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4'
+          }
         >
           <Input
             ref={inputRef}
@@ -545,11 +547,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal, openModalSh
           type="button"
           onClick={openModalShare}
         >
-
-          <span className="lg:ml-1 hidden lg:block">
-            Send My calendar
-          </span>
-          <LuCalendarDays className="ml-1 h-4 w-4 font-bold text-white" />
+          <span className="hidden lg:ml-1 lg:block">Send My calendar</span>
+          <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
         </Button>
       </form>
       <Filters />
@@ -633,7 +632,7 @@ const ChatSearchUI = () => {
         </div>
       </CustomModal>
 
-      <SearchBar activeTab={activeTab} openModal={openModal} openModalShare={openModalShare} />
+      <SearchBar openModal={openModal} openModalShare={openModalShare} />
       <div className="size-full min-h-[50vh]">
         <Tabs
           value={activeTab}
