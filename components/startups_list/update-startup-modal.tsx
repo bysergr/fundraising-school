@@ -403,7 +403,19 @@ export default function UpdateStartupModal() {
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
-                Deck
+                <span>
+                  Deck (
+                  <a
+                    href="http://experience.docsend.com/hsturp95ijw5"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block text-ctwLightPurple"
+                  >
+                    DOCSEND
+                  </a>
+                  )
+                </span>
+
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
