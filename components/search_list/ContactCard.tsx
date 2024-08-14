@@ -52,9 +52,11 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            {contact.linkedin.length > 40
-              ? `${contact.linkedin.slice(0, 40)}...`
-              : contact.linkedin}
+            {contact.linkedin === null
+              ? 'No LinkedIn'
+              : contact.linkedin.length > 40
+                ? `${contact.linkedin.slice(0, 40)}...`
+                : contact.linkedin}
           </a>
         </div>
       </div>

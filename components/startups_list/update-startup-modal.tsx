@@ -44,9 +44,9 @@ export default function UpdateStartupModal() {
   const [founders, setFounders] = useState<ContactInfo[]>([]);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length === 0) {
-      return;
-    }
+    if (!event.target.files) return;
+
+    if (event.target.files.length === 0) return;
 
     setFile(event.target.files[0]);
   }
@@ -155,8 +155,6 @@ export default function UpdateStartupModal() {
         response
           .json()
           .then((data) => {
-            console.log({ data });
-
             const founders: ContactInfo[] = data.map((founder: Founder) => {
               return {
                 name: founder.nickname,
