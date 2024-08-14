@@ -15,11 +15,11 @@ import MobileAside from '@/components/course/mobile-aside';
 
 export default async function Page({ params }: { params: { course: string; class: string } }) {
   if (params.course.trim() === '') {
-    redirect('/product/courses');
+    redirect('/matchmaking/courses');
   }
 
   if (params.class.trim() === '') {
-    redirect('/product/courses');
+    redirect('/matchmaking/courses');
   }
   const data: Session = (await getServerSession(authOptions)) as Session;
 
@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: { course: string; class
     .at(0);
 
   if (courseData === undefined) {
-    redirect('/product/courses');
+    redirect('/matchmaking/courses');
   }
 
   const classes = courseData.course.modules.flatMap((module) => module.classes);
@@ -65,7 +65,7 @@ export default async function Page({ params }: { params: { course: string; class
     .at(0);
 
   if (currentClass === undefined) {
-    redirect('/product/courses');
+    redirect('/matchmaking/courses');
   }
 
   const currentModule = courseData.course.modules.find((module) =>

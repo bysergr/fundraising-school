@@ -22,7 +22,11 @@ export const Content = ({
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const asideAllows = ['/product/search_list', '/product/startups_list', '/product/vc_list'];
+  const asideAllows = [
+    '/matchmaking/search_list',
+    '/matchmaking/startups_list',
+    '/matchmaking/vc_list',
+  ];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

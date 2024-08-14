@@ -56,7 +56,7 @@ export default function VideoSection({
               onClick={() => {
                 if (prevSessionName) {
                   router.push(
-                    `/product/courses/${slugify(courseName)}/class/${slugify(prevSessionName)}`,
+                    `/matchmaking/courses/${slugify(courseName)}/class/${slugify(prevSessionName)}`,
                   );
                 }
               }}
@@ -70,7 +70,7 @@ export default function VideoSection({
                 completeClass({ sessionID, email });
                 if (nextSessionName) {
                   router.push(
-                    `/product/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
+                    `/matchmaking/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
                   );
                 } else {
                   router.refresh();
@@ -98,7 +98,7 @@ export default function VideoSection({
               onClick={() => {
                 if (nextSessionName) {
                   router.push(
-                    `/product/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
+                    `/matchmaking/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
                   );
                 }
               }}
@@ -113,7 +113,7 @@ export default function VideoSection({
               completeClass({ sessionID, email });
               if (nextSessionName) {
                 router.push(
-                  `/product/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
+                  `/matchmaking/courses/${slugify(courseName)}/class/${slugify(nextSessionName)}`,
                 );
               } else {
                 router.refresh();

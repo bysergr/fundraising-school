@@ -11,7 +11,7 @@ export default function LinkedInSignIn({ className }: { className: string }) {
   return (
     <button
       onClick={() => {
-        signIn('linkedin', { redirect: true, callbackUrl: '/product/auth' });
+        signIn('linkedin', { redirect: true, callbackUrl: '/matchmaking/auth' });
 
         setStage('linkedin');
       }}

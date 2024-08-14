@@ -11,7 +11,7 @@ export default function AuthPage() {
 
   const router = useRouter();
 
-  router.push('/product/');
+  router.push('/matchmaking/');
 
   return;
 }

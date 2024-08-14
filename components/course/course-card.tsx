@@ -10,13 +10,13 @@ export default function CourseCard({ courseData }: { courseData: CourseInfo }) {
     const first_class_name = courseData.course.modules[0].classes[0].title;
     link_class =
       courseData.last_class_name !== null
-        ? `/product/courses/${slugify(courseData.course.title)}/class/${slugify(courseData.last_class_name)}`
-        : `/product/courses/${slugify(courseData.course.title)}/class/${slugify(first_class_name)}`;
+        ? `/matchmaking/courses/${slugify(courseData.course.title)}/class/${slugify(courseData.last_class_name)}`
+        : `/matchmaking/courses/${slugify(courseData.course.title)}/class/${slugify(first_class_name)}`;
   } catch (error) {
     link_class =
       courseData.last_class_name !== null
-        ? `/product/courses/${slugify(courseData.course.title)}/class/${slugify(courseData.last_class_name)}`
-        : `/product/courses/#`;
+        ? `/matchmaking/courses/${slugify(courseData.course.title)}/class/${slugify(courseData.last_class_name)}`
+        : `/matchmaking/courses/#`;
   }
 
   return (

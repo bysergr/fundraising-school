@@ -44,19 +44,19 @@ export async function middleware(req: NextRequest) {
       }
     }
 
-    if (userRole === 'startup' && pathname === '/product/startups_list') {
-      return NextResponse.redirect(new URL('/product/vc_list', req.url));
+    if (userRole === 'startup' && pathname === '/matchmaking/startup-list') {
+      return NextResponse.redirect(new URL('/matchmaking/vc-list', req.url));
     }
 
-    if (userRole === 'fund' && pathname === '/product/vc_list') {
-      return NextResponse.redirect(new URL('/product/startups_list', req.url));
+    if (userRole === 'fund' && pathname === '/matchmaking/vc-list') {
+      return NextResponse.redirect(new URL('/matchmaking/startup-list', req.url));
     }
 
     if (
       userRole === 'guest' &&
-      (pathname === '/product/vc_list' || pathname === '/product/startups_list')
+      (pathname === '/matchmaking/vc-list' || pathname === '/matchmaking/startup-list')
     ) {
-      return NextResponse.redirect(new URL('/product/', req.url));
+      return NextResponse.redirect(new URL('/matchmaking/', req.url));
     }
   } catch (error) {
     return NextResponse.next({ headers });

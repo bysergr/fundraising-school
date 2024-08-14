@@ -123,33 +123,37 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               icon={
                 <NewspaperIcon
                   className="size-6"
-                  stroke={pathname === '/product' ? '#fff' : '#32083E'}
+                  stroke={pathname === '/matchmaking' ? '#fff' : '#32083E'}
                 />
               }
               text="Match Making"
               collapsed={isCollapsed}
-              href="/product"
+              href="/matchmaking"
               pathname={pathname}
               exact
             />
             {data?.user && (
               <NavItem
                 icon={
-                  <ClassRoomIcon stroke={pathname === '/product/courses' ? '#fff' : '#32083E'} />
+                  <ClassRoomIcon
+                    stroke={pathname === '/matchmaking/courses' ? '#fff' : '#32083E'}
+                  />
                 }
                 text="Courses"
                 collapsed={isCollapsed}
-                href="/product/courses"
+                href="/matchmaking/courses"
                 pathname={pathname}
               />
             )}
 
             {role === 'startup' && (
               <NavItem
-                icon={<VCListIcon stroke={pathname === '/product/vc_list' ? '#fff' : '#32083E'} />}
+                icon={
+                  <VCListIcon stroke={pathname === '/matchmaking/vc-list' ? '#fff' : '#32083E'} />
+                }
                 text="VC List"
                 collapsed={isCollapsed}
-                href="/product/vc_list"
+                href="/matchmaking/vc-list"
                 pathname={pathname}
               />
             )}
@@ -157,22 +161,20 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               <NavItem
                 icon={
                   <StartupsIcon
-                    stroke={pathname === '/product/startups_list' ? '#fff' : '#32083E'}
+                    stroke={pathname === '/matchmaking/startup-list' ? '#fff' : '#32083E'}
                   />
                 }
                 text="Startup List"
                 collapsed={isCollapsed}
-                href="/product/startups_list"
+                href="/matchmaking/startup-list"
                 pathname={pathname}
               />
             )}
             <NavItem
-              icon={
-                <AgendaIcon stroke={pathname === '/product/search_list' ? '#fff' : '#32083E'} />
-              }
+              icon={<AgendaIcon stroke={pathname === '/matchmaking/agenda' ? '#fff' : '#32083E'} />}
               text="Agenda"
               collapsed={isCollapsed}
-              href="/product/search_list"
+              href="/matchmaking/agenda"
               pathname={pathname}
             />
           </div>

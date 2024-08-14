@@ -11,11 +11,11 @@ export const AppLink = {
     SignIn: '/signin',
   },
   VcList: {
-    BaseData: '/vc_list',
-    Home: '/vc_list',
+    BaseData: '/vc-list',
+    Home: '/vc-list',
   },
   Product: {
-    Home: '/product',
+    Home: '/matchmaking',
   },
   Home: '/',
 };
@@ -44,7 +44,7 @@ export const Rounds: Round[] = [
   },
 ];
 
-export const ProtectedRoutes: string[] = ['/product', '/activation'];
+export const ProtectedRoutes: string[] = ['/matchmaking', '/activation'];
 
 export const TicketSize: string[] = [
   '$150,000 a $500,000',

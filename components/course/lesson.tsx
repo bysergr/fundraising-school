@@ -64,7 +64,7 @@ export default function Lesson({ courseData }: { courseData: CourseInfo }) {
                       )}
                     />
                     <Link
-                      href={`/product/courses/${slugify(courseData.course.title)}/class/${slugify(classObj.title)}`}
+                      href={`/matchmaking/courses/${slugify(courseData.course.title)}/class/${slugify(classObj.title)}`}
                     >
                       {classObj.title}
                     </Link>
