@@ -24,8 +24,9 @@ export const Content = ({
   const pathname = usePathname();
   const asideAllows = [
     '/matchmaking/search_list',
-    '/matchmaking/startups_list',
-    '/matchmaking/vc_list',
+    '/matchmaking/startups-list',
+    '/matchmaking/agenda',
+    '/matchmaking/vc-list',
   ];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
