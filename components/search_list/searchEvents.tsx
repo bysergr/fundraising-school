@@ -456,11 +456,11 @@ const TopicSelect: React.FC<TopicSelectProps> = ({ className, onSelect }) => {
 };
 
 interface SearchBarProps {
-  activeTab: string;
   openModal: () => void;
+  openModalShare: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ openModal, openModalShare }) => {
   const { query, refine } = useSearchBox();
   const { status } = useInstantSearch();
   const [value, setValue] = React.useState(query);
@@ -503,7 +503,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
         }}
       >
         <div
-          className={`col-span-5 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4 ${activeTab === 'my_calendar' ? 'col-span-3 lg:col-span-4' : ''}  `}
+          className={
+            'col-span-4 flex w-full content-center items-center justify-center rounded-md border border-gray-400 bg-white  lg:col-span-4'
+          }
         >
           <Input
             ref={inputRef}
@@ -538,6 +540,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ activeTab, openModal }) => {
           onClick={openModal}
         >
           <LuSettings2 className="size-4 font-bold text-white" />
+        </Button>
+        <Button
+          className="inset-y-0 right-0 z-10 my-1 flex cursor-pointer items-center rounded-[1px] bg-[#3C0560] px-2 text-white focus:outline-none lg:col-span-1"
+          variant="ghost"
+          type="button"
+          onClick={openModalShare}
+        >
+          <span className="hidden lg:ml-1 lg:block">Send My calendar</span>
+          <LuCalendarDays className="ml-1 size-4 font-bold text-white" />
         </Button>
       </form>
       <Filters />
@@ -583,6 +594,10 @@ const ChatSearchUI = () => {
 
   const [isModalOpenShare, setIsModalOpenShare] = React.useState(false);
 
+  const openModalShare = () => {
+    setIsModalOpenShare(true);
+  };
+
   const closeModalShare = () => {
     setIsModalOpenShare(false);
   };
@@ -617,7 +632,7 @@ const ChatSearchUI = () => {
         </div>
       </CustomModal>
 
-      <SearchBar activeTab={activeTab} openModal={openModal} />
+      <SearchBar openModal={openModal} openModalShare={openModalShare} />
       <div className="size-full min-h-[50vh]">
         <Tabs
           value={activeTab}
