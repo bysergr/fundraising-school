@@ -21,7 +21,7 @@ export default async function Page() {
         description="Browse all Startups"
       />
       <div className="size-full px-2 lg:px-7">
-        <div className="flex flex-row flex-wrap lg:mt-5">
+        {/* <div className="flex flex-row flex-wrap lg:mt-5">
           <div className="basis-full px-2 lg:basis-1/2">
             <SearchInput searchType="Startup" />
           </div>
@@ -29,7 +29,7 @@ export default async function Page() {
             <FilterBar />
             <DownloadStartups />
           </div>
-        </div>
+        </div> */}
         <TableStartups email_linkedin={data.user?.email as string} />
       </div>
     </>

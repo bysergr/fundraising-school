@@ -9,7 +9,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import '../search_list/styles.css';
 import type { StartupProfile } from '@/models/vc_list';
-import { IoRocketOutline } from 'react-icons/io5';
+import { IoRocketOutline, IoPaperPlaneOutline } from 'react-icons/io5';
 
 export default function TableStartups({ email_linkedin }: { email_linkedin: string }) {
   const {
@@ -97,6 +97,18 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
   }, [startups]);
 
   return (
+    <div className="flex h-[30vh] w-full items-center justify-center ">
+      <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+        <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Coming Soon</h3>
+        <IoPaperPlaneOutline className="size-10 text-[#818181]" />
+        <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+          coming Soon
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
     <div>
       <div className="mt-5 size-full min-h-[50vh]">
         <Tabs
@@ -133,6 +145,7 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
                     </td>
                   </tr>
                 )}
+
                 {startups.length === 0 && !loading ? (
                   <div className="flex h-[30vh] w-full items-center justify-center ">
                     <div className="flex w-full flex-col items-center justify-center space-y-2.5">

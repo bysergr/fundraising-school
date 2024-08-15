@@ -17,7 +17,7 @@ export default async function Page() {
       <FundModal />
       <TitleSection icon="identification" nameSection="VC List" description="Browse all funds" />
       <div className="size-full px-2 lg:px-7">
-        <div className="flex flex-row flex-wrap lg:mt-5">
+        {/* <div className="flex flex-row flex-wrap lg:mt-5">
           <div className="basis-full px-2 lg:basis-1/3">
             <SearchInput searchType="Startup" />
           </div>
@@ -25,7 +25,7 @@ export default async function Page() {
             <FilterBar />
             <DownloadVC />
           </div>
-        </div>
+        </div> */}
         <TableVC email_linkedin={data.user?.email as string} />
       </div>
     </>

@@ -24,7 +24,7 @@ export const Content = ({
   const pathname = usePathname();
   const asideAllows = [
     '/matchmaking/search_list',
-    '/matchmaking/startups-list',
+    '/matchmaking/startup-list',
     '/matchmaking/agenda',
     '/matchmaking/vc-list',
   ];
