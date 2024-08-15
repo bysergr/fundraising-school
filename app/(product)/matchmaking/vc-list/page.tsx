@@ -1,6 +1,3 @@
-import DownloadVC from '@/components/vc_list/download-vc';
-import FilterBar from '@/components/vc_list/filter-bar';
-import SearchInput from '@/components/vc_list/search-input';
 import TableVC from '@/components/vc_list/table-vc';
 import TitleSection from '@/components/vc_list/title-section';
 

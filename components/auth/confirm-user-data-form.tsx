@@ -3,7 +3,7 @@
 import 'react-phone-number-input/style.css';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { CheckIcon, XMarkIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Countries, UserFormRoles } from '@/data/enums';
 import { useAppStore } from '@/providers/app-store-providers';
@@ -14,6 +14,7 @@ import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-nu
 export default function ConfirmUserDataForm({ data }: { data: Session | null }) {
   const { setSignInStage } = useAppStore((state) => state);
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const [validWhatsApp, setValidWhatsApp] = useState<boolean>(false);
 

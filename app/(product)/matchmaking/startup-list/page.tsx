@@ -1,6 +1,3 @@
-import DownloadStartups from '@/components/startups_list/download-startups';
-import FilterBar from '@/components/startups_list/filter-bar';
-import SearchInput from '@/components/vc_list/search-input';
 import TableStartups from '@/components/startups_list/table-startups';
 import TitleSection from '@/components/vc_list/title-section';
 

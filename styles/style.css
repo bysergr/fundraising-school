@@ -27,6 +27,6 @@ lite-youtube {
   max-width: none !important;
 }
 
-.PhoneInputInput{
-  @apply border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0 w-full;
+.PhoneInputInput {
+  @apply w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0;
 }
