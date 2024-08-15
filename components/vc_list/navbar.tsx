@@ -206,7 +206,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               className="underline"
               rel="noopener noreferrer"
             >
-              Sergio
+              Sergio Rey
             </a>
           </p>
         </div>
