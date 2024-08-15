@@ -1,4 +1,4 @@
-// import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 import '@/styles/style.css';
 import { dm_sans, josefin_sans } from '@/app/fonts';
@@ -8,9 +8,9 @@ import { ToastProvider } from '@/providers/toast-provider';
 import clsx from 'clsx';
 
 export const metadata = {
-  title: 'Fundraising School - Be a great deal for investors and raise money like a pro',
+  title: 'Colombia Tech Week | Dashboard',
   description:
-    'Fuel your LATAM startup at Fundraising School. Master fundraising with expert-led courses on pitch decks and venture capital. Join to accelerate growth, achieve goals, and network with founders. Unleash fundraising expertise for success!',
+    "Exclusive events connecting global venture leaders, attracting foreign investment, and celebrating the region's entrepreneurial spirit.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </UserStoreProvider>
         </ToastProvider>
       </body>
-      {/* <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID as string} /> */}
+      <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID as string} />
     </html>
   );
 }
