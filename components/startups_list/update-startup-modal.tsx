@@ -10,13 +10,13 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
 import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
 import { ContactCard, ContactInfo } from '../search_list/ContactCard';
+import { Countries } from '@/data/enums';
 
 const lookingForOptions: Framework[] = [
-  { value: 'funding', label: 'Funding' },
-  { value: 'partnerships', label: 'Partnerships' },
-  { value: 'mentorship', label: 'Mentorship' },
-  { value: 'networking', label: 'Networking' },
-  { value: 'talent', label: 'Talent' },
+  { value: 'Pre-Seed', label: 'Pre-Seed' },
+  { value: 'Seed', label: 'Seed' },
+  { value: 'Series A', label: 'Series A' },
+  { value: 'Series B+', label: 'Series B+' },
 ];
 const tractionUSDOptions: Framework[] = [
   { value: '0-500k', label: '0 - 500K USD' },
@@ -26,22 +26,29 @@ const tractionUSDOptions: Framework[] = [
   { value: '10m+', label: '10M+ USD' },
 ];
 const mainIndustryOptions: Framework[] = [
-  { value: 'technology', label: 'Technology' },
-  { value: 'healthcare', label: 'Healthcare' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'education', label: 'Education' },
-  { value: 'manufacturing', label: 'Manufacturing' },
+  { value: 'Fintech', label: 'Fintech' },
+  { value: 'Healthtech', label: 'Healthtech' },
+  { value: 'Edtech', label: 'Edtech' },
+  { value: 'E-commerce', label: 'E-commerce' },
+  { value: 'Logistics', label: 'Logistics' },
+  { value: 'Agtech', label: 'Agtech' },
+  { value: 'Proptech', label: 'Proptech' },
+  { value: 'SaaS', label: 'SaaS' },
+  { value: 'Foodtech', label: 'Foodtech' },
+  { value: 'Others', label: 'Others' },
 ];
 
 export default function UpdateStartupModal() {
   const [startup, setStartup] = useState<StartupProfile>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [countries, setCountries] = useState<string[]>([]);
   const [fileStr, setFileStr] = useState<string>(
     startup?.photo || 'https://naurat.com/favicon.svg',
   );
   const [file, setFile] = useState<File>();
   const [founders, setFounders] = useState<ContactInfo[]>([]);
+  const [selectedLooking, setSelectedLooking] = useState<Framework[]>([]);
+  const [selectedTraction, setSelectedTraction] = useState<Framework[]>([]);
+  const [selectedIndustry, setSelectedIndustry] = useState<Framework[]>([]);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
@@ -100,6 +107,8 @@ export default function UpdateStartupModal() {
           response
             .json()
             .then((data) => {
+              setFileStr(data.photo || 'https://naurat.com/favicon.svg');
+
               setStartup(data);
               setIsLoading(false);
             })
@@ -116,22 +125,6 @@ export default function UpdateStartupModal() {
         .finally(() => {
           setIsLoading(false);
         });
-
-      fetch(`/api/startups/filter/countries`).then((response) => {
-        if (!response.ok) {
-          return;
-        }
-        response
-          .json()
-          .then((data) => {
-            const countries = data.map((country: { name: string }) => country.name);
-
-            setCountries(countries);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
     } else {
       dialogRef.current?.close();
     }
@@ -257,21 +250,38 @@ export default function UpdateStartupModal() {
       )?.value;
     }
 
-    try {
-      if (file) {
+    if ((e.currentTarget.elements.namedItem('startup_country') as HTMLSelectElement)?.value) {
+      body_request['country'] = (
+        e.currentTarget.elements.namedItem('startup_country') as HTMLSelectElement
+      )?.value;
+    }
+
+    let closeDialog = false;
+
+    if (file) {
+      try {
         const formData = new FormData();
         formData.append('startup_photo', file);
 
-        const response = await fetch(`/api/startups/image/${startup?.id}`, {
-          method: 'POST',
-          body: formData,
-        });
+        const response = await fetch(
+          `https://ctw-backend-service-zfymtlnmgq-ue.a.run.app/startup/${startup?.id}/startup_photo/`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        );
 
         if (!response.ok) {
           throw new Error('Failed to upload startup photo');
         }
-      }
 
+        closeDialog = true;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    try {
       const response = await fetch(`/api/startups/${startup?.id}`, {
         method: 'PUT',
         body: JSON.stringify(body_request),
@@ -281,12 +291,16 @@ export default function UpdateStartupModal() {
         throw new Error('Failed to update startup profile');
       }
 
+      closeDialog = true;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    if (closeDialog) {
       dialogRef.current?.close();
 
       setStartupSelectedFilterOptions(selected_startups_filter_options);
       closeUpdateStartupModal();
-    } catch (error) {
-      console.error('Error:', error);
     }
   };
 
@@ -384,9 +398,19 @@ export default function UpdateStartupModal() {
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location
                 <select id="startup_country" className="rounded-md border border-[#DBDBDB] p-2">
-                  {countries.map((country) => {
-                    return <option key={country}>{country}</option>;
-                  })}
+                  {startup.country ? (
+                    <>
+                      <option>{startup.country.name}</option>
+                      {Countries.map((country) => {
+                        if (country !== startup.country.name)
+                          return <option key={country}>{country}</option>;
+                      })}
+                    </>
+                  ) : (
+                    Countries.map((country) => {
+                      return <option key={country}>{country}</option>;
+                    })
+                  )}
                 </select>
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -455,15 +479,27 @@ export default function UpdateStartupModal() {
             <div className=" grid grid-cols-1 gap-x-6  gap-y-4 lg:grid-cols-3">
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 Looking for
-                <FancyMultiSelect data={lookingForOptions} />
+                <FancyMultiSelect
+                  selected={selectedLooking}
+                  setSelected={setSelectedLooking}
+                  data={lookingForOptions}
+                />
               </div>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 Traction USD
-                <FancyMultiSelect data={tractionUSDOptions} />
+                <FancyMultiSelect
+                  selected={selectedTraction}
+                  setSelected={setSelectedTraction}
+                  data={tractionUSDOptions}
+                />
               </div>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 Main Industry
-                <FancyMultiSelect data={mainIndustryOptions} />
+                <FancyMultiSelect
+                  selected={selectedIndustry}
+                  setSelected={setSelectedIndustry}
+                  data={mainIndustryOptions}
+                />
               </div>
             </div>
 

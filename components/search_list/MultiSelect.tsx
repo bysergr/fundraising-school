@@ -6,12 +6,13 @@ export type Framework = { value: string; label: string };
 
 type FancyMultiSelectProps = {
   data?: Framework[];
+  selected: Framework[];
+  setSelected: React.Dispatch<React.SetStateAction<Framework[]>>;
 };
 
-export const FancyMultiSelect = ({ data = [] }: FancyMultiSelectProps) => {
+export const FancyMultiSelect = ({ data = [], selected, setSelected }: FancyMultiSelectProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Framework[]>([]);
   const [inputValue, setInputValue] = React.useState('');
 
   const handleUnselect = (framework: Framework) => {
