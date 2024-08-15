@@ -1,17 +1,20 @@
 'use client';
 
+import 'react-phone-number-input/style.css';
+
 import { useState, useEffect, FormEvent } from 'react';
 import { CheckIcon, XMarkIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Countries, UserFormRoles } from '@/data/enums';
-import { Session } from 'next-auth';
 import { useAppStore } from '@/providers/app-store-providers';
+import { toast } from 'react-toastify';
+import { Session } from 'next-auth';
+import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
 
 export default function ConfirmUserDataForm({ data }: { data: Session | null }) {
   const { setSignInStage } = useAppStore((state) => state);
 
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [countryCode, setCountryCode] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<any>();
   const [validWhatsApp, setValidWhatsApp] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,6 +23,10 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
     e.preventDefault();
 
     if (!validWhatsApp) {
+      toast('Please enter a valid WhatsApp number', {
+        theme: 'light',
+        type: 'error',
+      });
       return;
     }
 
@@ -34,8 +41,8 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
         body: JSON.stringify({
           nickname: data?.user?.name as string,
           email: data?.user?.email as string,
-          country_code: countryCode,
-          phone_number: phoneNumber,
+          country_code: parsePhoneNumber(phoneNumber)?.countryCallingCode,
+          phone_number: parsePhoneNumber(phoneNumber)?.nationalNumber,
           location: countrySelect.value,
         }),
       });
@@ -60,30 +67,18 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
   };
 
   useEffect(() => {
-    const phone = phoneNumber.replace(/\s/g, '');
-
-    if (!/^[0-9]*$/.test(phone)) {
+    if (!phoneNumber) {
       setValidWhatsApp(false);
       return;
     }
 
-    if (!/^[0-9]*$/.test(countryCode)) {
-      setValidWhatsApp(false);
-      return;
-    }
-
-    if (countryCode.length < 1 || countryCode.length > 3) {
-      setValidWhatsApp(false);
-      return;
-    }
-
-    if (phone.trim() === '' || phone.length < 6 || phone.length > 17) {
+    if (!isValidPhoneNumber(phoneNumber)) {
       setValidWhatsApp(false);
       return;
     }
 
     setValidWhatsApp(true);
-  }, [phoneNumber, countryCode]);
+  }, [phoneNumber]);
 
   if (loading) {
     return (
@@ -105,20 +100,10 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
           <span className="mt-2 block text-xs font-normal">With Country Code</span>
         </label>
         <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
-          <PhoneIcon className="size-6" />
-          <input
-            onChange={(e) => setCountryCode(e.target.value)}
-            className="w-[72px] border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
-            type="number"
-            placeholder={'57'}
-            min={0}
-            max={999}
-          />
-          <input
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
-            type="string"
-            placeholder={'319 6022224'}
+          <PhoneInput
+            defaultCountry="CO"
+            onChange={(value) => setPhoneNumber(value)}
+            value={phoneNumber}
           />
           {validWhatsApp ? (
             <CheckIcon className="size-6 text-blue-500" />

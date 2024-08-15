@@ -23,7 +23,10 @@ dialog:modal {
   max-height: 100vh;
 }
 
-
 lite-youtube {
   max-width: none !important;
+}
+
+.PhoneInputInput{
+  @apply border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0 w-full;
 }
