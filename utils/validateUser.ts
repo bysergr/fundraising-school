@@ -21,8 +21,6 @@ export default async function validateUser(
 
   const data = await response.json();
 
-  console.log({ data });
-
   if (data['phone_number'] === null) {
     setSignInStage('basic');
     return;
@@ -38,11 +36,7 @@ export default async function validateUser(
     if (response.ok) {
       const data = await response.json();
 
-      console.log('Data:', data);
-
       const role = data['user']['response'];
-
-      console.log('Role:', role);
 
       if (role !== undefined) {
         userRole = role;

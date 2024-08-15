@@ -37,6 +37,14 @@ export default function FilterBar() {
           locations: data.countries,
         };
 
+        if (
+          filter_options.rounds.length === 0 &&
+          filterOptions.check_size.length === 0 &&
+          filterOptions.sectors.length === 0 &&
+          filterOptions.locations.length === 0
+        )
+          return;
+
         setFilterOptions(filterOptions);
       })
       .catch((error) => console.error('Error:', error));

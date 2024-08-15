@@ -94,8 +94,6 @@ export default function UpdateStartupModal() {
         method: 'GET',
       })
         .then((response) => {
-          console.log({ response });
-
           if (!response.ok) {
             return;
           }

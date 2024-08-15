@@ -13,8 +13,6 @@ export async function POST(req: Request, context: { params: Params }) {
 
   const new_request_data = new FormData();
   if (file instanceof File) {
-    console.log({ file });
-
     new_request_data.append('startup_photo', file, file.name);
   }
 
