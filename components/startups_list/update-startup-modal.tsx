@@ -50,6 +50,24 @@ export default function UpdateStartupModal() {
   const [selectedTraction, setSelectedTraction] = useState<Framework[]>([]);
   const [selectedIndustry, setSelectedIndustry] = useState<Framework[]>([]);
 
+  useEffect(() => {
+    if (selectedLooking.length > 1) {
+      setSelectedLooking([selectedLooking[selectedLooking.length - 1]]);
+    }
+  }, [selectedLooking]);
+
+  useEffect(() => {
+    if (selectedTraction.length > 1) {
+      setSelectedTraction([selectedTraction[selectedTraction.length - 1]]);
+    }
+  }, [selectedTraction]);
+
+  useEffect(() => {
+    if (selectedIndustry.length > 1) {
+      setSelectedIndustry([selectedIndustry[selectedIndustry.length - 1]]);
+    }
+  }, [selectedIndustry]);
+
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
 
@@ -107,7 +125,21 @@ export default function UpdateStartupModal() {
           response
             .json()
             .then((data) => {
+              console.log(data);
+
               setFileStr(data.photo || 'https://naurat.com/favicon.svg');
+
+              if (data.traction) {
+                setSelectedTraction([{ value: data.traction.name, label: data.traction.name }]);
+              }
+
+              if (data.round) {
+                setSelectedLooking([{ value: data.round.stage, label: data.round.stage }]);
+              }
+
+              if (data.sector) {
+                setSelectedIndustry([{ value: data.sector.name, label: data.sector.name }]);
+              }
 
               setStartup(data);
               setIsLoading(false);
@@ -254,6 +286,18 @@ export default function UpdateStartupModal() {
       body_request['country'] = (
         e.currentTarget.elements.namedItem('startup_country') as HTMLSelectElement
       )?.value;
+    }
+
+    if (selectedTraction.length > 0) {
+      body_request['traction'] = selectedTraction[0].value;
+    }
+
+    if (selectedIndustry.length > 0) {
+      body_request['sector'] = selectedIndustry[0].value;
+    }
+
+    if (selectedLooking.length > 0) {
+      body_request['round'] = selectedLooking[0].value;
     }
 
     let closeDialog = false;
