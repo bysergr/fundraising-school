@@ -410,7 +410,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_name"
-                  placeholder={startup?.name || 'Startup Name'}
+                  placeholder={startup?.name || 'Your Amazing Startup'}
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -419,7 +419,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_email"
-                  placeholder={startup.email || 'Email'}
+                  placeholder={startup.email || 'contact@your-amazing-startup.com'}
                 />
               </label>
               <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
@@ -427,7 +427,9 @@ export default function UpdateStartupModal() {
                 <textarea
                   className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
                   id="startup_sentence"
-                  placeholder={startup.one_sentence_description || 'Your Startup in One Sentence'}
+                  placeholder={
+                    startup.one_sentence_description || 'Describe your startup in a single sentence'
+                  }
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -463,7 +465,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_calendly"
-                  placeholder={startup.calendly || 'Calendly'}
+                  placeholder={startup.calendly || 'calendly.com/your-amazing-startup'}
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -484,7 +486,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_deck"
-                  placeholder={startup.deck || 'Deck'}
+                  placeholder={startup.deck || 'docsend.com/view/amazingdeck'}
                 />
               </label>
               <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
@@ -492,7 +494,9 @@ export default function UpdateStartupModal() {
                 <textarea
                   className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
                   id="startup_description"
-                  placeholder={startup.description || 'Description'}
+                  placeholder={
+                    startup.description || 'Provide a brief description of your startup.'
+                  }
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -501,7 +505,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_url"
-                  placeholder={startup.website || 'URL'}
+                  placeholder={startup.website || ' www.your-amazing-startup.com'}
                 />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -510,7 +514,7 @@ export default function UpdateStartupModal() {
                   className="rounded-md border border-[#DBDBDB] p-2"
                   type="text"
                   id="startup_linkedin"
-                  placeholder={startup.linkedin || 'Linkedin'}
+                  placeholder={startup.linkedin || 'linkedin.com/company/your-amazing-startup '}
                 />
               </label>
             </div>
@@ -564,7 +568,17 @@ export default function UpdateStartupModal() {
                 return <ContactCard key={founder.email} contact={founder} />;
               })}
             </div>
-            <div className="mb-12 mt-4 flex w-full justify-end">
+            <div className="mb-12 mt-4 flex w-full justify-between">
+              <p className="">
+                If you’re having trouble or need assistance, feel free to contact us at{' '}
+                <a
+                  className="text-ctwLightPurple underline"
+                  href="mailto:hello@colombiatechweek.co"
+                >
+                  hello@colombiatechweek.co
+                </a>
+              </p>
+
               <button className="rounded-lg bg-ctwLightPurple px-4 py-2 text-white" type="submit">
                 Save
               </button>
