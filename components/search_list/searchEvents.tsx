@@ -133,7 +133,7 @@ interface DateFormatterOptions {
 }
 
 function formatHelper(date: Date | number | string, options: DateFormatterOptions = {}): string {
-  const { format = 'datetime', locale = 'en-US', timeZone = 'UTC' } = options;
+  const { format = 'datetime', locale = 'en-US', timeZone = 'America/Bogota' } = options;
 
   const intlOptions: Intl.DateTimeFormatOptions = {
     timeZone,
@@ -173,26 +173,8 @@ function formatHelper(date: Date | number | string, options: DateFormatterOption
   return formatter.format(new Date(date));
 }
 
-const timeFormatter = new Intl.DateTimeFormat('en-US', {
-  hour: 'numeric',
-  hour12: true,
-  timeZone: 'America/Bogota',
-});
-
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  weekday: 'long',
-  month: 'long',
-  day: 'numeric',
-  timeZone: 'America/Bogota',
-});
-
-const formatTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  return timeFormatter.format(date);
-};
-
-const formatDate = (dateString: string): string =>
-  formatHelper(dateString, { format: 'date', timeZone: 'America/Bogota' });
+const formatTime = (dateString: string): string => formatHelper(dateString, { format: 'time' });
+const formatDate = (dateString: string): string => formatHelper(dateString, { format: 'date' });
 
 const TimelineItem = ({
   event,
