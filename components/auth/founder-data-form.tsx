@@ -76,6 +76,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
             onChange={(e) => setCompanyName(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
             type="text"
+            required
             placeholder={companyName}
           />
         </div>
@@ -88,6 +89,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
             onChange={(e) => setStartupURL(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
             type="text"
+            required
             placeholder={startupURL}
           />
         </div>
@@ -99,6 +101,7 @@ export default function FounderDataForm({ data }: { data: Session | null }) {
             onChange={(e) => setJobTitle(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
             type="text"
+            required
             placeholder={jobTitle}
           />
         </div>

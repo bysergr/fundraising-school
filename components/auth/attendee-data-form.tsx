@@ -69,6 +69,7 @@ export default function AttendeeDataForm({ data }: { data: Session | null }) {
             onChange={(e) => setCompanyName(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
             type="text"
+            required
             placeholder={companyName}
           />
         </div>

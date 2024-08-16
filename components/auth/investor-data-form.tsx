@@ -77,6 +77,7 @@ export default function InvestorDataForm({ data }: { data: Session | null }) {
             onChange={(e) => setJobTitle(e.target.value)}
             className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
             type="text"
+            required
             placeholder={jobTitle}
           />
         </div>
