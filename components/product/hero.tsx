@@ -51,7 +51,7 @@ export default async function Hero() {
                     <CurrencyDollarIcon className="mx-auto mb-2 size-10 text-ctwLightGreen" />
                     <h5 className="my-2 font-semibold">MatchMaking</h5>
                     <p className="text-sm text-gray-700">
-                      Connect with over 150 VCs in just one week and in one place.
+                      Potentially connect with over 150 VCs in just one week and in one place.
                     </p>
                   </li>
                 </ul>
