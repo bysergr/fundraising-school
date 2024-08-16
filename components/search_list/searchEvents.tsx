@@ -124,6 +124,58 @@ const ExpandableParagraph = ({ text }: { text: string }) => {
   );
 };
 
+type DateFormat = 'date' | 'time' | 'datetime' | 'short';
+
+interface DateFormatterOptions {
+  format?: DateFormat;
+  locale?: string;
+  timeZone?: string;
+}
+
+function formatHelper(date: Date | number | string, options: DateFormatterOptions = {}): string {
+  const { format = 'datetime', locale = 'en-US', timeZone = 'America/Bogota' } = options;
+
+  const intlOptions: Intl.DateTimeFormatOptions = {
+    timeZone,
+  };
+
+  switch (format) {
+    case 'date':
+      intlOptions.year = 'numeric';
+      intlOptions.month = 'long';
+      intlOptions.day = 'numeric';
+      intlOptions.weekday = 'long';
+      break;
+    case 'time':
+      intlOptions.hour = 'numeric';
+      intlOptions.minute = 'numeric';
+      intlOptions.hour12 = true;
+      break;
+    case 'datetime':
+      intlOptions.year = 'numeric';
+      intlOptions.month = 'long';
+      intlOptions.day = 'numeric';
+      intlOptions.hour = 'numeric';
+      intlOptions.minute = 'numeric';
+      intlOptions.hour12 = true;
+      break;
+    case 'short':
+      intlOptions.year = 'numeric';
+      intlOptions.month = 'numeric';
+      intlOptions.day = 'numeric';
+      break;
+    default:
+      const _exhaustiveCheck: never = format;
+      throw new Error(`Invalid format specified: ${_exhaustiveCheck}`);
+  }
+
+  const formatter = new Intl.DateTimeFormat(locale, intlOptions);
+  return formatter.format(new Date(date));
+}
+
+const formatTime = (dateString: string): string => formatHelper(dateString, { format: 'time' });
+const formatDate = (dateString: string): string => formatHelper(dateString, { format: 'date' });
+
 const TimelineItem = ({
   event,
   separator,
@@ -141,12 +193,6 @@ const TimelineItem = ({
   const { openSignInModal } = useAppStore((state) => state);
   const { showToast } = useToast();
   const [isClicked, setIsClicked] = React.useState(false);
-  const formatTime = (dateString: string): string =>
-    new Date(dateString).toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
 
   const handleCalendarClick = () => {
     setIsClicked(true);
@@ -275,13 +321,6 @@ function groupAndOrderEventsByDate(events: TechWeekEvent[]): ScheduleProps[] {
   return groupedEventsArray;
 }
 
-const formatDate = (dateString: string): string =>
-  new Date(dateString).toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
-
 const TimelineSkeleton = ({ numberOfDays = 2, eventsPerDay = 3 }) => {
   return (
     <div className="animate-pulse space-y-8">
@@ -339,7 +378,7 @@ const TimeLine: React.FC<TimeLineProps> = ({
     <div className="p-0">
       <ul className="grid max-w-full gap-y-8">
         {schedules.map((schedule) => {
-          const formattedDate = formatDate(schedule.date);
+          const formattedDate = formatDate(schedule.events[0].start_time);
           const isOpen = openDates.has(formattedDate);
           return (
             <li key={formattedDate} className="flex flex-col rounded-lg bg-white p-3 shadow-sm">
