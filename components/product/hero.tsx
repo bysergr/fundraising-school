@@ -13,7 +13,7 @@ export default async function Hero() {
   return (
     <section className="relative grid min-h-screen place-content-center bg-white" id="about">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="pb-12 pt-12 md:pb-20 md:pt-40">
+        <div className="py-12 md:pb-20 md:pt-40">
           <div className="pb-12 text-center md:pb-16">
             <h1 className="mb-4 text-4xl font-extrabold leading-tighter tracking-tighter md:text-[76px]">
               Matchmaking for <br />

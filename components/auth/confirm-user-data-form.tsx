@@ -55,16 +55,16 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
       }
 
       const reqBody: {
-        email: any;
+        email: string;
         linkedin_url: string;
-        photo_url?: any;
+        photo_url?: string;
       } = {
         email: data?.user?.email,
         linkedin_url: linkedinURL,
       };
 
       if (data?.user?.image) {
-        reqBody['photo_url'] = data?.user?.image;
+        reqBody['photo_url'] = data?.user?.image as string;
       }
 
       const res = await fetch('/api/user/linkedin_photo', {
