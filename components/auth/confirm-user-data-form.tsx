@@ -59,7 +59,7 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
         linkedin_url: string;
         photo_url?: string;
       } = {
-        email: data?.user?.email,
+        email: data?.user?.email as string,
         linkedin_url: linkedinURL,
       };
 
