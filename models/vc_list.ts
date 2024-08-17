@@ -65,6 +65,7 @@ interface StartupProfile {
   fund_raised: string;
   description: string;
   phone_number: string;
+  country_code: string;
   website: string;
   linkedin: string;
   photo: string;

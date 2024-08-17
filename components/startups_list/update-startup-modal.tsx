@@ -4,7 +4,7 @@ import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Founder, StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
@@ -12,6 +12,7 @@ import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
 import { ContactCard, ContactInfo } from '../search_list/ContactCard';
 import { Countries } from '@/data/enums';
 import { toast } from 'react-toastify';
+import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
 
 const lookingForOptions: Framework[] = [
   { value: 'Pre-Seed', label: 'Pre-Seed' },
@@ -50,6 +51,9 @@ export default function UpdateStartupModal() {
   const [selectedLooking, setSelectedLooking] = useState<Framework[]>([]);
   const [selectedTraction, setSelectedTraction] = useState<Framework[]>([]);
   const [selectedIndustry, setSelectedIndustry] = useState<Framework[]>([]);
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const [phoneNumber, setPhoneNumber] = useState<any>();
+  const [validPhoneNumber, setValidPhoneNumber] = useState<boolean>(true);
 
   useEffect(() => {
     if (selectedLooking.length > 1) {
@@ -86,6 +90,20 @@ export default function UpdateStartupModal() {
       reader.readAsDataURL(file);
     }
   }, [file]);
+
+  useEffect(() => {
+    if (!phoneNumber) {
+      setValidPhoneNumber(false);
+      return;
+    }
+
+    if (!isValidPhoneNumber(phoneNumber)) {
+      setValidPhoneNumber(false);
+      return;
+    }
+
+    setValidPhoneNumber(true);
+  }, [phoneNumber]);
 
   const { role, email } = useUserStore((state) => state);
   const {
@@ -138,6 +156,10 @@ export default function UpdateStartupModal() {
 
               if (data.sector) {
                 setSelectedIndustry([{ value: data.sector.name, label: data.sector.name }]);
+              }
+
+              if (data.phone_number) {
+                setValidPhoneNumber(true);
               }
 
               setStartup(data);
@@ -264,10 +286,17 @@ export default function UpdateStartupModal() {
       )?.value;
     }
 
-    if ((e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement)?.value) {
-      body_request['phone_number'] = (
-        e.currentTarget.elements.namedItem('startup_phone') as HTMLInputElement
-      )?.value;
+    if (phoneNumber) {
+      if (!validPhoneNumber) {
+        toast('Invalid phone number', {
+          theme: 'light',
+          type: 'error',
+        });
+        return;
+      }
+
+      body_request['phone_number'] = parsePhoneNumber(phoneNumber)?.nationalNumber as string;
+      body_request['country_code'] = parsePhoneNumber(phoneNumber)?.countryCallingCode as string;
     }
 
     if ((e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement)?.value) {
@@ -446,12 +475,23 @@ export default function UpdateStartupModal() {
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Phone Number
-                <input
-                  className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
-                  id="startup_phone"
-                  placeholder={startup.phone_number || 'Phone Numer'}
-                />
+                <div className="flex items-center rounded-md border border-[#DBDBDB] bg-white px-2">
+                  <PhoneInput
+                    defaultCountry="CO"
+                    onChange={(value) => setPhoneNumber(value)}
+                    placeholder={
+                      startup.phone_number
+                        ? `+${startup.country_code} ${startup.phone_number}`
+                        : 'Phone Number'
+                    }
+                    value={phoneNumber}
+                  />
+                  {validPhoneNumber ? (
+                    <CheckIcon className="size-6 text-blue-500" />
+                  ) : (
+                    <XMarkIcon className="size-6 text-red-500" />
+                  )}
+                </div>
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location

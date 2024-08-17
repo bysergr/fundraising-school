@@ -47,7 +47,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
         <div className="mt-2 flex items-center text-gray-700">
           <FaLinkedin className="mr-2" />
           <a
-            href={`https://${contact.linkedin}`}
+            href={contact.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
