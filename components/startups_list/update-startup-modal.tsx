@@ -481,7 +481,9 @@ export default function UpdateStartupModal() {
                     onChange={(value) => setPhoneNumber(value)}
                     placeholder={
                       startup.phone_number
-                        ? `+${startup.country_code} ${startup.phone_number}`
+                        ? startup.country_code
+                          ? `+${startup.country_code} ${startup.phone_number}`
+                          : startup.phone_number
                         : 'Phone Number'
                     }
                     value={phoneNumber}
