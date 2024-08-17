@@ -54,7 +54,7 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
         return;
       }
 
-      let reqBody: {
+      const reqBody: {
         email: any;
         linkedin_url: string;
         photo_url?: any;
