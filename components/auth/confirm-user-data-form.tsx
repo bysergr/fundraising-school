@@ -3,7 +3,7 @@
 import 'react-phone-number-input/style.css';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, LinkIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Countries, UserFormRoles } from '@/data/enums';
 import { useAppStore } from '@/providers/app-store-providers';
@@ -17,6 +17,7 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const [validWhatsApp, setValidWhatsApp] = useState<boolean>(false);
+  const [linkedinURL, setLinkedinURL] = useState<string>('http://linkedin.com/your-name');
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -51,6 +52,28 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
       if (response.status !== 201) {
         console.error('Error update contact info');
         return;
+      }
+
+      let reqBody: {
+        email: any;
+        linkedin_url: string;
+        photo_url?: any;
+      } = {
+        email: data?.user?.email,
+        linkedin_url: linkedinURL,
+      };
+
+      if (data?.user?.image) {
+        reqBody['photo_url'] = data?.user?.image;
+      }
+
+      const res = await fetch('/api/user/linkedin_photo', {
+        method: 'POST',
+        body: JSON.stringify(reqBody),
+      });
+
+      if (res.status !== 200 && res.status !== 201) {
+        console.error('Error update contact info');
       }
 
       if (roleSelect.value === 'Entrepreneur (Founder)') {
@@ -111,6 +134,19 @@ export default function ConfirmUserDataForm({ data }: { data: Session | null }) 
           ) : (
             <XMarkIcon className="size-6 text-red-500" />
           )}
+        </div>
+        <label className="mt-2 block w-full max-w-[365px] text-left font-semibold">
+          Linkedin URL
+        </label>
+        <div className="flex h-11 w-full max-w-[365px] items-center rounded-[22px] border border-green-950 bg-white px-5 py-1">
+          <LinkIcon className="size-6" />
+          <input
+            onChange={(e) => setLinkedinURL(e.target.value)}
+            className="w-full border-0 focus:border-0 focus:outline-none focus:ring-0 active:border-0"
+            type="url"
+            required
+            placeholder={linkedinURL}
+          />
         </div>
         <label
           className="mt-2 block w-full max-w-[365px] text-left font-semibold"

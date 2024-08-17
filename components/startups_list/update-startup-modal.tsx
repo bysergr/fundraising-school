@@ -11,6 +11,7 @@ import edit_button from '@/public/images/ctw/edit_button.png';
 import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
 import { ContactCard, ContactInfo } from '../search_list/ContactCard';
 import { Countries } from '@/data/enums';
+import { toast } from 'react-toastify';
 
 const lookingForOptions: Framework[] = [
   { value: 'Pre-Seed', label: 'Pre-Seed' },
@@ -125,8 +126,6 @@ export default function UpdateStartupModal() {
           response
             .json()
             .then((data) => {
-              console.log(data);
-
               setFileStr(data.photo || 'https://naurat.com/favicon.svg');
 
               if (data.traction) {
@@ -185,6 +184,7 @@ export default function UpdateStartupModal() {
                 title: founder.role,
                 phone: `+${founder.country_code} ${founder.phone_number}`,
                 linkedin: founder.linkedin_url,
+                photo: founder.photo_url,
               };
             });
 
@@ -277,6 +277,17 @@ export default function UpdateStartupModal() {
     }
 
     if ((e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement)?.value) {
+      if (
+        (e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement)?.value.length >
+        115
+      ) {
+        toast('The one sentence description must be less than 115 characters', {
+          theme: 'light',
+          type: 'error',
+        });
+        return;
+      }
+
       body_request['one_sentence_description'] = (
         e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement
       )?.value;
@@ -427,6 +438,7 @@ export default function UpdateStartupModal() {
                 <textarea
                   className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
                   id="startup_sentence"
+                  maxLength={115}
                   placeholder={
                     startup.one_sentence_description || 'Describe your startup in a single sentence'
                   }
