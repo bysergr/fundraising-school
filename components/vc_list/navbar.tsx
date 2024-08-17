@@ -136,7 +136,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               <NavItem
                 icon={
                   <ClassRoomIcon
-                    stroke={pathname === '/matchmaking/courses' ? '#fff' : '#32083E'}
+                    stroke={pathname.includes('/matchmaking/courses') ? '#fff' : '#32083E'}
                   />
                 }
                 text="Courses"
