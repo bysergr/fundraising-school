@@ -37,6 +37,7 @@ import { useToast } from '@/providers/toast-provider';
 import CalendarToggleButton from '@/components/search_list/CalendarToggleButton';
 import { format } from 'date-fns';
 import OpenAuthModal from '../auth/open-auth-modal';
+import { Aside } from '../layout/content';
 
 const Host = ({ host }: { host: HostProps[] }) => {
   const ui = host.map((item, key) => {
@@ -727,6 +728,9 @@ const ChatSearchUI = () => {
                 </div>
               </li>
             )}
+            <div className="mt-4">
+              <Aside mobile />
+            </div>
           </TabsContent>
           <TabsContent value="my_calendar" className="!mt-3 h-screen w-full">
             {email ? (
@@ -769,6 +773,9 @@ const ChatSearchUI = () => {
                 </div>
               </div>
             )}
+            <div className="mt-4">
+              <Aside mobile />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
