@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import '../search_list/styles.css';
 import type { StartupProfile } from '@/models/vc_list';
 import { IoRocketOutline, IoPaperPlaneOutline } from 'react-icons/io5';
+import { Aside } from '../layout/content';
 
 export default function TableStartups({ email_linkedin }: { email_linkedin: string }) {
   const {
@@ -177,6 +178,9 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
                 )}
               </div>
             </div>
+            <div className="mt-4">
+              <Aside mobile />
+            </div>
           </TabsContent>
           <TabsContent value="favorites" className="!mt-3 h-screen w-full">
             <div className="w-full ">
@@ -201,6 +205,9 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
                   </>
                 )}
               </div>
+            </div>
+            <div className="mt-4">
+              <Aside mobile />
             </div>
           </TabsContent>
         </Tabs>

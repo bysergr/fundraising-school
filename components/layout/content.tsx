@@ -11,6 +11,70 @@ import logo from '@/public/images/ctw/logo.svg';
 import AuthModal from '@/components/auth/auth-modal';
 import { usePathname } from 'next/navigation';
 
+export const Aside = ({ mobile }: { mobile?: boolean }) => {
+  const pathname = usePathname();
+
+  const asideAllows = [
+    '/matchmaking/search_list',
+    '/matchmaking/startup-list',
+    '/matchmaking/agenda',
+    '/matchmaking/vc-list',
+  ];
+
+  return (
+    <>
+      {asideAllows.indexOf(pathname) !== -1 && (
+        <div
+          className={`${!mobile ? 'hidden flex-col lg:flex lg:w-1/5' : 'bottom-0 block w-full flex-col pb-20 lg:hidden'}  items-center justify-center bg-[#F9F9FA] p-4 `}
+        >
+          <div className="space-y-6 text-base ">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-500">Brought to you by</h2>
+              <Link href="https://onde-vamos.com/" target="_blank" prefetch={false}>
+                <Image
+                  alt="onde logo"
+                  src={onde_logo_gray}
+                  className={`mt-1 ${!mobile ? 'w-4/12' : 'w-[28%]'}`}
+                />
+              </Link>
+            </div>
+            <p className="text-gray-500">
+              AI-powered event planning marketplace of venues and service providers.
+            </p>
+            <p className="text-wrap break-all text-gray-500">
+              Plan your next event at <br />
+              <Link
+                href="https://onde-vamos.com/"
+                target="_blank"
+                className="text-gray-700  underline"
+                prefetch={false}
+              >
+                onde-vamos.com
+              </Link>
+            </p>
+            <p className="text-gray-500">
+              We’re organizing a series of thoughtfully curated dinners across Colombia and the US
+              designed to accelerate personal and professional growth.
+            </p>
+            <p className="text-gray-500">
+              To join, apply{' '}
+              <Link
+                href="https://onde-vamos.com/dinners"
+                target="_blank"
+                className="text-gray-700  underline"
+                prefetch={false}
+              >
+                here
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 export const Content = ({
   data,
   children,
@@ -21,13 +85,6 @@ export const Content = ({
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-  const asideAllows = [
-    '/matchmaking/search_list',
-    '/matchmaking/startup-list',
-    '/matchmaking/agenda',
-    '/matchmaking/vc-list',
-  ];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -72,48 +129,7 @@ export const Content = ({
         <main className="flex h-screen flex-1 flex-col space-y-1 overflow-y-auto overflow-x-hidden bg-[#F9F9FA] px-2 lg:w-10/12 lg:px-0 lg:pl-4">
           <div className="h-full overflow-y-auto">{children}</div>
         </main>
-        {asideAllows.indexOf(pathname) !== -1 && (
-          <aside className="hidden w-full flex-col items-center justify-center bg-[#F9F9FA] p-4 lg:flex lg:w-1/5 ">
-            <div className="space-y-6 text-base ">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-500">Brought to you by</h2>
-                <Link href="https://onde-vamos.com/" target="_blank" prefetch={false}>
-                  <Image alt="onde logo" src={onde_logo_gray} className="mt-1 w-4/12" />
-                </Link>
-              </div>
-              <p className="text-gray-500">
-                AI-powered event planning marketplace of venues and service providers.
-              </p>
-              <p className="text-wrap break-all text-gray-500">
-                Plan your next event at <br />
-                <Link
-                  href="https://onde-vamos.com/"
-                  target="_blank"
-                  className="text-gray-700  underline"
-                  prefetch={false}
-                >
-                  onde-vamos.com
-                </Link>
-              </p>
-              <p className="text-gray-500">
-                We’re organizing a series of thoughtfully curated dinners across Colombia and the US
-                designed to accelerate personal and professional growth.
-              </p>
-              <p className="text-gray-500">
-                To join, apply{' '}
-                <Link
-                  href="https://onde-vamos.com/dinners"
-                  target="_blank"
-                  className="text-gray-700  underline"
-                  prefetch={false}
-                >
-                  here
-                </Link>
-                .
-              </p>
-            </div>
-          </aside>
-        )}
+        <Aside />
       </div>
     </div>
   );

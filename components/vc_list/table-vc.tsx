@@ -11,6 +11,7 @@ import '../search_list/styles.css';
 import type { VCProfile } from '@/models/vc_list';
 import { FaBuildingCircleExclamation } from 'react-icons/fa6';
 import { IoPaperPlaneOutline } from 'react-icons/io5';
+import { Aside } from '../layout/content';
 
 export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
   const {
@@ -170,6 +171,9 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
                 )}
               </div>
             </div>
+            <div className="mt-4">
+              <Aside mobile />
+            </div>
           </TabsContent>
           <TabsContent value="favorites" className="!mt-3 h-screen w-full">
             <div className="w-full ">
@@ -194,6 +198,9 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
                   </>
                 )}
               </div>
+            </div>
+            <div className="mt-4">
+              <Aside mobile />
             </div>
           </TabsContent>
         </Tabs>

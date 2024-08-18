@@ -20,7 +20,7 @@ export default async function Page() {
         description="Browse all events and create your calendar"
       >
         <div className="block lg:hidden">
-          <Link href="https://onde-vamos.com/" target="_blank" className="bg-[red]">
+          <Link href="https://onde-vamos.com/" target="_blank">
             <Image src={by_onde} alt="by Onde" className="ml-1 mt-2 w-16" />
           </Link>
         </div>
