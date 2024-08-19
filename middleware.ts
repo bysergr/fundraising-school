@@ -1,5 +1,6 @@
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
+import { LinkedinAdminEmail } from './data/enums';
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -23,6 +24,10 @@ export async function middleware(req: NextRequest) {
   // }
 
   if (!token) {
+    return NextResponse.next({ headers });
+  }
+
+  if (LinkedinAdminEmail.includes(token?.email)) {
     return NextResponse.next({ headers });
   }
 
