@@ -143,24 +143,45 @@ export default function StartupModal() {
             <span>{modal_startup?.sector?.name || ''}</span>
             <StartupsLinks startup_profile={modal_startup} size="size-5" />
             <div className="mt-5 flex w-full gap-2">
-              <a
-                href={modal_startup.calendly || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full justify-center gap-2 rounded-lg  bg-ctwLightPurple px-2 py-1 text-center text-sm font-semibold text-white"
-              >
-                <CalendarIcon className="size-5 text-white" />
-                <span className="hidden lg:block">My Calendly Link</span>
-              </a>
-              <a
-                href={modal_startup.deck || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full justify-center gap-2 rounded-lg bg-[#E3A3EF] px-2 py-1 text-center text-sm font-semibold text-black"
-              >
-                <RocketLaunchIcon className="size-5 text-black" />
-                <span className="hidden lg:block">Deck</span>
-              </a>
+              {modal_startup.calendly ? (
+                <a
+                  href={modal_startup.calendly}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full justify-center gap-2 rounded-lg  bg-ctwLightPurple px-2 py-1 text-center text-sm font-semibold text-white"
+                >
+                  <CalendarIcon className="size-5 text-white" />
+                  <span className="hidden lg:block">My Calendly Link</span>
+                </a>
+              ) : (
+                <a
+                  href={'#'}
+                  className="flex w-full justify-center gap-2 rounded-lg bg-ctwLightPurple px-2 py-1 text-center text-sm font-semibold text-white"
+                >
+                  <CalendarIcon className="size-5 text-white" />
+                  <span className="hidden lg:block">My Calendly Link</span>
+                </a>
+              )}
+
+              {modal_startup.deck ? (
+                <a
+                  href={modal_startup.deck}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full justify-center gap-2 rounded-lg bg-[#E3A3EF] px-2 py-1 text-center text-sm font-semibold text-black"
+                >
+                  <RocketLaunchIcon className="size-5 text-black" />
+                  <span className="hidden lg:block">Deck</span>
+                </a>
+              ) : (
+                <a
+                  href={'#'}
+                  className="flex w-full justify-center gap-2 rounded-lg bg-[#E3A3EF] px-2 py-1 text-center text-sm font-semibold text-black"
+                >
+                  <RocketLaunchIcon className="size-5 text-black" />
+                  <span className="hidden lg:block">Deck</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

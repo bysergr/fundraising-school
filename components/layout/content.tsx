@@ -102,6 +102,41 @@ export const Content = ({
     };
   }, [sidebarRef]);
 
+  useEffect(() => {
+    if (!data) return;
+
+    const syncPhoto = async () => {
+      try {
+        const reqBody: {
+          email: string;
+          photo_url?: string;
+        } = {
+          email: data?.user?.email as string,
+        };
+
+        if (data?.user?.image) {
+          reqBody.photo_url = data?.user?.image as string;
+        }
+
+        const resp = await fetch('/api/user/linkedin_photo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(reqBody),
+        });
+
+        if (!resp.ok && !(resp.status === 200 || resp.status === 201)) {
+          console.error('Error:', resp);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    syncPhoto();
+  }, [data]);
+
   return (
     <div className="flex h-screen overflow-y-hidden bg-gray-100">
       <AuthModal data={data} />
