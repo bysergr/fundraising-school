@@ -20,6 +20,12 @@ export const AppLink = {
   Home: '/',
 };
 
+export const LinkedinAdminEmail = [
+  'fabianespitia370@gmail.com',
+  'brianochoa121@gmail.com',
+  'reysergio383@gmail.com',
+];
+
 export type Round = {
   Name: string;
   Value: string;
