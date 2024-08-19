@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next({ headers });
   }
 
-  if (LinkedinAdminEmail.includes(token?.email)) {
+  if (LinkedinAdminEmail.includes(token?.email as string)) {
     return NextResponse.next({ headers });
   }
 
