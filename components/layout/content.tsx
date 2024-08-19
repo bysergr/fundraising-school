@@ -132,7 +132,7 @@ export const Content = ({
           <div className="h-full overflow-y-auto">
             {role && role === 'startup' && (
               <div className="rounded-b-sm bg-ctwLightPurple px-2 py-3 font-semibold text-white">
-                Complete all fields with your startup's information to ensure visibility to
+                Complete all fields with your startup&#39;s information to ensure visibility to
                 investment funds.
               </div>
             )}
