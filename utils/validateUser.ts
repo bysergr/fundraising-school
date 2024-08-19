@@ -50,9 +50,35 @@ export default async function validateUser(
     data['nickname'] || (user.user?.name as string),
     data['contact_email'] || (user.user?.email as string),
     data['email'] || (user.user?.email as string),
-    data['photo_url'] || (user.user?.image as string),
+    (user.user?.image as string) || data['photo_url'],
     userRole,
   );
+
+  if (data['photo_url'] !== user.user?.image) {
+    try {
+      const reqBody: {
+        email: string;
+        photo_url?: string;
+      } = {
+        email: data?.user?.email as string,
+      };
+
+      if (user?.user?.image) {
+        reqBody['photo_url'] = user?.user?.image as string;
+      }
+
+      const res = await fetch('/api/user/linkedin_photo', {
+        method: 'POST',
+        body: JSON.stringify(reqBody),
+      });
+
+      if (res.status !== 200 && res.status !== 201) {
+        console.error('Error:', res.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   closeSignInModal();
 }

@@ -29,7 +29,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
       <div className="flex w-full flex-col">
         <div className="flex w-full flex-col">
           <div className="flex w-full items-start justify-between gap-10">
-            {startups_profile.id % 2 ? (
+            {false ? (
               <div className="rounded-tl-lg bg-[#52EF70] px-2 py-0.5 text-xs font-bold text-[#3C0560]">
                 Top 20 Startups
               </div>
@@ -42,17 +42,19 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
             </div>
           </div>
           <div className="flex w-full gap-1.5">
-            <div className="flex min-h-[90px] w-[90px] items-center justify-center gap-2.5 self-start p-2">
+            <div className="flex items-center justify-center gap-2.5 self-start p-2">
               <Image
                 loading="lazy"
                 alt={startups_profile.name}
                 src={
-                  startups_profile.photo ? startups_profile.photo : 'https://naurat.com/favicon.svg'
+                  startups_profile.photo
+                    ? startups_profile.photo
+                    : 'https://placehold.co/400x400/36454F/FFFFFF/png?text=Placeholder'
                 }
-                className=" aspect-square size-[90px]"
+                className="aspect-square rounded-md object-contain"
                 onClick={handleClick}
-                width={90}
-                height={90}
+                width={100}
+                height={100}
               />
             </div>
             <div className="flex h-full flex-1 shrink basis-0 items-center gap-2.5 whitespace-nowrap pt-4 text-black">
@@ -92,7 +94,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
             {startups_profile.traction ? startups_profile.traction.name : 'None'}
           </div>
           <div className="my-auto gap-2.5 self-stretch rounded-xl bg-lime-50 px-2 py-0.5 font-semibold text-green-900">
-            {startups_profile.fund_raised ? startups_profile.fund_raised : 'None'}
+            {startups_profile.sector ? startups_profile.sector.name : 'None'}
           </div>
         </div>
         {startups_profile.website && (

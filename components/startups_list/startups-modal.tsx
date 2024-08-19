@@ -123,9 +123,12 @@ export default function StartupModal() {
       <div className="flex justify-between">
         <div className="flex basis-full gap-4 lg:gap-4 lg:align-middle">
           <Image
-            className="my-auto block rounded-md bg-black"
+            className="my-auto block rounded-md bg-white object-contain"
             alt={modal_startup.name}
-            src={modal_startup.photo || 'https://naurat.com/favicon.svg'}
+            src={
+              modal_startup.photo ||
+              'https://placehold.co/400x400/36454F/FFFFFF/png?text=Placeholder'
+            }
             width={120}
             height={120}
           />
