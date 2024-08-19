@@ -10,6 +10,7 @@ import onde_logo_gray from '@/public/images/ctw/onde_logo_gray.svg';
 import logo from '@/public/images/ctw/logo.svg';
 import AuthModal from '@/components/auth/auth-modal';
 import { usePathname } from 'next/navigation';
+import { useUserStore } from '@/providers/user-store-provider';
 
 export const Aside = ({ mobile }: { mobile?: boolean }) => {
   const pathname = usePathname();
@@ -85,6 +86,7 @@ export const Content = ({
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { role } = useUserStore((state) => state);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -127,7 +129,15 @@ export const Content = ({
           </div>
         </header>
         <main className="flex h-screen flex-1 flex-col space-y-1 overflow-y-auto overflow-x-hidden bg-[#F9F9FA] px-2 lg:w-10/12 lg:px-0 lg:pl-4">
-          <div className="h-full overflow-y-auto">{children}</div>
+          <div className="h-full overflow-y-auto">
+            {role && role === 'startup' && (
+              <div className="rounded-b-sm bg-ctwLightPurple px-2 py-3 font-semibold text-white">
+                Complete all fields with your startup's information to ensure visibility to
+                investment funds.
+              </div>
+            )}
+            {children}
+          </div>
         </main>
         <Aside />
       </div>
