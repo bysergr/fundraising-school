@@ -126,7 +126,7 @@ export const Content = ({
           body: JSON.stringify(reqBody),
         });
 
-        if (!resp.ok && !(resp.status === 200 || resp.status === 201)) {
+        if (!resp.ok || !(resp.status === 200 || resp.status === 201)) {
           console.error('Error:', resp);
         }
       } catch (error) {

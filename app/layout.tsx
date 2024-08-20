@@ -7,7 +7,6 @@ import { AppStoreProvider } from '@/providers/app-store-providers';
 import { ToastProvider } from '@/providers/toast-provider';
 import clsx from 'clsx';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
 
 export const metadata = {
   title: 'Colombia Tech Week | Dashboard',
@@ -24,7 +23,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AppStoreProvider>{children}</AppStoreProvider>
           </UserStoreProvider>
         </ToastProvider>
-        <ToastContainer position="bottom-left" limit={3} />
       </body>
       <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID as string} />
     </html>

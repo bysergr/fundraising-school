@@ -4,14 +4,14 @@ import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { CheckIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Founder, StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
 import { FancyMultiSelect, type Framework } from '../search_list/MultiSelect';
 import { ContactCard, ContactInfo } from '../search_list/ContactCard';
 import { Countries } from '@/data/enums';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
 
 const lookingForOptions: Framework[] = [
@@ -183,7 +183,7 @@ export default function UpdateStartupModal() {
     }
   }, [email, role, modal_update_startup]);
 
-  useEffect(() => {
+  const updateFounders = () => {
     if (!startup) {
       return;
     }
@@ -221,6 +221,10 @@ export default function UpdateStartupModal() {
       .catch((error) => {
         console.error('Error:', error);
       });
+  };
+
+  useEffect(() => {
+    updateFounders();
   }, [startup]);
 
   useEffect(() => {
@@ -408,6 +412,8 @@ export default function UpdateStartupModal() {
       ref={dialogRef}
       onCancel={closeUpdateStartupModal}
     >
+      <ToastContainer position="bottom-left" limit={3} />
+
       <div className="absolute right-3 top-6 z-30 justify-end lg:right-4 lg:top-6">
         <button onClick={closeUpdateStartupModal} type="button">
           <XMarkIcon className="size-5 text-neutral-500" />
@@ -436,7 +442,7 @@ export default function UpdateStartupModal() {
               width={120}
               height={120}
             />
-            <div className=" flex flex-col items-center lg:items-start">
+            <div className="flex flex-col items-center lg:items-start">
               <p className="text-lg font-normal">Upload your photo</p>
               <p className="text-sm font-normal">Your photo should be in PNG or JPG format</p>
               <label
@@ -622,17 +628,23 @@ export default function UpdateStartupModal() {
 
             <div className="mb-2.5 flex justify-between">
               <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
-              <button
+              {/* <button
                 className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
                 type="button"
               >
                 <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
                 Add founder
-              </button>
+              </button> */}
             </div>
             <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
               {founders.map((founder) => {
-                return <ContactCard key={founder.email} contact={founder} />;
+                return (
+                  <ContactCard
+                    key={founder.email}
+                    updateFounders={updateFounders}
+                    contact={founder}
+                  />
+                );
               })}
             </div>
             <div className="mb-12 mt-4 flex w-full justify-between">
