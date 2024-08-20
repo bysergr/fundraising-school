@@ -5,7 +5,7 @@ import type React from 'react';
 import { FaMailBulk } from 'react-icons/fa';
 import { FaLinkedin, FaPhone } from 'react-icons/fa6';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
-import { TrashIcon, PencilSquareIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 
 import { FormEvent, useEffect, useState } from 'react';
@@ -27,6 +27,7 @@ type ContactCardProps = {
 
 export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const [validPhoneNumber, setValidPhoneNumber] = useState<boolean>(true);
 
@@ -46,9 +47,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
     }
 
     setValidPhoneNumber(true);
-  }, [phoneNumber]);
+  }, [phoneNumber, contact.phone_number]);
 
-  const handleUpdateSubmit = async (e: FormEvent<HTMLFormElement>) => {};
+  const handleUpdateSubmit = async () => {};
 
   if (editMode) {
     return (
