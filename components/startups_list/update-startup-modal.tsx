@@ -44,9 +44,7 @@ const mainIndustryOptions: Framework[] = [
 export default function UpdateStartupModal() {
   const [startup, setStartup] = useState<StartupProfile>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [fileStr, setFileStr] = useState<string>(
-    startup?.photo || logo,
-  );
+  const [fileStr, setFileStr] = useState<string>(startup?.photo || logo);
   const [file, setFile] = useState<File>();
   const [founders, setFounders] = useState<ContactInfo[]>([]);
   const [selectedLooking, setSelectedLooking] = useState<Framework[]>([]);
