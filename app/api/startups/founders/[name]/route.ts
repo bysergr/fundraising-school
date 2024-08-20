@@ -8,6 +8,7 @@ export async function GET(req: Request, context: { params: Params }) {
   try {
     const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/startup/users/${name}`, {
       method: 'GET',
+      cache: 'no-store',
     });
 
     if (!response.ok) {
