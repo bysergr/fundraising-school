@@ -10,7 +10,7 @@ import {
   CalendarIcon,
   EnvelopeIcon,
 } from '@heroicons/react/24/outline';
-import { FaLinkedin } from 'react-icons/fa6';
+import { FaLinkedin, FaWhatsapp } from 'react-icons/fa6';
 import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 import clsx from 'clsx';
 import { Founder } from '@/models/vc_list';
@@ -127,7 +127,7 @@ export default function StartupModal() {
             alt={modal_startup.name}
             src={
               modal_startup.photo ||
-              'https://placehold.co/400x400/36454F/FFFFFF/png?text=Placeholder'
+              'https://placehold.co/600x600/8FFC87/000000?text=Colombia+Tech+Week&font=montserrat'
             }
             width={120}
             height={120}
@@ -270,7 +270,7 @@ export default function StartupModal() {
           founders.map((founder) => (
             <li
               key={founder?.id}
-              className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
+              className="flex w-64 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
             >
               {founder?.photo_url !== null || founder?.photo_url !== '' ? (
                 <Image
@@ -300,9 +300,21 @@ export default function StartupModal() {
                       <FaLinkedin className="size-5" />
                     </a>
                   )}
-
-                  {founder?.contact_email && (
+                  {founder?.phone_number && (
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={`https://wa.me/${founder?.country_code}${founder?.phone_number}`}
+                    >
+                      <FaWhatsapp className="size-5" />
+                    </a>
+                  )}
+                  {founder?.contact_email ? (
                     <a target="_blank" rel="noreferrer" href={`mailto:${founder?.contact_email}`}>
+                      <EnvelopeIcon className="size-5" />
+                    </a>
+                  ) : (
+                    <a target="_blank" rel="noreferrer" href={`mailto:${founder?.email}`}>
                       <EnvelopeIcon className="size-5" />
                     </a>
                   )}

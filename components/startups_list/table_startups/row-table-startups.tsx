@@ -49,7 +49,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
                 src={
                   startups_profile.photo
                     ? startups_profile.photo
-                    : 'https://placehold.co/400x400/36454F/FFFFFF/png?text=Placeholder'
+                    : 'https://placehold.co/600x600/8FFC87/000000?text=Colombia+Tech+Week&font=montserrat'
                 }
                 className="aspect-square rounded-md object-contain"
                 onClick={handleClick}
