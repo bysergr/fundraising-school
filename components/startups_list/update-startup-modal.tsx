@@ -277,6 +277,17 @@ export default function UpdateStartupModal() {
     }
 
     if ((e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)?.value) {
+      const deckLink = (e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)
+        ?.value;
+
+      if (!deckLink.includes('docsend')) {
+        toast('Invalid deck link: The link must be from DocSend', {
+          theme: 'light',
+          type: 'error',
+        });
+        return;
+      }
+
       body_request['deck'] = (
         e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement
       )?.value;
