@@ -13,6 +13,7 @@ import { ContactCard, ContactInfo } from '../search_list/ContactCard';
 import { Countries } from '@/data/enums';
 import { toast, ToastContainer } from 'react-toastify';
 import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
+import logo from '@/public/images/ctw/logo.svg';
 
 const lookingForOptions: Framework[] = [
   { value: 'Pre-Seed', label: 'Pre-Seed' },
@@ -44,7 +45,7 @@ export default function UpdateStartupModal() {
   const [startup, setStartup] = useState<StartupProfile>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileStr, setFileStr] = useState<string>(
-    startup?.photo || 'https://naurat.com/favicon.svg',
+    startup?.photo || logo,
   );
   const [file, setFile] = useState<File>();
   const [founders, setFounders] = useState<ContactInfo[]>([]);
@@ -144,7 +145,7 @@ export default function UpdateStartupModal() {
           response
             .json()
             .then((data) => {
-              setFileStr(data.photo || 'https://naurat.com/favicon.svg');
+              setFileStr(data.photo || logo);
 
               if (data.traction) {
                 setSelectedTraction([{ value: data.traction.name, label: data.traction.name }]);
@@ -437,7 +438,7 @@ export default function UpdateStartupModal() {
           </div>
           <div className="flex flex-col items-center justify-center gap-5 align-middle lg:flex-row lg:justify-start">
             <Image
-              className="my-auto block rounded-md bg-black"
+              className="my-auto block rounded-md bg-white"
               alt={startup?.name}
               src={fileStr}
               width={120}

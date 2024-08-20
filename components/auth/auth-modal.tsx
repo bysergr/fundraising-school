@@ -15,10 +15,14 @@ export default function AuthModal({ data }: { data: Session | null }) {
   useEffect(() => {
     console.log('dialogRef.current:', dialogRef.current);
     if (dialogRef.current) {
-      if (modal_sign_in && !dialogRef.current.open) {
-        dialogRef.current.showModal();
-      } else if (!modal_sign_in && dialogRef.current.open) {
-        dialogRef.current.close();
+      try {
+        if (modal_sign_in && !dialogRef.current.open) {
+          dialogRef.current.showModal();
+        } else if (!modal_sign_in && dialogRef.current.open) {
+          dialogRef.current.close();
+        }
+      } catch (e) {
+        console.error('Failed to show modal:', e);
       }
     }
   }, [modal_sign_in]);
@@ -29,15 +33,18 @@ export default function AuthModal({ data }: { data: Session | null }) {
         event.preventDefault();
       }
     };
-
-    if (modal_sign_in) {
-      if (dialogRef.current) {
-        dialogRef.current.showModal();
+    try {
+      if (modal_sign_in) {
+        if (dialogRef.current) {
+          dialogRef.current.showModal();
+        }
+        window.addEventListener('keydown', handleEscape);
+      } else {
+        dialogRef.current?.close();
+        window.removeEventListener('keydown', handleEscape);
       }
-      window.addEventListener('keydown', handleEscape);
-    } else {
-      dialogRef.current?.close();
-      window.removeEventListener('keydown', handleEscape);
+    } catch (e) {
+      console.error('Failed to show modal:', e);
     }
 
     return () => {
