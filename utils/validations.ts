@@ -61,3 +61,16 @@ export function slugify(url: string): string {
     .replace(/-+/g, '-'); // remove consecutive hyphens
   return url;
 }
+
+export function ensureHttpOrHttps(url: string): string {
+  const httpPattern = /^http:\/\//i;
+  const httpsPattern = /^https:\/\//i;
+
+  if (httpPattern.test(url) || httpsPattern.test(url)) {
+    // Si empieza con http:// o https://, lo dejamos tal cual
+    return url;
+  } else {
+    // Si no tiene ningún prefijo, agregamos https://
+    return `https://${url}`;
+  }
+}

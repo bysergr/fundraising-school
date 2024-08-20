@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import { Founder } from '@/models/vc_list';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
 import ClipLoader from 'react-spinners/ClipLoader';
+import logo from '@/public/images/ctw/logo.svg';
 
 export default function StartupModal() {
   const [founders, setFounders] = useState<Founder[]>([]);
@@ -126,10 +127,7 @@ export default function StartupModal() {
             unoptimized
             className="my-auto block rounded-md bg-white object-contain"
             alt={modal_startup.name}
-            src={
-              modal_startup.photo ||
-              'https://placehold.co/600x600/8FFC87/000000?text=Colombia+Tech+Week&font=montserrat'
-            }
+            src={modal_startup.photo || logo}
             width={120}
             height={120}
           />

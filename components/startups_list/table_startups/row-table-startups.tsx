@@ -8,6 +8,7 @@ import { useAppStore } from '@/providers/app-store-providers';
 import StartupsLinks from '@/components/startups_list/table_startups/startups-links';
 import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 import Link from 'next/link';
+import logo from '@/public/images/ctw/logo.svg';
 
 function InnerRowTableStartups({ startups_profile }: { startups_profile: StartupProfile }) {
   const { openStartupModal: openModal } = useAppStore((state) => state);
@@ -47,11 +48,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
                 unoptimized
                 loading="lazy"
                 alt={startups_profile.name}
-                src={
-                  startups_profile.photo
-                    ? startups_profile.photo
-                    : 'https://placehold.co/600x600/8FFC87/000000?text=Colombia+Tech+Week&font=montserrat'
-                }
+                src={startups_profile.photo ? startups_profile.photo : logo}
                 className="aspect-square rounded-md object-contain"
                 onClick={handleClick}
                 width={100}
