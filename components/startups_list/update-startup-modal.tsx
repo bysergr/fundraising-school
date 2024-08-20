@@ -4,7 +4,7 @@ import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Founder, StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
@@ -202,11 +202,13 @@ export default function UpdateStartupModal() {
             const founders: ContactInfo[] = data.map((founder: Founder) => {
               return {
                 name: founder.nickname,
-                email: founder.email,
+                email: founder.contact_email ? founder.contact_email : founder.email,
                 title: founder.role,
                 phone: `+${founder.country_code} ${founder.phone_number}`,
                 linkedin: founder.linkedin_url,
                 photo: founder.photo_url,
+                phone_number: founder.phone_number,
+                country_code: founder.country_code,
               };
             });
 
@@ -609,13 +611,13 @@ export default function UpdateStartupModal() {
 
             <div className="mb-2.5 flex justify-between">
               <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
-              {/* <button
+              <button
                 className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
                 type="button"
               >
                 <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
                 Add founder
-              </button> */}
+              </button>
             </div>
             <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
               {founders.map((founder) => {
