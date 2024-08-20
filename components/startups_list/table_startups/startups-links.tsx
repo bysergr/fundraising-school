@@ -39,7 +39,7 @@ export default function StartupsLinks({
           <a
             target="_blank"
             rel="noreferrer"
-            href={`https://wa.me/${startup_profile.country_code}${startup_profile.phone_number}`}
+            href={`https://wa.me/${startup_profile.country_code ? startup_profile.country_code.replaceAll(' ', '') : ''}${startup_profile.phone_number.replace('+', '').replaceAll(' ', '')}`}
           >
             <FaWhatsapp className={size} />
           </a>
