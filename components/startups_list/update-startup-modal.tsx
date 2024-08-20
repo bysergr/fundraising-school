@@ -444,8 +444,8 @@ export default function UpdateStartupModal() {
               height={120}
             />
             <div className="flex flex-col items-center lg:items-start">
-              <p className="text-lg font-normal">Upload your photo</p>
-              <p className="text-sm font-normal">Your photo should be in PNG or JPG format</p>
+              <p className="text-lg font-normal">Upload your logo</p>
+              <p className="text-sm font-normal">Should be in PNG or JPG format</p>
               <label
                 htmlFor="edit_button"
                 className="mt-4 flex cursor-pointer items-center justify-center"

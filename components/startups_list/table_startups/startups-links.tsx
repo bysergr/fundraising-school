@@ -1,5 +1,5 @@
 import { LinkIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
-import { FaLinkedin } from 'react-icons/fa6';
+import { FaLinkedin, FaWhatsapp } from 'react-icons/fa6';
 
 import { StartupProfile } from '@/models/vc_list';
 import { ensureHttpOrHttps } from '@/utils/validations';
@@ -31,6 +31,17 @@ export default function StartupsLinks({
         <li>
           <a href={`mailto:${startup_profile.email}`}>
             <EnvelopeIcon className={size} />
+          </a>
+        </li>
+      )}
+      {startup_profile.phone_number && startup_profile.phone_number.length !== 0 && (
+        <li>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={`https://wa.me/${startup_profile.country_code}${startup_profile.phone_number}`}
+          >
+            <FaWhatsapp className={size} />
           </a>
         </li>
       )}
