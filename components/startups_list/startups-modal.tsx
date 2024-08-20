@@ -185,9 +185,13 @@ export default function StartupModal() {
           </div>
         </div>
       </div>
+
       <h3 className="mb-2 mt-4 text-base font-semibold text-ctwLightPurple ">
         Profile information
       </h3>
+      {modal_startup.one_sentence_description && (
+        <p className="my-4 text-sm text-neutral-500">{modal_startup.one_sentence_description} </p>
+      )}
       <p className="text-base text-neutral-500">{modal_startup.description || 'Empty'} </p>
       <hr className="my-4 h-0.5 bg-[#DBDBDB]" />
       <h3 className="mb-2 mt-4 text-base font-semibold text-ctwLightPurple ">

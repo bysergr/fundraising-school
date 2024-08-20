@@ -79,11 +79,14 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
       </div>
 
       <p className="mt-4 max-h-16 w-full flex-1 shrink gap-2.5 self-stretch overflow-hidden text-ellipsis whitespace-pre-wrap break-words px-2.5 text-sm text-zinc-500">
-        {startups_profile.description
-          ? startups_profile.description.length > 120
-            ? `${startups_profile.description.substring(0, 115)}...`
-            : startups_profile.description
-          : 'No description'}
+        {startups_profile.one_sentence_description
+          ? startups_profile.one_sentence_description
+          : startups_profile.description
+            ? startups_profile.description.length > 120
+              ? `${startups_profile.description.substring(0, 115)}...`
+              : startups_profile.description
+            : 'No description'}
+
         <br />
       </p>
       <div className="mt-4 flex w-full flex-col">
