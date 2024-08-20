@@ -8,7 +8,7 @@ import defaultImageProfile from '@/public/images/default-profile.jpg';
 import { PencilSquareIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type ContactInfo = {
   name: string;
