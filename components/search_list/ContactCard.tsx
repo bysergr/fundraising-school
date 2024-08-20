@@ -48,11 +48,14 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
     setValidPhoneNumber(true);
   }, [phoneNumber]);
 
-  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {};
+  const handleUpdateSubmit = async (e: FormEvent<HTMLFormElement>) => {};
 
   if (editMode) {
     return (
-      <form className="size-full overflow-hidden rounded border p-4 pb-8 shadow-lg">
+      <form
+        onSubmit={handleUpdateSubmit}
+        className="size-full overflow-hidden rounded border p-4 pb-8 shadow-lg"
+      >
         <div className="flex items-center">
           <Image
             className="mr-4 size-16 rounded-full"
@@ -115,8 +118,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
           </button>
           <button
             className="rounded-sm border border-green-500 px-4 py-2 text-green-500 hover:text-green-700"
-            onClick={handleUpdate}
-            type="button"
+            type="submit"
           >
             Save
           </button>
