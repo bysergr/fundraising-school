@@ -230,8 +230,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact, updateFounder
       <div className="mt-4">
         <div className="flex items-center text-gray-700">
           <FaMailBulk className="mr-2" />
-          <a href={`mailto:${contact.email}`} className="hover:underline">
-            {contact.email}
+          <a href={`mailto:${contact.contact_email || contact.email}`} className="hover:underline">
+            {contact.contact_email || contact.email}
           </a>
         </div>
         <div className="mt-2 flex items-center text-gray-700">
