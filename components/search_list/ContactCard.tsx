@@ -15,6 +15,7 @@ export type ContactInfo = {
   name: string;
   title: string;
   email: string;
+  contact_email: string;
   phone: string;
   linkedin: string;
   photo: string;
@@ -154,7 +155,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact, updateFounder
               value={contactEmail}
               type="text"
               className="ml-2 w-full rounded-lg py-0.5"
-              placeholder={contact.email || 'Contact Email'}
+              placeholder={
+                contact.contact_email ? contact.contact_email : contact.email || 'Contact Email'
+              }
             />
           </div>
           <div className="mt-2 flex items-center text-gray-700">

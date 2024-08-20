@@ -202,7 +202,8 @@ export default function UpdateStartupModal() {
             const founders: ContactInfo[] = data.map((founder: Founder) => {
               return {
                 name: founder.nickname,
-                email: founder.contact_email ? founder.contact_email : founder.email,
+                email: founder.email,
+                contact_email: founder.contact_email,
                 title: founder.role,
                 phone: `+${founder.country_code} ${founder.phone_number}`,
                 linkedin: founder.linkedin_url,
