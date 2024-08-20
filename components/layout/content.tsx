@@ -114,7 +114,7 @@ export const Content = ({
           email: data?.user?.email as string,
         };
 
-        if (data?.user?.image) {
+        if (data?.user?.image && data?.user?.image !== '') {
           reqBody.photo_url = data?.user?.image as string;
         }
 
