@@ -13,10 +13,13 @@ export default function AuthModal({ data }: { data: Session | null }) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    if (modal_sign_in) {
-      dialogRef.current?.showModal();
-    } else {
-      dialogRef.current?.close();
+    console.log('dialogRef.current:', dialogRef.current);
+    if (dialogRef.current) {
+      if (modal_sign_in && !dialogRef.current.open) {
+        dialogRef.current.showModal();
+      } else if (!modal_sign_in && dialogRef.current.open) {
+        dialogRef.current.close();
+      }
     }
   }, [modal_sign_in]);
 
@@ -28,7 +31,9 @@ export default function AuthModal({ data }: { data: Session | null }) {
     };
 
     if (modal_sign_in) {
-      dialogRef.current?.showModal();
+      if (dialogRef.current) {
+        dialogRef.current.showModal();
+      }
       window.addEventListener('keydown', handleEscape);
     } else {
       dialogRef.current?.close();
