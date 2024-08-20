@@ -44,6 +44,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
           <div className="flex w-full gap-1.5">
             <div className="flex items-center justify-center gap-2.5 self-start p-2">
               <Image
+                unoptimized
                 loading="lazy"
                 alt={startups_profile.name}
                 src={
