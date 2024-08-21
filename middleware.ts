@@ -23,6 +23,10 @@ export async function middleware(req: NextRequest) {
   //   return NextResponse.redirect(new URL('/activation/', req.url));
   // }
 
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/matchmaking/', req.url));
+  }
+
   if (!token) {
     return NextResponse.next({ headers });
   }

@@ -13,7 +13,6 @@ export default function AuthModal({ data }: { data: Session | null }) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    console.log('dialogRef.current:', dialogRef.current);
     if (dialogRef.current) {
       try {
         if (modal_sign_in && !dialogRef.current.open) {
