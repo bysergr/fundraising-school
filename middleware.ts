@@ -28,6 +28,10 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!token) {
+    if (pathname === '/matchmaking/vc-list' || pathname === '/matchmaking/startup-list') {
+      return NextResponse.redirect(new URL('/matchmaking/', req.url));
+    }
+
     return NextResponse.next({ headers });
   }
 
