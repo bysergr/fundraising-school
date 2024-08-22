@@ -9,6 +9,8 @@ import clsx from 'clsx';
 import { useAppStore } from '@/providers/app-store-providers';
 import { useUserStore } from '@/providers/user-store-provider';
 import { StartupsIcon } from '@/public/images/icons/startups';
+import { signOut } from 'next-auth/react';
+import { AppLink } from '@/data/enums';
 
 export default function Profile({
   data,
@@ -22,7 +24,7 @@ export default function Profile({
   const { imageProfile, name } = useUserInfo({ data });
 
   const { openUpdateStartupModal } = useAppStore((state) => state);
-  const { role } = useUserStore((state) => state);
+  const { role, updateUserInfo } = useUserStore((state) => state);
 
   return (
     <div
@@ -65,7 +67,14 @@ export default function Profile({
               <StartupsIcon stroke={'#32083E'} />
             </button>
           )}
-          <Image alt="icon" src={logout} className="w-6" />
+          <button
+            onClick={() => {
+              updateUserInfo('', '', '', '', '');
+              signOut({ callbackUrl: AppLink.Product.Home });
+            }}
+          >
+            <Image alt="icon" src={logout} className="w-6" />
+          </button>
         </>
       )}
     </div>

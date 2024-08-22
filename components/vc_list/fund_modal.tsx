@@ -74,7 +74,7 @@ export default function FundModal() {
       <div className="flex justify-between">
         <div className="flex basis-full gap-4 lg:gap-4 lg:align-middle">
           <Image
-            className="my-auto block rounded-md bg-black"
+            className="my-auto block rounded-md bg-white object-contain"
             alt={`image of ${modal_vc.name}`}
             src={modal_vc.photo}
             width={120}

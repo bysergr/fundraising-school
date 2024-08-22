@@ -39,8 +39,7 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
                 loading="lazy"
                 alt={`image of ${vc_profile.name}`}
                 src={vc_profile.photo}
-                // className=" aspect-square size-[90px]"
-                className="size-[110px] cursor-pointer rounded-md bg-black object-cover"
+                className="size-[110px] cursor-pointer rounded-md bg-white object-contain"
                 onClick={handleClick}
                 width={90}
                 height={90}
