@@ -220,7 +220,7 @@ export default function StartupModal() {
       {/* Rounds */}
       {startup_rounds.length > 0 && (
         <div className="my-8 flex flex-col gap-2">
-          <h4 className="my-auto ml-2 text-sm font-bold leading-5">Rounds they invest in</h4>
+          <h4 className="my-auto ml-2 text-sm font-bold leading-5">Looking For</h4>
           <ul className="my-auto flex flex-wrap gap-2 px-5">
             {startup_rounds.map((round) => (
               <li

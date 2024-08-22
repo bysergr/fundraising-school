@@ -95,7 +95,7 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
             {startups_profile.traction ? startups_profile.traction.name : 'None'}
           </div>
           <div className="my-auto gap-2.5 self-stretch rounded-xl bg-lime-50 px-2 py-0.5 font-semibold text-green-900">
-            {startups_profile.sector ? startups_profile.sector.name : 'None'}
+            {startups_profile.round ? startups_profile.round.stage : 'None'}
           </div>
         </div>
         {startups_profile.website && (
