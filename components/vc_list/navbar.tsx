@@ -20,6 +20,7 @@ import { VCListIcon } from '@/public/images/icons/vc_list';
 import { StartupsIcon } from '@/public/images/icons/startups';
 import { AgendaIcon } from '@/public/images/icons/agenda';
 import { ClassRoomIcon } from '@/public/images/icons/classroom';
+import { LinkedinAdminEmail } from '@/data/enums';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -146,7 +147,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
               />
             )}
 
-            {role === 'startup' && (
+            {(role === 'startup' || LinkedinAdminEmail.includes(email)) && (
               <NavItem
                 icon={
                   <VCListIcon stroke={pathname === '/matchmaking/vc-list' ? '#fff' : '#32083E'} />
@@ -157,7 +158,7 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 pathname={pathname}
               />
             )}
-            {role === 'fund' && (
+            {(role === 'fund' || LinkedinAdminEmail.includes(email)) && (
               <NavItem
                 icon={
                   <StartupsIcon
