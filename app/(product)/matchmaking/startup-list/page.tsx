@@ -11,6 +11,7 @@ import DownloadStartups from '@/components/startups_list/download-startups';
 import Image from 'next/image';
 import Link from 'next/link';
 import by_onde from '@/public/images/ctw/by_onde.svg';
+import DownloadAllStartUps from '@/components/startups_list/download-all-startups';
 
 export default async function Page() {
   const data: Session = (await getServerSession(authOptions)) as Session;
@@ -36,7 +37,10 @@ export default async function Page() {
           </div>
           <div className="flex basis-full items-end justify-between overflow-x-auto px-2 lg:basis-1/2">
             <FilterBar />
-            <DownloadStartups />
+            <div className="flex gap-0.5">
+              <DownloadStartups />
+              <DownloadAllStartUps />
+            </div>
           </div>
         </div>
         <TableStartups email_linkedin={data.user?.email as string} />

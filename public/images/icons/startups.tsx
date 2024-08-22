@@ -20,14 +20,14 @@ export const StartupsIcon = ({ stroke }: IconProps) => {
       />
       <path
         d="M9 12.5H4C4 12.5 4.55 9.47002 6 8.50002C7.62 7.42002 11 8.50002 11 8.50002"
-        stroke="black"
+        stroke={stroke}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12 15.5V20.5C12 20.5 15.03 19.95 16 18.5C17.08 16.88 16 13.5 16 13.5"
-        stroke="black"
+        stroke={stroke}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
