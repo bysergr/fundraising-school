@@ -278,6 +278,13 @@ export default function UpdateStartupModal() {
       body_request['email'] = (
         e.currentTarget.elements.namedItem('startup_email') as HTMLInputElement
       )?.value;
+    } else if (!startup?.email) {
+      toast('The startup email is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
     }
 
     if ((e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement)?.value) {
@@ -295,12 +302,26 @@ export default function UpdateStartupModal() {
       body_request['deck'] = (
         e.currentTarget.elements.namedItem('startup_deck') as HTMLInputElement
       )?.value;
+    } else if (!startup?.deck) {
+      toast('The startup deck is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
     }
 
     if ((e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement)?.value) {
       body_request['description'] = (
         e.currentTarget.elements.namedItem('startup_description') as HTMLInputElement
       )?.value;
+    } else if (!startup?.description) {
+      toast('The startup description is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
     }
 
     if (phoneNumber) {
@@ -314,6 +335,13 @@ export default function UpdateStartupModal() {
 
       body_request['phone_number'] = parsePhoneNumber(phoneNumber)?.nationalNumber as string;
       body_request['country_code'] = parsePhoneNumber(phoneNumber)?.countryCallingCode as string;
+    } else if (!startup?.phone_number) {
+      toast('The startup phone number is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
     }
 
     if ((e.currentTarget.elements.namedItem('startup_url') as HTMLInputElement)?.value) {
@@ -337,6 +365,13 @@ export default function UpdateStartupModal() {
       body_request['one_sentence_description'] = (
         e.currentTarget.elements.namedItem('startup_sentence') as HTMLInputElement
       )?.value;
+    } else if (!startup?.one_sentence_description) {
+      toast('The startup one sentence description is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
     }
 
     if ((e.currentTarget.elements.namedItem('startup_country') as HTMLSelectElement)?.value) {
@@ -357,13 +392,21 @@ export default function UpdateStartupModal() {
       body_request['round'] = selectedLooking[0].value;
     }
 
+    if (!file && !startup?.photo) {
+      toast('The startup logo is required', {
+        theme: 'light',
+        type: 'error',
+      });
+
+      return;
+    }
+
     let closeDialog = false;
 
     if (file) {
       try {
         const formData = new FormData();
         formData.append('startup_photo', file);
-
         const response = await fetch(
           `https://ctw-backend-service-zfymtlnmgq-ue.a.run.app/startup/${startup?.id}/startup_photo/`,
           {
@@ -371,11 +414,9 @@ export default function UpdateStartupModal() {
             body: formData,
           },
         );
-
         if (!response.ok) {
           throw new Error('Failed to upload startup photo');
         }
-
         closeDialog = true;
       } catch (error) {
         console.error('Error:', error);
