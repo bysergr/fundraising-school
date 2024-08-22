@@ -17,7 +17,7 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-    <span
+    <article
       className="flex shrink grow flex-col justify-start self-stretch "
       onClick={(e) => {
         e.preventDefault();
@@ -61,12 +61,9 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
       </div>
 
       <div className="flex h-full flex-col justify-between px-2 max-lg:space-y-2">
-        <div className="flex">
-          <div className="flex rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
-            🎯 Excellent Match
-          </div>
-          <div />
-        </div>
+        {/* <p className="mb-4 flex w-fit rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
+          🎯 Excellent Match
+        </p> */}
 
         <div className="mb-4">
           <p className="mb-2 text-sm text-gray-600">Sectors they invest in</p>
@@ -120,7 +117,7 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
           </div>
         </div>
       </div>
-    </span>
+    </article>
   );
 }
 

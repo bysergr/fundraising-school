@@ -52,7 +52,7 @@ export default function FilterBar() {
 
   return (
     <div className="mt-4 flex gap-6">
-      <label className="flex flex-col gap-1 whitespace-nowrap text-xs  font-bold">
+      <label className="flex flex-col gap-1 whitespace-nowrap text-xs font-bold">
         Rounds They invest In
         <Select
           onChange={(e) =>
