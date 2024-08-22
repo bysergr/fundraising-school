@@ -31,6 +31,7 @@ export const LinkedinAdminEmail = [
   'mariromero2709@gmail.com',
   'fedelopezandrade28@gmail.com',
   'iperez@investinbogota.org',
+  'ivancamiloperez@hotmail.com',
 ];
 
 export type Round = {
