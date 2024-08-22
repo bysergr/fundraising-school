@@ -12,6 +12,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import by_onde from '@/public/images/ctw/by_onde.svg';
 import DownloadAllStartUps from '@/components/startups_list/download-all-startups';
+import { LinkedinAdminEmail } from '@/data/enums';
 
 export default async function Page() {
   const data: Session = (await getServerSession(authOptions)) as Session;
@@ -39,7 +40,7 @@ export default async function Page() {
             <FilterBar />
             <div className="flex gap-0.5">
               <DownloadStartups />
-              <DownloadAllStartUps />
+              {LinkedinAdminEmail.includes(data.user?.email as string) && <DownloadAllStartUps />}
             </div>
           </div>
         </div>
