@@ -63,6 +63,11 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const { role, email, updateRole, updateEmail } = useUserStore((state) => state);
 
     useEffect(() => {
+      if (data === null) {
+        updateEmail('');
+        return;
+      }
+
       if (email.trim() === '' && data?.user && data.user.email) {
         updateEmail(data.user.email);
         return;
