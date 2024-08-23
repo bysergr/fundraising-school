@@ -3,8 +3,8 @@
 import { useUserStore } from '@/providers/user-store-provider';
 import { useAppStore } from '@/providers/app-store-providers';
 import Image from 'next/image';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState, useCallback } from 'react';
+import { CheckIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Founder, StartupProfile } from '@/models/vc_list';
 import ClipLoader from 'react-spinners/ClipLoader';
 import edit_button from '@/public/images/ctw/edit_button.png';
@@ -14,6 +14,7 @@ import { Countries } from '@/data/enums';
 import { toast, ToastContainer } from 'react-toastify';
 import PhoneInput, { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
 import logo from '@/public/images/ctw/logo.svg';
+import AddFounder from './add-founder';
 
 const lookingForOptions: Framework[] = [
   { value: 'Pre-Seed', label: 'Pre-Seed' },
@@ -53,6 +54,7 @@ export default function UpdateStartupModal() {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const [validPhoneNumber, setValidPhoneNumber] = useState<boolean>(true);
+  const [addFounder, setAddFounder] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedLooking.length > 1) {
@@ -182,7 +184,7 @@ export default function UpdateStartupModal() {
     }
   }, [email, role, modal_update_startup]);
 
-  const updateFounders = () => {
+  const updateFounders = useCallback(() => {
     if (!startup) {
       return;
     }
@@ -221,11 +223,11 @@ export default function UpdateStartupModal() {
       .catch((error) => {
         console.error('Error:', error);
       });
-  };
+  }, [startup]);
 
   useEffect(() => {
     updateFounders();
-  }, [startup]);
+  }, [startup, updateFounders]);
 
   useEffect(() => {
     const dialog = document.getElementById('modal-update-startup');
@@ -424,6 +426,8 @@ export default function UpdateStartupModal() {
     }
 
     try {
+      console.log({ body_request });
+
       const response = await fetch(`/api/startups/${startup?.id}`, {
         method: 'PUT',
         body: JSON.stringify(body_request),
@@ -475,63 +479,91 @@ export default function UpdateStartupModal() {
             </div>
             <p className="block font-normal ">You can edit and view profile preferences</p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-5 align-middle lg:flex-row lg:justify-start">
-            <Image
-              className="my-auto block rounded-md bg-white"
-              alt={startup?.name}
-              src={fileStr}
-              width={120}
-              height={120}
-            />
-            <div className="flex flex-col items-center lg:items-start">
-              <p className="text-lg font-normal">Upload your logo</p>
-              <p className="text-sm font-normal">Should be in PNG or JPG format</p>
-              <label
-                htmlFor="edit_button"
-                className="mt-4 flex cursor-pointer items-center justify-center"
-              >
-                <Image src={edit_button} alt="edit-button" className="w-16" />
-              </label>
-              <input
-                type="file"
-                id="edit_button"
-                accept="image/png, image/jpeg"
-                className="mt-4 hidden"
-                onChange={handleChange}
+          <form id="updateStartup" onSubmit={handleSubmit}>
+            <div className="flex flex-col items-center justify-center gap-5 align-middle lg:flex-row lg:justify-start">
+              <Image
+                className="my-auto block rounded-md bg-white"
+                alt={startup?.name}
+                src={fileStr}
+                width={120}
+                height={120}
               />
+              <div className="flex flex-col items-center lg:items-start">
+                <p className="text-lg font-normal">Upload your logo</p>
+                <p className="text-sm font-normal">Should be in PNG or JPG format</p>
+                <label
+                  htmlFor="edit_button"
+                  className="mt-4 flex cursor-pointer items-center justify-center"
+                >
+                  <Image src={edit_button} alt="edit-button" className="w-16" />
+                </label>
+                <input
+                  type="file"
+                  id="edit_button"
+                  accept="image/png, image/jpeg"
+                  className="mt-4 hidden"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          </div>
 
-          <form onSubmit={handleSubmit}>
             <div className="mt-6 grid grid-cols-1 gap-x-6  gap-y-4 lg:grid-cols-3">
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Startup Name
-                <input
-                  className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
-                  id="startup_name"
-                  placeholder={startup?.name || 'Your Amazing Startup'}
-                />
+                {startup?.name ? (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="text"
+                    id="startup_name"
+                    placeholder={startup?.name}
+                  />
+                ) : (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="text"
+                    id="startup_name"
+                    placeholder="Your Amazing Startup"
+                    required
+                  />
+                )}
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Email
-                <input
-                  className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
-                  id="startup_email"
-                  placeholder={startup.email || 'contact@your-amazing-startup.com'}
-                />
+                {startup?.email ? (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="email"
+                    id="startup_email"
+                    placeholder={startup.email}
+                  />
+                ) : (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="email"
+                    id="startup_email"
+                    placeholder={'contact@your-amazing-startup.com'}
+                    required
+                  />
+                )}
               </label>
               <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
                 Your Startup in One Sentence
-                <textarea
-                  className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
-                  id="startup_sentence"
-                  maxLength={115}
-                  placeholder={
-                    startup.one_sentence_description || 'Describe your startup in a single sentence'
-                  }
-                />
+                {startup.one_sentence_description ? (
+                  <textarea
+                    className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                    id="startup_sentence"
+                    maxLength={115}
+                    placeholder={startup.one_sentence_description}
+                  />
+                ) : (
+                  <textarea
+                    className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                    id="startup_sentence"
+                    maxLength={115}
+                    placeholder={'Describe your startup in a single sentence'}
+                    required
+                  />
+                )}
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Phone Number
@@ -557,7 +589,11 @@ export default function UpdateStartupModal() {
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Location
-                <select id="startup_country" className="rounded-md border border-[#DBDBDB] p-2">
+                <select
+                  id="startup_country"
+                  required
+                  className="rounded-md border border-[#DBDBDB] p-2"
+                >
                   {startup.country ? (
                     <>
                       <option>{startup.country.name}</option>
@@ -577,7 +613,7 @@ export default function UpdateStartupModal() {
                 Calendly
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
+                  type="url"
                   id="startup_calendly"
                   placeholder={startup.calendly || 'calendly.com/your-amazing-startup'}
                 />
@@ -595,23 +631,39 @@ export default function UpdateStartupModal() {
                   </a>
                   )
                 </span>
-
-                <input
-                  className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
-                  id="startup_deck"
-                  placeholder={startup.deck || 'docsend.com/view/amazingdeck'}
-                />
+                {startup.deck ? (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="url"
+                    id="startup_deck"
+                    placeholder={startup.deck}
+                  />
+                ) : (
+                  <input
+                    className="rounded-md border border-[#DBDBDB] p-2"
+                    type="url"
+                    id="startup_deck"
+                    required
+                    placeholder={'docsend.com/view/amazingdeck'}
+                  />
+                )}
               </label>
               <label className="row-span-2 flex flex-col gap-1 text-sm font-semibold">
                 Description
-                <textarea
-                  className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
-                  id="startup_description"
-                  placeholder={
-                    startup.description || 'Provide a brief description of your startup.'
-                  }
-                />
+                {startup.description ? (
+                  <textarea
+                    className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                    id="startup_description"
+                    placeholder={startup.description}
+                  />
+                ) : (
+                  <textarea
+                    required
+                    id="startup_description"
+                    className="rounded-md border border-[#DBDBDB] p-2 lg:h-full"
+                    placeholder={'Provide a brief description of your startup.'}
+                  />
+                )}
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 URL
@@ -626,7 +678,7 @@ export default function UpdateStartupModal() {
                 LinkedIn Link
                 <input
                   className="rounded-md border border-[#DBDBDB] p-2"
-                  type="text"
+                  type="url"
                   id="startup_linkedin"
                   placeholder={startup.linkedin || 'linkedin.com/company/your-amazing-startup '}
                 />
@@ -664,46 +716,56 @@ export default function UpdateStartupModal() {
                 />
               </div>
             </div>
-
-            <hr className="my-5 h-0.5 w-full bg-[#DBDBDB] text-[#DBDBDB]" />
-
-            <div className="mb-2.5 flex justify-between">
-              <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
-              {/* <button
-                className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
-                type="button"
-              >
-                <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
-                Add founder
-              </button> */}
-            </div>
-            <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
-              {founders.map((founder) => {
-                return (
-                  <ContactCard
-                    key={founder.email}
-                    updateFounders={updateFounders}
-                    contact={founder}
-                  />
-                );
-              })}
-            </div>
-            <div className="mb-12 mt-4 flex w-full justify-between">
-              <p className="">
-                If you’re having trouble or need assistance, feel free to contact us at{' '}
-                <a
-                  className="text-ctwLightPurple underline"
-                  href="mailto:hello@colombiatechweek.co"
-                >
-                  hello@colombiatechweek.co
-                </a>
-              </p>
-
-              <button className="rounded-lg bg-ctwLightPurple px-4 py-2 text-white" type="submit">
-                Save
-              </button>
-            </div>
           </form>
+
+          <hr className="my-5 h-0.5 w-full bg-[#DBDBDB] text-[#DBDBDB]" />
+
+          <div className="mb-2.5 flex justify-between">
+            <h2 className="text-xl font-normal text-darkFsGray">Founders</h2>
+            <button
+              className="mt-2 flex rounded-md bg-ctwLightPurple px-3 py-1 text-sm font-semibold text-white"
+              type="button"
+              onClick={() => setAddFounder(true)}
+            >
+              <UserPlusIcon className="mr-2 w-5 text-white" color="#fff" />
+              Add founder
+            </button>
+          </div>
+          <div className="flex grid-cols-1 flex-col items-center justify-center gap-x-6 gap-y-4  lg:grid lg:grid-cols-3">
+            {addFounder && (
+              <AddFounder
+                setAddFounder={setAddFounder}
+                updateFounders={updateFounders}
+                nameStartup={startup.name}
+              />
+            )}
+
+            {founders.map((founder) => {
+              return (
+                <ContactCard
+                  key={founder.email}
+                  updateFounders={updateFounders}
+                  contact={founder}
+                />
+              );
+            })}
+          </div>
+          <div className="mb-12 mt-4 flex w-full justify-between">
+            <p className="">
+              If you’re having trouble or need assistance, feel free to contact us at{' '}
+              <a className="text-ctwLightPurple underline" href="mailto:hello@colombiatechweek.co">
+                hello@colombiatechweek.co
+              </a>
+            </p>
+
+            <button
+              form="updateStartup"
+              className="rounded-lg bg-ctwLightPurple px-4 py-2 text-white"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
         </div>
       )}
     </dialog>
