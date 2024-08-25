@@ -17,10 +17,10 @@ function InnerRowTableStartups({
   startups_profile: StartupProfile;
   updateFavoritesStartup: () => void;
 }) {
-  const { openStartupModal: openModal } = useAppStore((state) => state);
+  const { openStartupModalWithValue: openModal } = useAppStore((state) => state);
 
   const handleClick = () => {
-    openModal(startups_profile.id);
+    openModal(startups_profile);
   };
 
   return (
@@ -46,6 +46,7 @@ function InnerRowTableStartups({
 
             <div className="flex min-h-[35px] w-[35px] items-end gap-2.5 px-1 pb-1 pt-3">
               <FavStartup
+                is_modal
                 updateFavoritesStartup={updateFavoritesStartup}
                 startup_id={startups_profile.id}
                 favorite={startups_profile.favorite}

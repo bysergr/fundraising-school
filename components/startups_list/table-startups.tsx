@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import RowTableStartups from '@/components/startups_list/table_startups/row-table-startups';
+import StartupsModal from '@/components/startups_list/startups-modal';
 import { useAppStore } from '@/providers/app-store-providers';
 import useLazyStartupsLoad from '@/hooks/useLazyStartupsLoad';
 import { useUserStore } from '@/providers/user-store-provider';
@@ -138,125 +139,128 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
   }
 
   return (
-    <div>
-      <div className="mt-5 size-full min-h-[50vh]">
-        <Tabs
-          value={activeTab}
-          defaultValue="matches"
-          className="flex flex-col items-start justify-center space-y-10"
-          id="myMatchesTab"
-        >
-          <TabsList className="grid w-full grid-cols-2 bg-transparent md:max-w-xl ">
-            <TabsTrigger
-              activeTab={activeTab}
-              onClick={() => setActiveTab('general')}
-              className="font-bold"
-              value="general"
-            >
-              General list
-            </TabsTrigger>
-            <TabsTrigger
-              activeTab={activeTab}
-              onClick={() => setActiveTab('favorites')}
-              className="font-bold"
-              value="favorites"
-            >
-              Favorites
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="general" className="!mt-3 h-screen w-full">
-            <div className="w-full ">
-              <div className="flex flex-wrap items-center gap-5 px-0 py-4">
-                {loading && (
-                  <tr className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
-                    <td className="m-auto block">
-                      <ClipLoader color="#637EE0" size={55} />
-                    </td>
-                  </tr>
-                )}
-
-                {startups.length === 0 && !loading ? (
-                  <div className="flex h-[30vh] w-full items-center justify-center ">
-                    <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-                      <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">
-                        Empty
-                      </h3>
-                      <IoRocketOutline className="size-10 text-[#818181]" />
-                      <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
-                        No startups found
-                      </p>
+    <>
+      <StartupsModal updateFavoritesStartup={updateFavoritesStartup} />
+      <div>
+        <div className="mt-5 size-full min-h-[50vh]">
+          <Tabs
+            value={activeTab}
+            defaultValue="matches"
+            className="flex flex-col items-start justify-center space-y-10"
+            id="myMatchesTab"
+          >
+            <TabsList className="grid w-full grid-cols-2 bg-transparent md:max-w-xl ">
+              <TabsTrigger
+                activeTab={activeTab}
+                onClick={() => setActiveTab('general')}
+                className="font-bold"
+                value="general"
+              >
+                General list
+              </TabsTrigger>
+              <TabsTrigger
+                activeTab={activeTab}
+                onClick={() => setActiveTab('favorites')}
+                className="font-bold"
+                value="favorites"
+              >
+                Favorites
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="general" className="!mt-3 h-screen w-full">
+              <div className="w-full ">
+                <div className="flex flex-wrap items-center gap-5 px-0 py-4">
+                  {loading && (
+                    <div className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
+                      <div className="m-auto block">
+                        <ClipLoader color="#637EE0" size={55} />
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                    {startups.map((startup, index) => {
-                      if (index === startups.length - 1) {
+                  )}
+
+                  {startups.length === 0 && !loading ? (
+                    <div className="flex h-[30vh] w-full items-center justify-center ">
+                      <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                        <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">
+                          Empty
+                        </h3>
+                        <IoRocketOutline className="size-10 text-[#818181]" />
+                        <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+                          No startups found
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {startups.map((startup, index) => {
+                        if (index === startups.length - 1) {
+                          return (
+                            <RowTableStartups
+                              updateFavoritesStartup={updateFavoritesStartup}
+                              refProp={showNext}
+                              startups_profile={startup}
+                              key={startup.id}
+                            />
+                          );
+                        }
+
                         return (
                           <RowTableStartups
                             updateFavoritesStartup={updateFavoritesStartup}
-                            refProp={showNext}
                             startups_profile={startup}
                             key={startup.id}
                           />
                         );
-                      }
-
-                      return (
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="mt-4">
+                <Aside mobile />
+              </div>
+            </TabsContent>
+            <TabsContent value="favorites" className="!mt-3 h-screen w-full">
+              <div className="w-full ">
+                <div className="flex flex-wrap items-center gap-5 px-0 py-4 ">
+                  {loadingFavorites ? (
+                    <div className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
+                      <div className="m-auto block">
+                        <ClipLoader color="#637EE0" size={55} />
+                      </div>
+                    </div>
+                  ) : favorites.length === 0 ? (
+                    <div className="flex h-[30vh] w-full items-center justify-center ">
+                      <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+                        <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">
+                          Empty
+                        </h3>
+                        <IoRocketOutline className="size-10 text-[#818181]" />
+                        <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+                          No startups added to favorites
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {favorites.map((favorite) => (
                         <RowTableStartups
                           updateFavoritesStartup={updateFavoritesStartup}
-                          startups_profile={startup}
-                          key={startup.id}
+                          startups_profile={favorite}
+                          key={favorite.id}
                         />
-                      );
-                    })}
-                  </>
-                )}
+                      ))}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="mt-4">
-              <Aside mobile />
-            </div>
-          </TabsContent>
-          <TabsContent value="favorites" className="!mt-3 h-screen w-full">
-            <div className="w-full ">
-              <div className="flex flex-wrap items-center gap-5 px-0 py-4 ">
-                {loadingFavorites ? (
-                  <tr className="mr-12 grid  h-full w-[calc(100%-3rem)] place-content-center">
-                    <td className="m-auto block">
-                      <ClipLoader color="#637EE0" size={55} />
-                    </td>
-                  </tr>
-                ) : favorites.length === 0 ? (
-                  <div className="flex h-[30vh] w-full items-center justify-center ">
-                    <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-                      <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">
-                        Empty
-                      </h3>
-                      <IoRocketOutline className="size-10 text-[#818181]" />
-                      <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
-                        No startups added to favorites
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {favorites.map((favorite) => (
-                      <RowTableStartups
-                        updateFavoritesStartup={updateFavoritesStartup}
-                        startups_profile={favorite}
-                        key={favorite.id}
-                      />
-                    ))}
-                  </>
-                )}
+              <div className="mt-4">
+                <Aside mobile />
               </div>
-            </div>
-            <div className="mt-4">
-              <Aside mobile />
-            </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -4,7 +4,6 @@ import TitleSection from '@/components/vc_list/title-section';
 import { type Session, getServerSession } from 'next-auth';
 import { authOptions } from '@/utils/auth';
 
-import StartupsModal from '@/components/startups_list/startups-modal';
 import SearchInput from '@/components/vc_list/search-input';
 import FilterBar from '@/components/startups_list/filter-bar';
 import DownloadStartups from '@/components/startups_list/download-startups';
@@ -19,7 +18,6 @@ export default async function Page() {
 
   return (
     <>
-      <StartupsModal />
       <TitleSection
         icon="presentation"
         nameSection="Startups List"

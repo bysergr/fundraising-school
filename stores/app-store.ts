@@ -71,6 +71,8 @@ export type AppActions = {
   setStartupSelectedFilterOptions: (selected_filter_options: SelectedStartupFilterOptions) => void;
   setFavoriteStartup: (id: number, favorite: boolean) => void;
   openStartupModal: (id: number) => void;
+  openStartupModalWithValue: (id: StartupProfile) => void;
+
   closeStartupModal: () => void;
 
   closeUpdateStartupModal: () => void;
@@ -252,6 +254,13 @@ export const createAppStore = (initState: AppState = defaultInitState) => {
       set(
         produce((state: AppState) => {
           state.modal_startup = state.startups.find((startup) => startup.id === id) || null;
+        }),
+      ),
+
+    openStartupModalWithValue: (startup) =>
+      set(
+        produce((state: AppState) => {
+          state.modal_startup = startup;
         }),
       ),
 

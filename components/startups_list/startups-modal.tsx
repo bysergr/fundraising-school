@@ -18,7 +18,11 @@ import defaultImageProfile from '@/public/images/default-profile.jpg';
 import ClipLoader from 'react-spinners/ClipLoader';
 import logo from '@/public/images/ctw/logo.svg';
 
-export default function StartupModal() {
+export default function StartupModal({
+  updateFavoritesStartup,
+}: {
+  updateFavoritesStartup?: () => void;
+}) {
   const [founders, setFounders] = useState<Founder[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -136,6 +140,8 @@ export default function StartupModal() {
             <div className="flex justify-between">
               <h3 className="text-2xl font-semibold">{modal_startup.name}</h3>
               <FavStartup
+                is_modal
+                updateFavoritesStartup={updateFavoritesStartup}
                 startup_id={modal_startup.id}
                 favorite={modal_startup.favorite || false}
               />
