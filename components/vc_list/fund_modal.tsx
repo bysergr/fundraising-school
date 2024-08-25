@@ -11,6 +11,7 @@ import { FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import { InvestmentPreferenceSection } from '@/components/shared/InvestmentPreferenceSection';
 import FavVC from '@/components/vc_list/table_vc/fav-vc';
 import defaultImageProfile from '@/public/images/default-profile.jpg';
+import { ensureHttpOrHttps } from '@/utils/validations';
 
 export default function FundModal() {
   const { modal_vc, closeFundModal: closeModal } = useAppStore((state) => state);
@@ -163,17 +164,17 @@ export default function FundModal() {
               <p className="text-center text-xs font-normal text-[#3C0560]">{partner?.role}</p>
               <div className="mt-2 flex w-full justify-center gap-1">
                 {partner?.website && (
-                  <a target="_blank" rel="noreferrer" href={partner?.website}>
+                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.website)}>
                     <LinkIcon className="size-4" />
                   </a>
                 )}
                 {partner?.linkedin && (
-                  <a target="_blank" rel="noreferrer" href={partner?.linkedin}>
+                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.linkedin)}>
                     <FaLinkedin className="size-4" />
                   </a>
                 )}
                 {partner?.twitter && (
-                  <a target="_blank" rel="noreferrer" href={partner?.twitter}>
+                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.twitter)}>
                     <FaXTwitter className="size-4" />
                   </a>
                 )}
