@@ -103,7 +103,7 @@ export default function FundModal() {
       {fund_rounds.length > 0 && (
         <InvestmentPreferenceSection
           title="Rounds they invest in"
-          listItems={fund_rounds}
+          listItems={fund_rounds.reverse()}
           className="rounded-full bg-ctwLightPurple px-2 py-1 text-sm font-semibold text-white"
         />
       )}
@@ -112,7 +112,7 @@ export default function FundModal() {
       {fund_check_size.length > 0 && (
         <InvestmentPreferenceSection
           title="Check size range(s)"
-          listItems={fund_check_size}
+          listItems={fund_check_size.reverse()}
           className="rounded-full bg-[#3C0560] px-2 py-1 text-sm font-semibold text-[#52EF70]"
         />
       )}
