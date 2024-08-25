@@ -26,12 +26,12 @@ function InnerRowTableStartups({
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <span
-      className="flex shrink grow flex-col justify-between self-stretch "
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         handleClick();
       }}
+      className="flex shrink grow flex-col justify-between self-stretch"
     >
       <div className="flex w-full flex-col">
         <div className="flex w-full flex-col">
@@ -46,7 +46,6 @@ function InnerRowTableStartups({
 
             <div className="flex min-h-[35px] w-[35px] items-end gap-2.5 px-1 pb-1 pt-3">
               <FavStartup
-                is_modal
                 updateFavoritesStartup={updateFavoritesStartup}
                 startup_id={startups_profile.id}
                 favorite={startups_profile.favorite}

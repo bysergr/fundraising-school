@@ -60,31 +60,8 @@ export default function FavStartup({
       });
   };
 
-  if (is_modal) {
-    return (
-      <div className="grid place-content-center">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleClick();
-          }}
-        >
-          <StarIcon
-            className={clsx(
-              'transition duration-100 ease-in-out',
-              size,
-              favorite ? IS_FAV_STYLES : IS_NOT_FAV_STYLES,
-            )}
-          />
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <td className="grid w-8 place-content-center">
+    <div className="grid place-content-center">
       <button
         type="button"
         onClick={(e) => {
@@ -101,6 +78,6 @@ export default function FavStartup({
           )}
         />
       </button>
-    </td>
+    </div>
   );
 }
