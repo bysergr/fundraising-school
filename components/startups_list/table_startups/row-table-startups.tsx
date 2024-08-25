@@ -2,13 +2,40 @@
 
 import Image from 'next/image';
 import { LegacyRef } from 'react';
-
 import { StartupProfile } from '@/models/vc_list';
 import { useAppStore } from '@/providers/app-store-providers';
 import StartupsLinks from '@/components/startups_list/table_startups/startups-links';
 import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 import Link from 'next/link';
 import logo from '@/public/images/ctw/logo.svg';
+import { Badge } from '@/components/ui/badge';
+
+const RelevanceBadge = ({ score }) => {
+  let color, text, emoji;
+  if (score >= 90) {
+    color = 'bg-green-100 text-green-800';
+    text = 'Excellent Match';
+    emoji = '🎯';
+  } else if (score >= 85) {
+    color = 'bg-yellow-100 text-yellow-800';
+    text = 'Good Fit';
+    emoji = '👍';
+  } else if (score >= 65) {
+    color = 'bg-orange-100 text-orange-800';
+    text = 'Somewhat Relevant';
+    emoji = '🤔';
+  } else {
+    color = 'bg-red-100 text-red-800';
+    text = 'Less Relevant';
+    emoji = '🔍';
+  }
+
+  return (
+    <Badge className={`${color} px-2 py-1 text-sm font-medium`}>
+      {emoji} {text}
+    </Badge>
+  );
+};
 
 function InnerRowTableStartups({
   startups_profile,
@@ -104,6 +131,15 @@ function InnerRowTableStartups({
 
         <br />
       </p>
+
+      {startups_profile?.recommendation && (
+        <>
+          <p className="my-1 flex w-fit rounded-full px-2.5 py-0.5 text-sm font-medium ">
+            <RelevanceBadge score={startups_profile?.recommendation.data.alignment_score * 100} />
+          </p>
+          <p className="text-xs">{startups_profile.recommendation.data.justification}</p>
+        </>
+      )}
       <div className="mt-4 flex w-full flex-col">
         <div className="flex w-full items-center justify-between gap-10 px-2.5 text-sm">
           <div className="my-auto gap-2.5 self-stretch py-0.5 text-black">
