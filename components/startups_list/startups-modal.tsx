@@ -34,6 +34,7 @@ export default function StartupModal() {
     }
     setIsLoading(true);
 
+    setFounders([]);
     fetch(`/api/startups/founders/${modal_startup.name}`)
       .then((response) => {
         if (!response.ok) {
