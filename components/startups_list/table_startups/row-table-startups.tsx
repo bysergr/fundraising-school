@@ -9,8 +9,9 @@ import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 import Link from 'next/link';
 import logo from '@/public/images/ctw/logo.svg';
 import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 
-const RelevanceBadge = ({ score }) => {
+const RelevanceBadge = ({ score }: { score: number }) => {
   let color, text, emoji;
   if (score >= 90) {
     color = 'bg-green-100 text-green-800';
@@ -134,10 +135,24 @@ function InnerRowTableStartups({
 
       {startups_profile?.recommendation && (
         <>
-          <p className="my-1 flex w-fit rounded-full px-2.5 py-0.5 text-sm font-medium ">
-            <RelevanceBadge score={startups_profile?.recommendation.data.alignment_score * 100} />
-          </p>
-          <p className="text-xs">{startups_profile.recommendation.data.justification}</p>
+          <Popover
+            trigger={
+              <PopoverTrigger>
+                <p className="my-2 flex w-fit rounded-full px-2.5 py-0.5 text-sm font-medium ">
+                  <RelevanceBadge
+                    score={startups_profile?.recommendation.data.alignment_score * 100}
+                  />
+                </p>
+              </PopoverTrigger>
+            }
+            content={
+              <PopoverContent>
+                {/* <h3 className="text-lg font-bold">Título del Popover</h3> */}
+                <p className="text-xs">{startups_profile.recommendation.data.justification}</p>
+              </PopoverContent>
+            }
+            className="border-gray-300 bg-gray-100"
+          />
         </>
       )}
       <div className="mt-4 flex w-full flex-col">

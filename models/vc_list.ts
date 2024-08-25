@@ -56,6 +56,22 @@ interface VCProfile {
   favorite: boolean;
 }
 
+type InvestmentAnalysis = {
+  data: {
+    justification: string;
+    recommendation: string;
+    alignment_score: number;
+    confidence_level: "low" | "medium" | "high";
+  };
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+    cache_read_input_tokens: number;
+    cache_creation_input_tokens: number;
+  };
+  startupId: number;
+};
+
 interface StartupProfile {
   id: number;
   name: string;
@@ -75,6 +91,7 @@ interface StartupProfile {
   round: Round;
   favorite: boolean;
   one_sentence_description: string;
+  recommendation: InvestmentAnalysis;
 }
 
 interface Founder {
