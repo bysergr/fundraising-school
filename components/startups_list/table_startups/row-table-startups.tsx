@@ -10,7 +10,13 @@ import FavStartup from '@/components/startups_list/table_startups/fav-startup';
 import Link from 'next/link';
 import logo from '@/public/images/ctw/logo.svg';
 
-function InnerRowTableStartups({ startups_profile }: { startups_profile: StartupProfile }) {
+function InnerRowTableStartups({
+  startups_profile,
+  updateFavoritesStartup,
+}: {
+  startups_profile: StartupProfile;
+  updateFavoritesStartup: () => void;
+}) {
   const { openStartupModal: openModal } = useAppStore((state) => state);
 
   const handleClick = () => {
@@ -39,7 +45,11 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
             )}
 
             <div className="flex min-h-[35px] w-[35px] items-end gap-2.5 px-1 pb-1 pt-3">
-              <FavStartup startup_id={startups_profile.id} favorite={startups_profile.favorite} />
+              <FavStartup
+                updateFavoritesStartup={updateFavoritesStartup}
+                startup_id={startups_profile.id}
+                favorite={startups_profile.favorite}
+              />
             </div>
           </div>
           <div className="flex w-full gap-1.5">
@@ -114,10 +124,12 @@ function InnerRowTableStartups({ startups_profile }: { startups_profile: Startup
 }
 
 export default function RowTableStartups({
+  updateFavoritesStartup,
   startups_profile,
   refProp,
 }: {
   startups_profile: StartupProfile;
+  updateFavoritesStartup: () => void;
   refProp?: LegacyRef<HTMLTableRowElement> | undefined;
 }) {
   const className =
@@ -125,14 +137,20 @@ export default function RowTableStartups({
   if (refProp) {
     return (
       <div ref={refProp} className={className}>
-        <InnerRowTableStartups startups_profile={startups_profile} />
+        <InnerRowTableStartups
+          updateFavoritesStartup={updateFavoritesStartup}
+          startups_profile={startups_profile}
+        />
       </div>
     );
   }
 
   return (
     <div className={className}>
-      <InnerRowTableStartups startups_profile={startups_profile} />
+      <InnerRowTableStartups
+        updateFavoritesStartup={updateFavoritesStartup}
+        startups_profile={startups_profile}
+      />
     </div>
   );
 }

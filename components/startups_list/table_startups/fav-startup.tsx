@@ -13,11 +13,13 @@ export default function FavStartup({
   favorite,
   is_modal = false,
   size = 'size-5',
+  updateFavoritesStartup,
 }: {
   startup_id: number;
   favorite: boolean;
   size?: string;
   is_modal?: boolean;
+  updateFavoritesStartup?: () => void;
 }) {
   const { setFavoriteStartup: setFavorite, openStartupModal: openModal } = useAppStore(
     (state) => state,
@@ -43,6 +45,10 @@ export default function FavStartup({
         if (response.status !== 200 && response.status !== 201) {
           setFavorite(startup_id, favorite);
           return;
+        }
+
+        if (updateFavoritesStartup) {
+          updateFavoritesStartup();
         }
 
         if (is_modal) {
