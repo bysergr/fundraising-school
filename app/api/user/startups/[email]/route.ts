@@ -5,10 +5,6 @@ type Params = {
 export async function GET(request: Request, context: { params: Params }) {
   const email = context.params.email;
 
-  return Response.json({
-    response: 'fund',
-  });
-  /// Se acabo
   const response = await fetch(`${process.env.BACKEND_GATEWAY_URL}/user/check/${email}`, {
     method: 'GET',
   });

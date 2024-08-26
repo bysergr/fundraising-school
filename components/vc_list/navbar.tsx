@@ -163,19 +163,19 @@ const Navbar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 pathname={pathname}
               />
             )}
-            {/* {(role === 'fund' || LinkedinAdminEmail.includes(email)) && ( */}
-            <NavItem
-              icon={
-                <StartupsIcon
-                  stroke={pathname === '/matchmaking/startup-list' ? '#fff' : '#32083E'}
-                />
-              }
-              text="Startup List"
-              collapsed={isCollapsed}
-              href="/matchmaking/startup-list"
-              pathname={pathname}
-            />
-            {/* )} */}
+            {(role === 'fund' || LinkedinAdminEmail.includes(email)) && (
+              <NavItem
+                icon={
+                  <StartupsIcon
+                    stroke={pathname === '/matchmaking/startup-list' ? '#fff' : '#32083E'}
+                  />
+                }
+                text="Startup List"
+                collapsed={isCollapsed}
+                href="/matchmaking/startup-list"
+                pathname={pathname}
+              />
+            )}
             <NavItem
               icon={<AgendaIcon stroke={pathname === '/matchmaking/agenda' ? '#fff' : '#32083E'} />}
               text="Agenda"
