@@ -10,9 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import '../search_list/styles.css';
 import type { VCProfile } from '@/models/vc_list';
 import { FaBuildingCircleExclamation } from 'react-icons/fa6';
-import { IoPaperPlaneOutline } from 'react-icons/io5';
+//import { IoPaperPlaneOutline } from 'react-icons/io5';
 import { Aside } from '../layout/content';
-import { LinkedinAdminEmail } from '@/data/enums';
+//import { LinkedinAdminEmail } from '@/data/enums';
 
 export default function TableVC({ email_linkedin }: { email_linkedin: string }) {
   const {
@@ -97,7 +97,7 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     setFavorites(fav);
   }, [funds]);
 
-  if (!LinkedinAdminEmail.includes(email_linkedin)) {
+/*   if (!LinkedinAdminEmail.includes(email_linkedin)) {
     return (
       <div className="flex h-[30vh] w-full items-center justify-center ">
         <div className="flex w-full flex-col items-center justify-center space-y-2.5">
@@ -109,7 +109,7 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
         </div>
       </div>
     );
-  }
+  } */
 
   return (
     <div>
