@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 import LinkedInSignIn from '@/components/auth/linkedin-sign-in';
 import Logo from '@/components/ui/logo-ctw';
 import { useAppStore } from '@/providers/app-store-providers';
 
-export default function AuthLinkedinStage() {
+export default function AuthLinkedinStage({ is_modal = false }: { is_modal?: boolean }) {
   const { closeSignInModal } = useAppStore((state) => state);
 
   return (
@@ -21,16 +23,18 @@ export default function AuthLinkedinStage() {
 
         <LinkedInSignIn className="hidden lg:flex" />
         <LinkedInSignIn className="mx-auto lg:hidden" />
-        <div className="flex">
-          <button
-            onClick={closeSignInModal}
-            className="m-0 border-0 p-0 underline"
-            rel="noopener noreferrer"
-            type="button"
-          >
-            Or continue later
-          </button>
-        </div>
+        {is_modal && (
+          <div className="flex">
+            <button
+              onClick={closeSignInModal}
+              className="m-0 border-0 p-0 underline"
+              rel="noopener noreferrer"
+              type="button"
+            >
+              Or continue later
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

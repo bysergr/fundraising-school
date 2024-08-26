@@ -36,6 +36,13 @@ function InnerRowTableStartups({
       <div className="flex w-full flex-col">
         <div className="flex w-full flex-col">
           <div className="flex w-full items-start justify-between gap-10">
+            {startups_profile.id === 4 ? (
+              <div className="rounded-tl-lg bg-[#52EF70] px-2 py-0.5 text-xs font-bold text-[#3C0560]">
+                Builders
+              </div>
+            ) : (
+              <div />
+            )}
             {false ? (
               <div className="rounded-tl-lg bg-[#52EF70] px-2 py-0.5 text-xs font-bold text-[#3C0560]">
                 Top 20 Startups

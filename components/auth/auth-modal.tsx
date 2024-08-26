@@ -59,7 +59,7 @@ export default function AuthModal({ data }: { data: Session | null }) {
     >
       <ToastContainer position="bottom-left" limit={3} />
 
-      {sign_in_stage === null && <AuthLinkedinStage />}
+      {sign_in_stage === null && <AuthLinkedinStage is_modal />}
       {sign_in_stage === 'linkedin' && <ValidationStage data={data} />}
       {sign_in_stage !== 'linkedin' && sign_in_stage !== null && (
         <BasicInfoStage data={data} stage={sign_in_stage} />
