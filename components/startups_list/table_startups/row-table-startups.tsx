@@ -41,15 +41,13 @@ function InnerRowTableStartups({
                 Builders
               </div>
             ) : (
-              <div />
+              <div className=""></div>
             )}
-            {false ? (
+            {/* {false && (
               <div className="rounded-tl-lg bg-[#52EF70] px-2 py-0.5 text-xs font-bold text-[#3C0560]">
                 Top 20 Startups
               </div>
-            ) : (
-              <div />
-            )}
+            )} */}
 
             <div className="flex min-h-[35px] w-[35px] items-end gap-2.5 px-1 pb-1 pt-3">
               <FavStartup

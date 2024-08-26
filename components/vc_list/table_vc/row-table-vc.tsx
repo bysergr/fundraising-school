@@ -28,7 +28,13 @@ function InnerRowTableVC({ vc_profile }: { vc_profile: VCProfile }) {
       <div className="flex w-full flex-col">
         <div className="flex w-full flex-col">
           <div className="flex w-full items-start justify-between gap-10">
-            <div />
+            {vc_profile.id === 116 ? (
+              <div className="rounded-tl-lg bg-[#52EF70] px-2 py-0.5 text-xs font-bold text-[#3C0560]">
+                Builders
+              </div>
+            ) : (
+              <div></div>
+            )}
             <div className="flex min-h-[35px] w-[35px] items-end gap-2.5 p-1">
               <FavVC fund_id={vc_profile.id} favorite={vc_profile.favorite} />
             </div>
