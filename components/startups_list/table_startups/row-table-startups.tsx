@@ -147,7 +147,6 @@ function InnerRowTableStartups({
             }
             content={
               <PopoverContent>
-                {/* <h3 className="text-lg font-bold">Título del Popover</h3> */}
                 <p className="text-xs">{startups_profile.recommendation.data.justification}</p>
               </PopoverContent>
             }
