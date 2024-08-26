@@ -97,7 +97,7 @@ export default function TableVC({ email_linkedin }: { email_linkedin: string }) 
     setFavorites(fav);
   }, [funds]);
 
-/*   if (!LinkedinAdminEmail.includes(email_linkedin)) {
+  /*   if (!LinkedinAdminEmail.includes(email_linkedin)) {
     return (
       <div className="flex h-[30vh] w-full items-center justify-center ">
         <div className="flex w-full flex-col items-center justify-center space-y-2.5">
