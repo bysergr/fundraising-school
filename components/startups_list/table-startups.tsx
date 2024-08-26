@@ -123,19 +123,19 @@ export default function TableStartups({ email_linkedin }: { email_linkedin: stri
     email_linkedin,
   ]);
 
-  if (!LinkedinAdminEmail.includes(email_linkedin)) {
-    return (
-      <div className="flex h-[30vh] w-full items-center justify-center ">
-        <div className="flex w-full flex-col items-center justify-center space-y-2.5">
-          <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Stay Tuned</h3>
-          <IoPaperPlaneOutline className="size-10 text-[#818181]" />
-          <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
-            Access goes live a few days before the event
-          </p>
-        </div>
-      </div>
-    );
-  }
+  /* if (!LinkedinAdminEmail.includes(email_linkedin)) {
+   *   return (
+   *     <div className="flex h-[30vh] w-full items-center justify-center ">
+   *       <div className="flex w-full flex-col items-center justify-center space-y-2.5">
+   *         <h3 className="text-center text-2xl font-bold leading-7 text-gray-500">Stay Tuned</h3>
+   *         <IoPaperPlaneOutline className="size-10 text-[#818181]" />
+   *         <p className="px-5 text-center text-base font-normal leading-6 text-gray-500">
+   *           Access goes live a few days before the event
+   *         </p>
+   *       </div>
+   *     </div>
+   *   );
+   * } */
 
   return (
     <>
