@@ -137,56 +137,60 @@ export default function FundModal() {
       <hr className="my-4 h-0.5 bg-[#DBDBDB]" />
       <h3 className="mb-2 mt-4 text-lg font-semibold text-ctwLightPurple">Partners</h3>
       <ul className="flex flex-wrap justify-around gap-2">
-        {modal_vc.partners.map((partner) => (
-          <li
-            key={partner?.id}
-            className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
-          >
-            {partner?.photo !== null ? (
-              <Image
-                className="rounded-full"
-                alt={`image of ${partner?.name}`}
-                src={partner?.photo}
-                width={90}
-                height={90}
-              />
-            ) : (
-              <Image
-                className="rounded-full"
-                alt={`image of ${partner?.name}`}
-                src={defaultImageProfile}
-                width={90}
-                height={90}
-              />
-            )}
-            <div>
-              <p className="text-center text-sm font-semibold text-[#3C0560]">{partner?.name}</p>
-              <p className="text-center text-xs font-normal text-[#3C0560]">{partner?.role}</p>
-              <div className="mt-2 flex w-full justify-center gap-1">
-                {partner?.website && (
-                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.website)}>
-                    <LinkIcon className="size-4" />
-                  </a>
-                )}
-                {partner?.linkedin && (
-                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.linkedin)}>
-                    <FaLinkedin className="size-4" />
-                  </a>
-                )}
-                {partner?.twitter && (
-                  <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.twitter)}>
-                    <FaXTwitter className="size-4" />
-                  </a>
-                )}
-                {partner?.email && (
-                  <a target="_blank" rel="noreferrer" href={`mailto:${partner?.email}`}>
-                    <EnvelopeIcon className="size-4" />
-                  </a>
-                )}
+        {modal_vc.partners.map((partner) => {
+          if (partner.name.includes('invisible-ctw-developers')) return null;
+
+          return (
+            <li
+              key={partner?.id}
+              className="flex w-44 flex-col items-center gap-4 rounded-md bg-white p-6 shadow-sm"
+            >
+              {partner?.photo !== null ? (
+                <Image
+                  className="rounded-full"
+                  alt={`image of ${partner?.name}`}
+                  src={partner?.photo}
+                  width={90}
+                  height={90}
+                />
+              ) : (
+                <Image
+                  className="rounded-full"
+                  alt={`image of ${partner?.name}`}
+                  src={defaultImageProfile}
+                  width={90}
+                  height={90}
+                />
+              )}
+              <div>
+                <p className="text-center text-sm font-semibold text-[#3C0560]">{partner?.name}</p>
+                <p className="text-center text-xs font-normal text-[#3C0560]">{partner?.role}</p>
+                <div className="mt-2 flex w-full justify-center gap-1">
+                  {partner?.website && (
+                    <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.website)}>
+                      <LinkIcon className="size-4" />
+                    </a>
+                  )}
+                  {partner?.linkedin && (
+                    <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.linkedin)}>
+                      <FaLinkedin className="size-4" />
+                    </a>
+                  )}
+                  {partner?.twitter && (
+                    <a target="_blank" rel="noreferrer" href={ensureHttpOrHttps(partner?.twitter)}>
+                      <FaXTwitter className="size-4" />
+                    </a>
+                  )}
+                  {partner?.email && (
+                    <a target="_blank" rel="noreferrer" href={`mailto:${partner?.email}`}>
+                      <EnvelopeIcon className="size-4" />
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </dialog>
   );

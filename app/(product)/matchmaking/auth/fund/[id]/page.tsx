@@ -1,3 +1,4 @@
+import ValidateFund from '@/components/vc_list/validate-fund';
 import { authOptions } from '@/utils/auth';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -66,9 +67,9 @@ export default async function Page({ params }: { params: { id: string } }) {
         }),
       });
     }
-  } finally {
+  } catch (e) {
     redirect('/matchmaking/');
   }
 
-  return <>Made with ❤️ by Sergio Rey</>;
+  return <ValidateFund user={data} />;
 }
